@@ -1,0 +1,73 @@
+<!--If you're reading this, no cheating!-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>UCFGuessr</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <!-- EXIF.js for extracting image metadata -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
+  </head>
+  <body>
+    <div class="header-container">
+      <div class="title-group">
+        <h1>UCFGuessr</h1>
+        <span class="current-date" id="current-date"></span>
+      </div>
+      <div class="controls-group">
+        <button class="theme-button" onclick="toggleDarkMode()">🌙</button>
+        <button class="help-button" onclick="showHelp()">?</button>
+      </div>
+    </div>
+    <p class="rounds-indicator">
+      <span id="round1-text">Round 1: Easy</span> | 
+      <span id="round2-text">Round 2: Medium</span> | 
+      <span id="round3-text">Round 3: Hard</span>
+    </p>
+    <div class="game-content">
+      <div id="image-container">
+        <div class="image-wrapper">
+          <img id="challenge-image" src="" alt="Challenge Image">
+        </div>
+        <div class="zoom-controls">
+          <button class="zoom-button" onclick="zoomIn()">+</button>
+          <button class="zoom-button" onclick="zoomOut()">-</button>
+        </div>
+      </div>
+      <div id="map-container">
+        <div id="map"></div>
+      </div>
+    </div>
+    <div class="button-container">
+      <button id="submit-guess" class="button" disabled>Submit Guess</button>
+      <button id="next-round" class="button" style="display: none;">Next Round</button>
+    </div>
+    <div id="result"></div>
+
+    <!-- Revamped results popup overlay -->
+    <div class="popup-overlay" id="overlay"></div>
+    <div id="results-popup">
+      <button class="close-x" onclick="closePopup()">×</button>
+      <p id="total-score"></p>
+      <p id="round-scores"></p>
+      <button class="button" onclick="copyResults()">Share</button>
+    </div>
+    <div class="copied-message" id="copied-message">Copied to clipboard</div>
+
+    <!-- Help popup -->
+    <div id="help-popup">
+      <h2>How to Play</h2>
+      <p>Guess where each photo was taken at UCF. Click on the map and submit to place your guess.<br><br>
+      There are 3 rounds of increasing difficulty. All photos are located on campus.<br><br>
+      Try to get the highest score possible, and share the game with friends!<br><br>
+      <i>Made by Kian S.</i></p>
+      <button class="button" onclick="closeHelp()">Close</button>
+    </div>
+
+    <!-- External JS for Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

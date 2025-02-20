@@ -1,0 +1,410 @@
+:root {
+    --primary-color: #637de3;
+    --secondary-color: #2c3e50;
+    --background-color: #f8f9fa;
+    --card-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    --text-color: #2c3e50;
+    --border-color: #e0e0e0;
+    --popup-bg: white;
+    --transition-duration: 0.3s;
+}
+
+[data-theme="dark"] {
+    --primary-color: #4752ef;
+    --secondary-color: #a1b4c7;
+    --background-color: #18191a;
+    --card-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    --text-color: #e0e0e0;
+    --border-color: #404040;
+    --popup-bg: #2d2d2d;
+    --marker-label-bg: #1a1a1a; 
+    --marker-label-text: #e0e0e0; 
+
+    & .leaflet-layer,
+    & .leaflet-control-zoom-in,
+    & .leaflet-control-zoom-out,
+    & .leaflet-control-attribution {
+        filter: invert(100%) hue-rotate(290deg) brightness(95%) contrast(90%);
+        transition: filter var(--transition-duration);
+    }
+
+    & .leaflet-container {
+        background: #000;
+    }
+
+    & .leaflet-marker-icon {
+        background-color: var(--marker-label-bg);
+        color: var(--marker-label-text);
+    }
+
+    & .leaflet-popup-content-wrapper {
+        background: #1a1a1a;
+        color: #e0e0e0;
+    }
+
+    & .leaflet-popup-tip {
+        background: #1a1a1a;
+    }
+}
+
+body {
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 15px; 
+    transition: background-color var(--transition-duration), color var(--transition-duration);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 30px;
+    max-width: calc(100% - 60px);
+    margin: 0 auto 10px;
+    position: relative;
+}
+
+.title-group {
+    display: flex;
+    align-items: baseline;
+    gap: 15px; 
+    position: relative;
+}
+
+h1 {
+    color: var(--text-color);
+    font-size: 2.5em;
+    font-weight: 700;
+    margin: 0;
+    margin-right: 15px;
+}
+
+.current-date {
+    color: var(--text-color);
+    font-size: 1.2em;
+    opacity: 0.8;
+    line-height: 1;  
+    padding-bottom: 3px; 
+}
+
+.rounds-indicator {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#game-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+}
+
+.game-content {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+#image-container {
+    flex: 2;
+    height: 450px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--card-shadow);
+    border: 2px solid var(--border-color);
+}
+
+.image-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+}
+
+.image-wrapper:active {
+    cursor: grabbing;
+}
+
+#challenge-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform-origin: center;
+    position: relative;
+    transition: transform 0.1s ease-out;
+}
+
+.zoom-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    background: var(--background-color);
+    opacity: 0.9;
+    border-radius: 8px;
+    padding: 8px;
+    transition: background-color var(--transition-duration);
+}
+
+.zoom-button {
+    width: 36px;
+    height: 36px;
+    margin: 0 2px;
+    cursor: pointer;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    transition: transform 0.2s;
+}
+
+.zoom-button:hover {
+    transform: scale(1.05);
+}
+
+#map-container {
+    flex: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    border: 2px solid var(--border-color);
+}
+
+#map {
+    height: 450px;
+    width: 100%;
+}
+
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.button {
+    padding: 14px 28px;
+    background: var(--primary-color);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 10px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.button:disabled {
+    background: #808080;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+#result {
+    font-size: 1.2em;
+    text-align: center;
+    margin: 5px 0; 
+    padding: 10px;
+    border-radius: 12px;
+    margin-top: 5px; 
+    background: transparent;
+    box-shadow: none;
+}
+
+.leaflet-popup-close-button {
+    display: none !important;
+}
+
+#results-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--popup-bg);
+    color: var(--text-color);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    width: 30%;
+    max-width: 600px;
+    text-align: center;
+    display: none;
+    z-index: 2000;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1500;
+}
+
+.copied-message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--secondary-color);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2500;
+    font-weight: 500;
+}
+
+.help-button {
+    position: relative;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s, background-color var(--transition-duration);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.help-button:hover {
+    transform: scale(1.1);
+}
+
+#help-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--popup-bg);
+    color: var(--text-color);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+    display: none;
+    z-index: 2000;
+}
+
+.close-x {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+}
+
+.close-x:hover {
+    color: #000;
+}
+
+.controls-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(15%); 
+}
+
+.theme-button {
+    position: relative;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s, background-color var(--transition-duration);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure all color transitions are consistent */
+* {
+    transition-property: background-color, color, border-color;
+    transition-duration: var(--transition-duration);
+}
+
+.theme-button:hover {
+    transform: scale(1.1);
+}
+
+.score-progress {
+    width: 80%;
+    height: 18px;
+    background-color: var(--border-color);
+    border-radius: 6px;
+    margin: 20px auto;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.score-progress-bar {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 6px;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+}
+
+.score-progress::before,
+.score-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.score-progress::before {
+    left: 33.33%;
+}
+
+.score-progress::after {
+    left: 66.66%;
+}
+
+[data-theme="dark"] .score-progress::before,
+[data-theme="dark"] .score-progress::after {
+    background-color: rgba(255, 255, 255, 0.2);
+}
