@@ -26,21 +26,24 @@ const easyPhotos = [
     "images/easy/IMG_7534.jpeg",
     "images/easy/IMG_7322.jpeg",
     "images/easy/IMG_2747.jpeg",
+    "images/easy/IMG_0671.jpeg",
     "images/easy/IMG_1117.jpeg"
 ];
 
 const mediumPhotos = [
     "images/medium/IMG_4257.jpeg",
-    "images/medium/IMG_0128.jpeg",
     "images/medium/IMG_7859.jpeg",
     "images/medium/IMG_9438.jpeg",
-    "images/medium/IMG_3440.jpeg"
+    "images/medium/IMG_3440.jpeg", 
+    "images/medium/IMG_1555.jpeg"
 ];
 
 const hardPhotos = [
     "images/hard/IMG_0425.jpeg",
+    "images/hard/IMG_1770.jpeg", 
     "images/hard/IMG_9488.jpeg", 
-    "images/hard/IMG_1770.jpeg"
+    "images/hard/IMG_0128.jpeg", 
+    "images/hard/IMG_5283.jpeg"
 ];
 
 // Dark mode functionality
@@ -118,31 +121,43 @@ let isFirstLoad = true;
 const imageWrapper = document.querySelector('.image-wrapper');
 
 // --------------------
-// Image Drag & Zoom Handlers
+// Zoom & Pan Functionality
 // --------------------
-imageWrapper.addEventListener('mousedown', startDragging);
-imageWrapper.addEventListener('touchstart', startDragging);
-imageWrapper.addEventListener('mousemove', drag);
-imageWrapper.addEventListener('touchmove', drag);
-imageWrapper.addEventListener('mouseup', stopDragging);
-imageWrapper.addEventListener('mouseleave', stopDragging);
-imageWrapper.addEventListener('touchend', stopDragging);
+let maxZoom = 8;  // max zoom limit
+
+function updateImageTransform() {
+    const containerRect = imageWrapper.getBoundingClientRect();
+    // Base dimensions = container dimensions (since image fills container initially)
+    const baseWidth = containerRect.width;
+    const baseHeight = containerRect.height;
+    // Scaled dimensions:
+    const scaledWidth = baseWidth * currentZoom;
+    const scaledHeight = baseHeight * currentZoom;
+    const maxX = Math.max(0, (scaledWidth - containerRect.width) / 2);
+    const maxY = Math.max(0, (scaledHeight - containerRect.height) / 2);
+    // Restrict pan offsets
+    translateX = Math.max(-maxX, Math.min(translateX, maxX));
+    translateY = Math.max(-maxY, Math.min(translateY, maxY));
+    
+    const image = document.querySelector('.challenge-image.visible');
+    if (image) {
+        image.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+    }
+}
 
 function startDragging(e) {
-    if (currentZoom <= 1) return;
     isDragging = true;
     if (e.type === 'mousedown') {
-        startX = e.clientX - translateX;
-        startY = e.clientY - translateY;
+        startX = e.clientX;
+        startY = e.clientY;
     } else if (e.type === 'touchstart') {
-        startX = e.touches[0].clientX - translateX;
-        startY = e.touches[0].clientY - translateY;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
     }
-    imageWrapper.style.cursor = 'grabbing';
 }
 
 function drag(e) {
-    if (!isDragging || currentZoom <= 1) return;
+    if (!isDragging) return;
     e.preventDefault();
     let currentX, currentY;
     if (e.type === 'mousemove') {
@@ -152,75 +167,70 @@ function drag(e) {
         currentX = e.touches[0].clientX;
         currentY = e.touches[0].clientY;
     }
-    translateX = currentX - startX;
-    translateY = currentY - startY;
+    
+    const dx = (currentX - startX) * 1.25;
+    const dy = (currentY - startY) * 1.25;
+    translateX += dx;
+    translateY += dy;
+    startX = currentX;
+    startY = currentY;
     updateImageTransform();
 }
 
 function stopDragging() {
     isDragging = false;
-    imageWrapper.style.cursor = 'grab';
 }
 
-function updateImageTransform() {
-    const containerRect = imageWrapper.getBoundingClientRect();
-    const images = document.querySelectorAll('.challenge-image');
-    
-    images.forEach(image => {
-        const scaledWidth = image.offsetWidth * currentZoom;
-        const scaledHeight = image.offsetHeight * currentZoom;
-        
-        const maxX = Math.max(0, (scaledWidth - containerRect.width) / 2);
-        const maxY = Math.max(0, (scaledHeight - containerRect.height) / 2);
-        
-        translateX = Math.max(Math.min(translateX, maxX), -maxX);
-        translateY = Math.max(Math.min(translateY, maxY), -maxY);
-        
-        image.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
-    });
-}
-
-// New centerZoom function: always center the visible image in the container.
-function centerZoom(newZoom) {
-    const containerWidth = imageWrapper.clientWidth;
-    const containerHeight = imageWrapper.clientHeight;
-    const image = document.querySelector('.challenge-image.visible');
-    if (!image) return;
-    const imageWidth = image.offsetWidth;
-    const imageHeight = image.offsetHeight;
-    // Compute translations to center the image
-    translateX = (containerWidth - imageWidth * newZoom) / 2;
-    translateY = (containerHeight - imageHeight * newZoom) / 2;
+function zoomIn() {
+    const newZoom = Math.min(currentZoom * 1.5, maxZoom);
+    const factor = newZoom / currentZoom;
+    translateX *= factor;
+    translateY *= factor;
     currentZoom = newZoom;
     updateImageTransform();
 }
 
-// Replace zoomIn with centerZoom-based implementation (always center)
-function zoomIn() {
-    const maxZoom = isMobile ? 4 : 8;
-    if (currentZoom < maxZoom) {
-        const newZoom = Math.min(currentZoom * 1.5, maxZoom);
-        centerZoom(newZoom);
-    }
-}
-
-// Replace zoomOut with centerZoom-based implementation (always center)
 function zoomOut() {
-    if (currentZoom > 1) {
-        const newZoom = Math.max(currentZoom / 1.5, 1);
-        centerZoom(newZoom);
-    }
+    const newZoom = Math.max(currentZoom / 2, 1);
+    const factor = newZoom / currentZoom;
+    translateX *= factor;
+    translateY *= factor;
+    currentZoom = newZoom;
+    updateImageTransform();
 }
 
-// Update double-click zoom to also always center the image, ignoring click position
+// Attach mouse and touch event listeners for panning
+imageWrapper.addEventListener('mousedown', startDragging);
+imageWrapper.addEventListener('touchstart', startDragging);
+imageWrapper.addEventListener('mousemove', drag);
+imageWrapper.addEventListener('touchmove', drag);
+imageWrapper.addEventListener('mouseup', stopDragging);
+imageWrapper.addEventListener('mouseleave', stopDragging);
+imageWrapper.addEventListener('touchend', stopDragging);
+
+// Modified double-click zoom to zoom into the clicked location
 imageWrapper.addEventListener('dblclick', function(e) {
     e.preventDefault();
-    const maxZoom = isMobile ? 4 : 8;
-    let newZoom = currentZoom * 1.5;
-    if (newZoom > maxZoom) {
-        newZoom = 1;
+    const containerRect = imageWrapper.getBoundingClientRect();
+    // Get click offset from center of container
+    const clickX = e.clientX - containerRect.left;
+    const clickY = e.clientY - containerRect.top;
+    const offsetX = clickX - containerRect.width / 2;
+    const offsetY = clickY - containerRect.height / 2;
+    
+    if (currentZoom >= maxZoom) {
+        currentZoom = 1;
+        translateX = 0;
+        translateY = 0;
+    } else {
+        const newZoom = Math.min(currentZoom * 1.5, maxZoom);
+        const factor = newZoom / currentZoom;
+        // Adjust pan offsets so that the image zooms into the clicked point
+        translateX = (translateX - offsetX) * factor + offsetX;
+        translateY = (translateY - offsetY) * factor + offsetY;
+        currentZoom = newZoom;
     }
-    centerZoom(newZoom);
+    updateImageTransform();
 });
 
 // --------------------
@@ -345,8 +355,10 @@ function loadRound() {
 
     // Reset game state for the new round.
     currentZoom = 1;
-    translateX = translateY = 0;
+    translateX = 0;
+    translateY = 0;
     updateImageTransform();
+    
     map.setView([28.602053, -81.200421], 15);
     if (userMarker) map.removeLayer(userMarker);
     if (actualMarker) map.removeLayer(actualMarker);
@@ -532,51 +544,3 @@ function formatDate(date) {
 
 // Set the current date in the header
 document.getElementById('current-date').textContent = formatDate(new Date());
-
-// Add touch event handlers for image panning
-if (isMobile) {
-    imageWrapper.addEventListener('touchstart', handleTouchStart, false);
-    imageWrapper.addEventListener('touchmove', handleTouchMove, false);
-
-    let xDown = null;
-    let yDown = null;
-
-    function handleTouchStart(evt) {
-        const firstTouch = evt.touches[0];
-        xDown = firstTouch.clientX;
-        yDown = firstTouch.clientY;
-    }
-
-    function handleTouchMove(evt) {
-        if (!xDown || !yDown) {
-            return;
-        }
-
-        const xUp = evt.touches[0].clientX;
-        const yUp = evt.touches[0].clientY;
-        const xDiff = xDown - xUp;
-        const yDiff = yDown - yUp;
-
-        if (Math.abs(xDiff) > Math.abs(yDiff)) {
-            if (xDiff > 0) {
-                // swipe left
-                translateX -= 20;
-            } else {
-                // swipe right
-                translateX += 20;
-            }
-        } else {
-            if (yDiff > 0) {
-                // swipe up
-                translateY -= 20;
-            } else {
-                // swipe down
-                translateY += 20;
-            }
-        }
-
-        updateImageTransform();
-        xDown = null;
-        yDown = null;
-    }
-}
