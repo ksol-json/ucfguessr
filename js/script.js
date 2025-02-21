@@ -1,6 +1,24 @@
 // Add this at the start of the file
 const isMobile = window.innerWidth <= 768;
 
+// Add this function at the start of the file, after the initial variable declarations
+function showNotification(message) {
+    // Create notification if it doesn't exist
+    let notification = document.querySelector('.notification-popup');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.className = 'notification-popup';
+        document.body.appendChild(notification);
+    }
+    
+    notification.textContent = message;
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+
 // --------------------
 // Define Your Photo Lists for Each Difficulty
 // --------------------
@@ -147,41 +165,74 @@ function stopDragging() {
 function updateImageTransform() {
     const containerRect = imageWrapper.getBoundingClientRect();
     const images = document.querySelectorAll('.challenge-image');
-
+    
     images.forEach(image => {
-        if (isMobile && currentZoom === 1) {
-            // At default zoom on mobile, remove translation to allow centering via CSS
-            image.style.transform = 'scale(1)';
-        } else {
-            const scaledWidth = image.offsetWidth * currentZoom;
-            const scaledHeight = image.offsetHeight * currentZoom;
-            const maxX = Math.max(0, (scaledWidth - containerRect.width) / 2);
-            const maxY = Math.max(0, (scaledHeight - containerRect.height) / 2);
-            translateX = Math.max(Math.min(translateX, maxX), -maxX);
-            translateY = Math.max(Math.min(translateY, maxY), -maxY);
-            image.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
-        }
+        const scaledWidth = image.offsetWidth * currentZoom;
+        const scaledHeight = image.offsetHeight * currentZoom;
+        
+        const maxX = Math.max(0, (scaledWidth - containerRect.width) / 2);
+        const maxY = Math.max(0, (scaledHeight - containerRect.height) / 2);
+        
+        translateX = Math.max(Math.min(translateX, maxX), -maxX);
+        translateY = Math.max(Math.min(translateY, maxY), -maxY);
+        
+        image.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
     });
 }
 
+// New helper function for zooming at a focal point
+function zoomToPoint(newZoom, focalX, focalY) {
+    const oldZoom = currentZoom;
+    // Adjust translations so that the focal point remains fixed relative to the image
+    translateX = focalX - ((focalX - translateX) * newZoom / oldZoom);
+    translateY = focalY - ((focalY - translateY) * newZoom / oldZoom);
+    currentZoom = newZoom;
+    updateImageTransform();
+}
+
+// Update zoomIn to use the center of the viewfinder
 function zoomIn() {
-    if (currentZoom < (isMobile ? 4 : 8)) {  // Lower max zoom on mobile
-        currentZoom = Math.min(currentZoom * 1.5, isMobile ? 4 : 8);
-        updateImageTransform();
+    const maxZoom = isMobile ? 4 : 8;
+    if (currentZoom < maxZoom) {
+        const rect = imageWrapper.getBoundingClientRect();
+        const focalX = rect.width / 2;
+        const focalY = rect.height / 2;
+        const newZoom = Math.min(currentZoom * 1.5, maxZoom);
+        zoomToPoint(newZoom, focalX, focalY);
     }
 }
 
+// Update zoomOut to use the center of the viewfinder
 function zoomOut() {
     if (currentZoom > 1) {
+        const rect = imageWrapper.getBoundingClientRect();
+        const focalX = rect.width / 2;
+        const focalY = rect.height / 2;
         const newZoom = Math.max(currentZoom / 1.5, 1);
-        if (newZoom < 1.5) {
+        if (newZoom === 1) {
             translateX = 0;
             translateY = 0;
         }
-        currentZoom = newZoom;
-        updateImageTransform();
+        zoomToPoint(newZoom, focalX, focalY);
     }
 }
+
+// Add double-click zoom functionality: zoom into the double-clicked position; if at max, reset to 1x
+imageWrapper.addEventListener('dblclick', function(e) {
+    const rect = imageWrapper.getBoundingClientRect();
+    // Get the click coordinates relative to the container
+    const focalX = e.clientX - rect.left;
+    const focalY = e.clientY - rect.top;
+    const maxZoom = isMobile ? 4 : 8;
+    let newZoom = currentZoom * 1.5;
+    // If exceeding max zoom, reset back to original view
+    if(newZoom > maxZoom) {
+        newZoom = 1;
+        translateX = 0;
+        translateY = 0;
+    }
+    zoomToPoint(newZoom, focalX, focalY);
+});
 
 // --------------------
 // Map Setup
@@ -306,14 +357,6 @@ function loadRound() {
     // Reset game state for the new round.
     currentZoom = 1;
     translateX = translateY = 0;
-
-    // Reset transform styles on both challenge images on mobile to force centering at default zoom
-    if (isMobile) {
-        document.querySelectorAll('.challenge-image').forEach(img => {
-            img.style.transform = 'scale(1)';
-        });
-    }
-
     updateImageTransform();
     map.setView([28.602053, -81.200421], 15);
     if (userMarker) map.removeLayer(userMarker);
@@ -337,12 +380,7 @@ function loadRound() {
 
 loadRound();
 
-document.getElementById("submit-guess").addEventListener("click", function() {
-    if (!userMarker) {
-        alert("Please click on the map to place your guess.");
-        return;
-    }
-    
+document.getElementById("submit-guess").addEventListener("click", function(e) {
     if (!actualCoords) {
         alert("Error: Location data not loaded. Please try again.");
         return;

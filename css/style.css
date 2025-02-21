@@ -135,7 +135,7 @@ h1 {
     position: absolute;
     top: 0;
     left: 0;
-    transition: opacity 0.35s ease-in-out;
+    transition: transform 0.3s ease-out, opacity 0.35s ease-in-out;
     max-width: 100%;
     max-height: 100%;
 }
@@ -382,6 +382,7 @@ h1 {
     justify-content: center;
 }
 
+/* Ensure all color transitions are consistent */
 * {
     transition-property: background-color, color, border-color;
     transition-duration: var(--transition-duration);
@@ -453,30 +454,34 @@ h1 {
         height: 300px;
         width: 100%;
         position: relative;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
     .image-wrapper {
         width: 100%;
         height: 100%;
         position: relative;
-        overflow: hidden;
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
+        overflow: hidden;
     }
 
     .challenge-image {
-        position: relative;
+        position: relative; /* Change from absolute to relative */
         width: 100%;
         height: 100%;
         object-fit: contain;
         max-width: 100%;
         max-height: 100%;
-        transition: opacity 0.35s ease-in-out;
+        transition: opacity 0.35s ease-in-out, transform 0.1s ease-out;
+    }
+
+    .challenge-image.hidden {
+        display: none; /* Add this to properly hide images */
+    }
+
+    .challenge-image.visible {
+        display: block; /* Add this to properly show images */
     }
 
     #map-container {
@@ -566,4 +571,28 @@ h1 {
     body {
         padding: 10px;
     }
+}
+
+.notification-popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--secondary-color);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 2500;
+    font-weight: 500;
+    text-align: center;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.notification-popup.show {
+    visibility: visible;
+    opacity: 1;
 }
