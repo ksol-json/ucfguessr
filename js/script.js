@@ -1,3 +1,6 @@
+// Add this at the start of the file
+const isMobile = window.innerWidth <= 768;
+
 // --------------------
 // Define Your Photo Lists for Each Difficulty
 // --------------------
@@ -92,12 +95,8 @@ let isDragging = false;
 let startX, startY, translateX = 0, translateY = 0;
 let actualCoords;
 let perfectRange = 30;
+let isFirstLoad = true;
 
-const image = document.getElementById('challenge-image');
-image.draggable = false;
-image.addEventListener('dragstart', function(e) {
-    e.preventDefault();
-});
 const imageWrapper = document.querySelector('.image-wrapper');
 
 // --------------------
@@ -146,25 +145,26 @@ function stopDragging() {
 }
 
 function updateImageTransform() {
-    // Get container and scaled image dimensions
     const containerRect = imageWrapper.getBoundingClientRect();
-    const scaledWidth = image.offsetWidth * currentZoom;
-    const scaledHeight = image.offsetHeight * currentZoom;
+    const images = document.querySelectorAll('.challenge-image');
     
-    // Calculate the maximum allowed translation in each direction
-    const maxX = Math.max(0, (scaledWidth - containerRect.width) / 2);
-    const maxY = Math.max(0, (scaledHeight - containerRect.height) / 2);
-    
-    // Constrain translations within bounds
-    translateX = Math.max(Math.min(translateX, maxX), -maxX);
-    translateY = Math.max(Math.min(translateY, maxY), -maxY);
-    
-    image.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+    images.forEach(image => {
+        const scaledWidth = image.offsetWidth * currentZoom;
+        const scaledHeight = image.offsetHeight * currentZoom;
+        
+        const maxX = Math.max(0, (scaledWidth - containerRect.width) / 2);
+        const maxY = Math.max(0, (scaledHeight - containerRect.height) / 2);
+        
+        translateX = Math.max(Math.min(translateX, maxX), -maxX);
+        translateY = Math.max(Math.min(translateY, maxY), -maxY);
+        
+        image.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+    });
 }
 
 function zoomIn() {
-    if (currentZoom < 8) {
-        currentZoom = Math.min(currentZoom * 1.5, 8);
+    if (currentZoom < (isMobile ? 4 : 8)) {  // Lower max zoom on mobile
+        currentZoom = Math.min(currentZoom * 1.5, isMobile ? 4 : 8);
         updateImageTransform();
     }
 }
@@ -184,7 +184,7 @@ function zoomOut() {
 // --------------------
 // Map Setup
 // --------------------
-const map = L.map('map').setView([28.602053, -81.200421], 15);
+const map = L.map('map').setView([28.602053, -81.200421], isMobile ? 14 : 15);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
@@ -236,6 +236,39 @@ function convertDMSToDD(dms, ref) {
 // --------------------
 // Game Logic
 // --------------------
+let activeImageIndex = 1;
+
+function loadImage(imageUrl) {
+    const currentImage = document.getElementById(`challenge-image-${activeImageIndex}`);
+    const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
+    
+    if (isFirstLoad) {
+        // On first load, just show the image immediately
+        currentImage.src = imageUrl;
+        currentImage.classList.add('visible');
+        currentImage.classList.remove('hidden');
+        isFirstLoad = false;
+        return;
+    }
+    
+    // Normal crossfade for subsequent loads
+    nextImage.src = imageUrl;
+    nextImage.onload = () => {
+        currentImage.classList.remove('visible');
+        currentImage.classList.add('hidden');
+        nextImage.classList.remove('hidden');
+        nextImage.classList.add('visible');
+        activeImageIndex = activeImageIndex === 1 ? 2 : 1;
+    };
+}
+
+document.querySelectorAll('.challenge-image').forEach(img => {
+    img.draggable = false;
+    img.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+    });
+});
+
 function loadRound() {
     const round = rounds[currentRound];
     const challengeImage = document.getElementById("challenge-image");
@@ -265,7 +298,7 @@ function loadRound() {
             }
         });
         // Now update the displayed challenge image with the fresh URL.
-        challengeImage.src = urlWithTimestamp;
+        loadImage(urlWithTimestamp);
     };
 
     // Reset game state for the new round.
@@ -412,7 +445,7 @@ function copyResults() {
     }
 
     const gameDay = daysSinceEpoch + 1;
-    const shareText = `UCFGuessr ${gameDay}\n${totalScore} / 15000\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.xyz`;
+    const shareText = `UCFGuessr ${gameDay} ${totalScore}/15000\n\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.xyz`;
     
     navigator.clipboard.writeText(shareText).then(() => {
         const copiedMessage = document.getElementById("copied-message");
@@ -456,3 +489,51 @@ function formatDate(date) {
 
 // Set the current date in the header
 document.getElementById('current-date').textContent = formatDate(new Date());
+
+// Add touch event handlers for image panning
+if (isMobile) {
+    imageWrapper.addEventListener('touchstart', handleTouchStart, false);
+    imageWrapper.addEventListener('touchmove', handleTouchMove, false);
+
+    let xDown = null;
+    let yDown = null;
+
+    function handleTouchStart(evt) {
+        const firstTouch = evt.touches[0];
+        xDown = firstTouch.clientX;
+        yDown = firstTouch.clientY;
+    }
+
+    function handleTouchMove(evt) {
+        if (!xDown || !yDown) {
+            return;
+        }
+
+        const xUp = evt.touches[0].clientX;
+        const yUp = evt.touches[0].clientY;
+        const xDiff = xDown - xUp;
+        const yDiff = yDown - yUp;
+
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            if (xDiff > 0) {
+                // swipe left
+                translateX -= 10;
+            } else {
+                // swipe right
+                translateX += 10;
+            }
+        } else {
+            if (yDiff > 0) {
+                // swipe up
+                translateY -= 10;
+            } else {
+                // swipe down
+                translateY += 10;
+            }
+        }
+
+        updateImageTransform();
+        xDown = null;
+        yDown = null;
+    }
+}

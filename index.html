@@ -5,6 +5,7 @@
   <head>
     <meta charset="UTF-8">
     <title>UCFGuessr</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="css/style.css">
     <!-- EXIF.js for extracting image metadata -->
@@ -13,7 +14,7 @@
   <body>
     <div class="header-container">
       <div class="title-group">
-        <h1>UCFGuessr</h1>
+        <h1><span class="title-ucf">UCF</span><span class="title-guessr">Guessr</span></h1>
         <span class="current-date" id="current-date"></span>
       </div>
       <div class="controls-group">
@@ -29,7 +30,8 @@
     <div class="game-content">
       <div id="image-container">
         <div class="image-wrapper">
-          <img id="challenge-image" src="" alt="Challenge Image">
+          <img class="challenge-image visible" id="challenge-image-1">
+          <img class="challenge-image hidden" id="challenge-image-2">
         </div>
         <div class="zoom-controls">
           <button class="zoom-button" onclick="zoomIn()">+</button>
@@ -58,12 +60,12 @@
 
     <!-- Help popup -->
     <div id="help-popup">
+      <button class="close-x" onclick="closeHelp()">×</button>
       <h2>How to Play</h2>
       <p>Guess where each photo was taken at UCF. Click on the map and submit to place your guess.<br><br>
       There are 3 rounds of increasing difficulty. All photos are located on campus.<br><br>
       Try to get the highest score possible, and share the game with friends!<br><br>
       <i>Made by Kian S.</i></p>
-      <button class="button" onclick="closeHelp()">Close</button>
     </div>
 
     <!-- External JS for Leaflet -->
