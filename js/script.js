@@ -147,18 +147,20 @@ function stopDragging() {
 function updateImageTransform() {
     const containerRect = imageWrapper.getBoundingClientRect();
     const images = document.querySelectorAll('.challenge-image');
-    
+
     images.forEach(image => {
-        const scaledWidth = image.offsetWidth * currentZoom;
-        const scaledHeight = image.offsetHeight * currentZoom;
-        
-        const maxX = Math.max(0, (scaledWidth - containerRect.width) / 2);
-        const maxY = Math.max(0, (scaledHeight - containerRect.height) / 2);
-        
-        translateX = Math.max(Math.min(translateX, maxX), -maxX);
-        translateY = Math.max(Math.min(translateY, maxY), -maxY);
-        
-        image.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+        if (isMobile && currentZoom === 1) {
+            // At default zoom on mobile, remove translation to allow centering via CSS
+            image.style.transform = 'scale(1)';
+        } else {
+            const scaledWidth = image.offsetWidth * currentZoom;
+            const scaledHeight = image.offsetHeight * currentZoom;
+            const maxX = Math.max(0, (scaledWidth - containerRect.width) / 2);
+            const maxY = Math.max(0, (scaledHeight - containerRect.height) / 2);
+            translateX = Math.max(Math.min(translateX, maxX), -maxX);
+            translateY = Math.max(Math.min(translateY, maxY), -maxY);
+            image.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+        }
     });
 }
 
@@ -304,6 +306,14 @@ function loadRound() {
     // Reset game state for the new round.
     currentZoom = 1;
     translateX = translateY = 0;
+
+    // Reset transform styles on both challenge images on mobile to force centering at default zoom
+    if (isMobile) {
+        document.querySelectorAll('.challenge-image').forEach(img => {
+            img.style.transform = 'scale(1)';
+        });
+    }
+
     updateImageTransform();
     map.setView([28.602053, -81.200421], 15);
     if (userMarker) map.removeLayer(userMarker);
@@ -428,6 +438,12 @@ function showResults() {
     }, 50);
     
     document.getElementById("round-scores").innerHTML = `Easy: ${roundScores[0]}<br>Medium: ${roundScores[1]}<br>Hard: ${roundScores[2]}`;
+    
+    // Add the new text at the bottom of the results popup
+    const newText = document.createElement('p');
+    newText.textContent = "Come back tomorrow for a new challenge!";
+    document.getElementById("round-scores").appendChild(newText);
+    
     document.getElementById("results-popup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 }

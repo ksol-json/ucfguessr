@@ -455,6 +455,9 @@ h1 {
         width: 100%;
         position: relative;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .image-wrapper {
@@ -462,14 +465,13 @@ h1 {
         height: 100%;
         position: relative;
         overflow: hidden;
-        /* Use flex only if needed; otherwise, stick with relative positioning */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    /* Use the old working rules for challenge-image so they remain absolutely positioned */
     .challenge-image {
-        position: absolute;
-        top: 0;
-        left: 0;
+        position: relative;
         width: 100%;
         height: 100%;
         object-fit: contain;
@@ -541,13 +543,20 @@ h1 {
     }
 
     .zoom-controls {
-        bottom: 60px;
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        gap: 8px;
     }
 
     .zoom-button {
         width: 32px;
         height: 32px;
         font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
     }
 
     .button {
