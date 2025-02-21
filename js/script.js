@@ -180,58 +180,47 @@ function updateImageTransform() {
     });
 }
 
-// New helper function for zooming at a focal point
-function zoomToPoint(newZoom, focalX, focalY) {
-    const oldZoom = currentZoom;
-    // Adjust translations so that the focal point remains fixed relative to the image
-    translateX = focalX - ((focalX - translateX) * newZoom / oldZoom);
-    translateY = focalY - ((focalY - translateY) * newZoom / oldZoom);
+// New centerZoom function: always center the visible image in the container.
+function centerZoom(newZoom) {
+    const containerWidth = imageWrapper.clientWidth;
+    const containerHeight = imageWrapper.clientHeight;
+    const image = document.querySelector('.challenge-image.visible');
+    if (!image) return;
+    const imageWidth = image.offsetWidth;
+    const imageHeight = image.offsetHeight;
+    // Compute translations to center the image
+    translateX = (containerWidth - imageWidth * newZoom) / 2;
+    translateY = (containerHeight - imageHeight * newZoom) / 2;
     currentZoom = newZoom;
     updateImageTransform();
 }
 
-// Update zoomIn to use the center of the viewfinder
+// Replace zoomIn with centerZoom-based implementation (always center)
 function zoomIn() {
     const maxZoom = isMobile ? 4 : 8;
     if (currentZoom < maxZoom) {
-        const rect = imageWrapper.getBoundingClientRect();
-        const focalX = rect.width / 2;
-        const focalY = rect.height / 2;
         const newZoom = Math.min(currentZoom * 1.5, maxZoom);
-        zoomToPoint(newZoom, focalX, focalY);
+        centerZoom(newZoom);
     }
 }
 
-// Update zoomOut to use the center of the viewfinder
+// Replace zoomOut with centerZoom-based implementation (always center)
 function zoomOut() {
     if (currentZoom > 1) {
-        const rect = imageWrapper.getBoundingClientRect();
-        const focalX = rect.width / 2;
-        const focalY = rect.height / 2;
         const newZoom = Math.max(currentZoom / 1.5, 1);
-        if (newZoom === 1) {
-            translateX = 0;
-            translateY = 0;
-        }
-        zoomToPoint(newZoom, focalX, focalY);
+        centerZoom(newZoom);
     }
 }
 
-// Add double-click zoom functionality: zoom into the double-clicked position; if at max, reset to 1x
+// Update double-click zoom to also always center the image, ignoring click position
 imageWrapper.addEventListener('dblclick', function(e) {
-    const rect = imageWrapper.getBoundingClientRect();
-    // Get the click coordinates relative to the container
-    const focalX = e.clientX - rect.left;
-    const focalY = e.clientY - rect.top;
+    e.preventDefault();
     const maxZoom = isMobile ? 4 : 8;
     let newZoom = currentZoom * 1.5;
-    // If exceeding max zoom, reset back to original view
-    if(newZoom > maxZoom) {
+    if (newZoom > maxZoom) {
         newZoom = 1;
-        translateX = 0;
-        translateY = 0;
     }
-    zoomToPoint(newZoom, focalX, focalY);
+    centerZoom(newZoom);
 });
 
 // --------------------
@@ -571,18 +560,18 @@ if (isMobile) {
         if (Math.abs(xDiff) > Math.abs(yDiff)) {
             if (xDiff > 0) {
                 // swipe left
-                translateX -= 10;
+                translateX -= 20;
             } else {
                 // swipe right
-                translateX += 10;
+                translateX += 20;
             }
         } else {
             if (yDiff > 0) {
                 // swipe up
-                translateY -= 10;
+                translateY -= 20;
             } else {
                 // swipe down
-                translateY += 10;
+                translateY += 20;
             }
         }
 
