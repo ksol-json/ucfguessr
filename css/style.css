@@ -24,7 +24,8 @@
     & .leaflet-control-zoom-in,
     & .leaflet-control-zoom-out,
     & .leaflet-control-attribution {
-        filter: invert(100%) hue-rotate(290deg) brightness(95%) contrast(90%);
+        /*For inverting map color: --filter: invert(100%) hue-rotate(290deg) brightness(95%) contrast(90%); */
+        filter: brightness(80%); 
         transition: filter var(--transition-duration);
     }
 
@@ -45,6 +46,11 @@
     & .leaflet-popup-tip {
         background: #1a1a1a;
     }
+
+    & .challenge-image {
+        filter: brightness(80%);
+    }
+
 }
 
 body {

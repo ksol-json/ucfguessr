@@ -138,7 +138,7 @@ document.addEventListener('keydown', function(event) {
 // --------------------
 // Compute Daily Indices Based on Days Since Start
 // --------------------
-const epoch = new Date("February 21, 2025 00:00:00");  // Starting date (Day 0)
+const epoch = new Date("February 22, 2025 00:00:00");  // Starting date (Day 0)
 const now = new Date();
 const daysSinceEpoch = Math.floor((now - epoch) / (1000 * 60 * 60 * 24));
 
