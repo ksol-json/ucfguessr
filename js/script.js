@@ -1,9 +1,33 @@
-// Add this at the start of the file
+// --------------------
+// Define Your Photo Lists for Each Difficulty
+// --------------------
+const easyPhotos = [
+    "images/easy/IMG_7534.jpeg",
+    "images/easy/IMG_7322.jpeg",
+    "images/easy/IMG_2747.jpeg",
+    "images/easy/IMG_0671.jpeg",
+    "images/easy/IMG_1117.jpeg"
+];
+
+const mediumPhotos = [
+    "images/medium/IMG_4257.jpeg",
+    "images/medium/IMG_7859.jpeg",
+    "images/medium/IMG_9438.jpeg",
+    "images/medium/IMG_3440.jpeg", 
+    "images/medium/IMG_1555.jpeg"
+];
+
+const hardPhotos = [
+    "images/hard/IMG_0425.jpeg",
+    "images/hard/IMG_1770.jpeg", 
+    "images/hard/IMG_9488.jpeg", 
+    "images/hard/IMG_0128.jpeg", 
+    "images/hard/IMG_5283.jpeg"
+];
+
 const isMobile = window.innerWidth <= 768;
 
-// Add this function at the start of the file, after the initial variable declarations
 function showNotification(message) {
-    // Create notification if it doesn't exist
     let notification = document.querySelector('.notification-popup');
     if (!notification) {
         notification = document.createElement('div');
@@ -75,33 +99,6 @@ function animateConfetti() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 }
-
-// --------------------
-// Define Your Photo Lists for Each Difficulty
-// --------------------
-const easyPhotos = [
-    "images/easy/IMG_7534.jpeg",
-    "images/easy/IMG_7322.jpeg",
-    "images/easy/IMG_2747.jpeg",
-    "images/easy/IMG_0671.jpeg",
-    "images/easy/IMG_1117.jpeg"
-];
-
-const mediumPhotos = [
-    "images/medium/IMG_4257.jpeg",
-    "images/medium/IMG_7859.jpeg",
-    "images/medium/IMG_9438.jpeg",
-    "images/medium/IMG_3440.jpeg", 
-    "images/medium/IMG_1555.jpeg"
-];
-
-const hardPhotos = [
-    "images/hard/IMG_0425.jpeg",
-    "images/hard/IMG_1770.jpeg", 
-    "images/hard/IMG_9488.jpeg", 
-    "images/hard/IMG_0128.jpeg", 
-    "images/hard/IMG_5283.jpeg"
-];
 
 // Dark mode functionality
 function setTheme(theme) {
@@ -265,7 +262,7 @@ imageWrapper.addEventListener('mouseup', stopDragging);
 imageWrapper.addEventListener('mouseleave', stopDragging);
 imageWrapper.addEventListener('touchend', stopDragging);
 
-// Modified double-click zoom to zoom into the clicked location
+// Double click to zoom
 imageWrapper.addEventListener('dblclick', function(e) {
     e.preventDefault();
     const containerRect = imageWrapper.getBoundingClientRect();
@@ -282,7 +279,6 @@ imageWrapper.addEventListener('dblclick', function(e) {
     } else {
         const newZoom = Math.min(currentZoom * 1.5, maxZoom);
         const factor = newZoom / currentZoom;
-        // Adjust pan offsets so that the image zooms into the clicked point
         translateX = (translateX - offsetX) * factor + offsetX;
         translateY = (translateY - offsetY) * factor + offsetY;
         currentZoom = newZoom;
@@ -316,7 +312,6 @@ map.on('click', function(e) {
     document.getElementById("submit-guess").disabled = false;
 });
 
-// Add this after the map setup section
 function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; // Earth's radius in km
     const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -352,7 +347,7 @@ function loadImage(imageUrl) {
     const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
     
     if (isFirstLoad) {
-        // On first load, just show the image immediately
+        // On first load, show the image immediately
         currentImage.src = imageUrl;
         currentImage.classList.add('visible');
         currentImage.classList.remove('hidden');
@@ -382,15 +377,13 @@ function loadRound() {
     const round = rounds[currentRound];
     const challengeImage = document.getElementById("challenge-image");
     
-    // Create a temporary image to force a fresh load and EXIF extraction.
+    // Create a temporary image to force a fresh load and EXIF extraction
     const tempImg = new Image();
-    // If your images are hosted on a different domain or require CORS, you might need this:
     tempImg.crossOrigin = "Anonymous"; 
-    // Append a timestamp to prevent caching.
     const urlWithTimestamp = round.src + "?t=" + new Date().getTime();
     tempImg.src = urlWithTimestamp;
     
-    // When the temporary image loads, extract EXIF data.
+    // Extract EXIF data
     tempImg.onload = function() {
         EXIF.getData(tempImg, function() {
             const lat = EXIF.getTag(tempImg, "GPSLatitude");
@@ -406,11 +399,10 @@ function loadRound() {
                 console.error("No GPS data found in image: " + round.src);
             }
         });
-        // Now update the displayed challenge image with the fresh URL.
         loadImage(urlWithTimestamp);
     };
 
-    // Reset game state for the new round.
+    // Reset game state for new round
     currentZoom = 1;
     translateX = 0;
     translateY = 0;
@@ -430,7 +422,7 @@ function loadRound() {
     document.getElementById("submit-guess").disabled = true;
     guessSubmitted = false;
 
-    // Update round indicators.
+    // Bold round indicators
     document.getElementById("round1-text").style.fontWeight = currentRound === 0 ? "bold" : "normal";
     document.getElementById("round2-text").style.fontWeight = currentRound === 1 ? "bold" : "normal";
     document.getElementById("round3-text").style.fontWeight = currentRound === 2 ? "bold" : "normal";
@@ -458,7 +450,6 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     let score = distance <= perfectRange ? 5000 : Math.round(5500 * Math.exp(-3 * (distance / 800)));
     score = distance > 1000 ? 0 : score;
     
-    // Add this right after calculating the score
     if (score === 5000) {
         startConfetti();
     }
@@ -515,25 +506,20 @@ document.getElementById("next-round").addEventListener("click", function() {
 function showResults() {
     document.getElementById("total-score").innerHTML = `Your total score: <strong>${totalScore}</strong> / 15000`;
     
-    // Remove any existing progress bars
+    // Progress bar
     const existingProgress = document.querySelector('.score-progress');
     if (existingProgress) {
         existingProgress.remove();
     }
-    
-    // Add progress bar HTML starting at 0% width
     const progressHTML = `
         <div class="score-progress">
             <div class="score-progress-bar" style="width: 0%"></div>
         </div>
     `;
-    // Insert progress bar after total score
     document.getElementById("total-score").insertAdjacentHTML('afterend', progressHTML);
-    
-    // Get the progress bar element
     const progressBar = document.querySelector('.score-progress-bar');
     
-    // Use setTimeout to trigger the animation after a short delay
+    // Progress bar animation
     setTimeout(() => {
         const progressPercentage = (totalScore / 15000) * 100;
         progressBar.style.width = `${progressPercentage}%`;
@@ -541,7 +527,6 @@ function showResults() {
     
     document.getElementById("round-scores").innerHTML = `Easy: ${roundScores[0]}<br>Medium: ${roundScores[1]}<br>Hard: ${roundScores[2]}`;
     
-    // Add the new text at the bottom of the results popup
     const newText = document.createElement('p');
     newText.textContent = "Come back tomorrow for a new challenge!";
     document.getElementById("round-scores").appendChild(newText);
@@ -549,7 +534,7 @@ function showResults() {
     document.getElementById("results-popup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
     
-    // Add this line to show the attribution
+    // Show OpenStreetMap attribution at end of game
     document.querySelector('.leaflet-control-attribution').classList.add('show');
 }
 
