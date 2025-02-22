@@ -11,6 +11,7 @@
     <!-- EXIF.js for extracting image metadata -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
     <link rel="icon" type="image/png" href="images/faviconv5.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="images/faviconv5.png">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y48SSY2050"></script>
@@ -21,6 +22,7 @@
       gtag('config', 'G-Y48SSY2050');
     </script>
   </head>
+
   <body>
     <div class="header-container">
       <div class="title-group">
@@ -73,12 +75,15 @@
     <div id="help-popup">
       <button class="close-x" onclick="closeHelp()">×</button>
       <h2>How to Play</h2>
-      <p>Guess where each photo was taken at UCF. Click on the map and submit to place your guess.<br><br>
+      <p>Guess where each photo was taken at UCF.<br><br>
+      Click on the map where you think the photographer was standing. Submit to place your guess.<br><br>
       There are 3 rounds of increasing difficulty. All photos are located on campus.<br><br>
       Try to get the highest score possible, and share the game with friends!<br><br>
       <i>Made by Kian S.</i></p>
     </div>
 
+    <!-- Add canvas before scripts but after other content -->
+    <canvas id="confetti-canvas"></canvas>
     <!-- External JS for Leaflet -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="js/script.js"></script>

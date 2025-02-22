@@ -19,6 +19,63 @@ function showNotification(message) {
     }, 3000);
 }
 
+function createConfetti() {
+    return {
+        x: Math.random() * window.innerWidth,
+        y: -150,
+        size: Math.random() * 6 + 4,
+        speed: Math.random() * 3 + 2,
+        color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * 10
+    };
+}
+
+let confetti = [];
+let confettiActive = false;
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+
+function startConfetti() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    confetti = Array(300).fill().map(createConfetti);
+    confettiActive = true;
+    animateConfetti();
+}
+
+function animateConfetti() {
+    if (!confettiActive) return;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    let stillActive = false;
+    confetti.forEach(particle => {
+        particle.y += particle.speed;
+        particle.rotation += particle.rotationSpeed;
+        
+        ctx.save();
+        ctx.translate(particle.x, particle.y);
+        ctx.rotate((particle.rotation * Math.PI) / 180);
+        
+        ctx.fillStyle = particle.color;
+        ctx.fillRect(-particle.size / 2, -particle.size / 2, particle.size, particle.size);
+        
+        ctx.restore();
+        
+        if (particle.y < canvas.height) {
+            stillActive = true;
+        }
+    });
+    
+    if (stillActive) {
+        requestAnimationFrame(animateConfetti);
+    } else {
+        confettiActive = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+}
+
 // --------------------
 // Define Your Photo Lists for Each Difficulty
 // --------------------
@@ -123,7 +180,7 @@ const imageWrapper = document.querySelector('.image-wrapper');
 // --------------------
 // Zoom & Pan Functionality
 // --------------------
-let maxZoom = 8;  // max zoom limit
+let maxZoom = 7.5;
 
 function updateImageTransform() {
     const containerRect = imageWrapper.getBoundingClientRect();
@@ -400,6 +457,12 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     const distance = getDistance(guessLatLng.lat, guessLatLng.lng, actualCoords.lat, actualCoords.lng);
     let score = distance <= perfectRange ? 5000 : Math.round(5500 * Math.exp(-3 * (distance / 800)));
     score = distance > 1000 ? 0 : score;
+    
+    // Add this right after calculating the score
+    if (score === 5000) {
+        startConfetti();
+    }
+    
     totalScore += score;
     roundScores.push(score);
     
@@ -413,7 +476,7 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
         .openPopup();
 
     line = L.polyline([[guessLatLng.lat, guessLatLng.lng], [actualCoords.lat, actualCoords.lng]], {
-        color: 'black',
+        color: getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim(),
         dashArray: '5, 5'
     }).addTo(map);
 
@@ -485,6 +548,9 @@ function showResults() {
     
     document.getElementById("results-popup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
+    
+    // Add this line to show the attribution
+    document.querySelector('.leaflet-control-attribution').classList.add('show');
 }
 
 function closePopup() {
@@ -544,3 +610,11 @@ function formatDate(date) {
 
 // Set the current date in the header
 document.getElementById('current-date').textContent = formatDate(new Date());
+
+// Add window resize handler
+window.addEventListener('resize', () => {
+    if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+});
