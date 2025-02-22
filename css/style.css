@@ -17,25 +17,17 @@
     --text-color: #e0e0e0;
     --border-color: #404040;
     --popup-bg: #2d2d2d;
-    --marker-label-bg: #1a1a1a; 
-    --marker-label-text: #e0e0e0; 
 
     & .leaflet-layer,
     & .leaflet-control-zoom-in,
     & .leaflet-control-zoom-out,
     & .leaflet-control-attribution {
-        /*For inverting map color: --filter: invert(100%) hue-rotate(290deg) brightness(95%) contrast(90%); */
         filter: brightness(80%); 
         transition: filter var(--transition-duration);
     }
 
     & .leaflet-container {
         background: #000;
-    }
-
-    & .leaflet-marker-icon {
-        background-color: var(--marker-label-bg);
-        color: var(--marker-label-text);
     }
 
     & .leaflet-popup-content-wrapper {
