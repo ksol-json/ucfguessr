@@ -489,6 +489,24 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
         document.getElementById("next-round").textContent = "Next Round";
     }
     document.getElementById("next-round").style.display = "inline-block";
+
+    // Check if the result element is fully visible
+    const resultElement = document.getElementById("result");
+    const rect = resultElement.getBoundingClientRect();
+    const isFullyVisible = (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= window.innerHeight &&
+        rect.right <= window.innerWidth
+    );
+
+    // Only scroll if the element isn't fully visible
+    if (!isFullyVisible) {
+        resultElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
 });
 
 document.getElementById("next-round").addEventListener("click", function() {
@@ -497,6 +515,24 @@ document.getElementById("next-round").addEventListener("click", function() {
     } else {
         currentRound++;
         loadRound();
+        
+        // Check if the image wrapper is fully visible
+        const imageWrapper = document.querySelector('.image-wrapper');
+        const rect = imageWrapper.getBoundingClientRect();
+        const isFullyVisible = (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= window.innerHeight &&
+            rect.right <= window.innerWidth
+        );
+
+        // Only scroll if the element isn't fully visible
+        if (!isFullyVisible) {
+            imageWrapper.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
     }
 });
 
