@@ -1,5 +1,5 @@
 // --------------------
-// Define Your Photo Lists for Each Difficulty
+// Photo Lists
 // --------------------
 const easyPhotos = [
     "images/easy/IMG_7534.jpeg",
@@ -467,7 +467,7 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
         .openPopup();
 
     line = L.polyline([[guessLatLng.lat, guessLatLng.lng], [actualCoords.lat, actualCoords.lng]], {
-        color: getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim(),
+        color: 'var(--primary-color)', 
         dashArray: '5, 5'
     }).addTo(map);
 
