@@ -2,27 +2,27 @@
 // Photo Lists
 // --------------------
 const easyPhotos = [
-    "images/easy/IMG_7534.jpeg",
-    "images/easy/IMG_7322.jpeg",
-    "images/easy/IMG_2747.jpeg",
-    "images/easy/IMG_0671.jpeg",
-    "images/easy/IMG_1117.jpeg"
+    "images/easy/IMG_7534.jpeg", // 1
+    "images/easy/IMG_7322.jpeg", // 2
+    "images/easy/IMG_2747.jpeg", // 3
+    "images/easy/IMG_0671.jpeg", // 4
+    "images/easy/IMG_1117.jpeg" // 5
 ];
 
 const mediumPhotos = [
-    "images/medium/IMG_4257.jpeg",
-    "images/medium/IMG_7859.jpeg",
-    "images/medium/IMG_9438.jpeg",
-    "images/medium/IMG_3440.jpeg", 
-    "images/medium/IMG_1555.jpeg"
+    "images/medium/IMG_4257.jpeg", // 1
+    "images/medium/IMG_7859.jpeg", // 2
+    "images/medium/IMG_9438.jpeg", // 3
+    "images/medium/IMG_3440.jpeg", // 4
+    "images/medium/IMG_1555.jpeg" // 5
 ];
 
 const hardPhotos = [
-    "images/hard/IMG_0425.jpeg",
-    "images/hard/IMG_1770.jpeg", 
-    "images/hard/IMG_9488.jpeg", 
-    "images/hard/IMG_0128.jpeg", 
-    "images/hard/IMG_5283.jpeg"
+    "images/hard/IMG_0425.jpeg", // 1
+    "images/hard/IMG_1770.jpeg", // 2
+    "images/hard/IMG_9488.jpeg", // 3
+    "images/hard/IMG_5283.jpeg", // 4
+    "images/hard/IMG_0128.jpeg" // 5
 ];
 
 const isMobile = window.innerWidth <= 768;
@@ -138,7 +138,7 @@ document.addEventListener('keydown', function(event) {
 // --------------------
 // Compute Daily Indices Based on Days Since Start
 // --------------------
-const epoch = new Date("February 22, 2025 00:00:00");  // Starting date (Day 0)
+const epoch = new Date("February 22, 2025 00:00:00");  // Starting date (Feb 22)
 const now = new Date();
 const daysSinceEpoch = Math.floor((now - epoch) / (1000 * 60 * 60 * 24));
 
