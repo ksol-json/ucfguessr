@@ -495,6 +495,9 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     }
     document.getElementById("next-round").style.display = "inline-block";
 
+    // Save progress immediately after submitting guess
+    saveGameProgress();
+
     // Check if the result element is fully visible
     const resultElement = document.getElementById("result");
     const rect = resultElement.getBoundingClientRect();
@@ -512,8 +515,6 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
             block: "center"
         });
     }
-
-    saveGameProgress();
 });
 
 document.getElementById("next-round").addEventListener("click", function() {
@@ -541,8 +542,6 @@ document.getElementById("next-round").addEventListener("click", function() {
             });
         }
     }
-
-    saveGameProgress();
 });
 
 // --------------------
@@ -657,14 +656,14 @@ window.addEventListener('resize', () => {
 // --------------------
 function saveGameProgress() {
     const progress = {
-        currentRound: currentRound,
+        currentRound: currentRound + (guessSubmitted ? 1 : 0), // Increment round if guess was submitted
         totalScore: totalScore,
         roundScores: roundScores,
         day: daysSinceEpoch,
-        guessSubmitted: guessSubmitted,
-        lastGuess: userMarker ? userMarker.getLatLng() : null,
-        lastActual: actualMarker ? actualMarker.getLatLng() : null,
-        gameCompleted: currentRound === rounds.length - 1 && guessSubmitted // Add this flag
+        guessSubmitted: false, // Reset for next round
+        lastGuess: null, // Reset for next round
+        lastActual: null, // Reset for next round
+        gameCompleted: currentRound === rounds.length - 1 && guessSubmitted
     };
     localStorage.setItem('gameProgress', JSON.stringify(progress));
 }
@@ -681,75 +680,24 @@ function loadGameProgress() {
         return false;
     }
 
-    currentRound = progress.currentRound;
-    totalScore = progress.totalScore;
-    roundScores = progress.roundScores;
-    guessSubmitted = progress.guessSubmitted;
-
-    // If game was completed, show results directly
-    if (progress.gameCompleted) {
+    if (progress.currentRound >= rounds.length) {
+        // Game is completed, show final round and results
+        currentRound = rounds.length - 1;
+        totalScore = progress.totalScore;
+        roundScores = progress.roundScores;
         loadRound(true);
-        // Restore final round state
-        if (progress.lastGuess && progress.lastActual) {
-            restoreRoundState(progress);
-        }
         showResults();
         return true;
     }
 
-    // Load the correct image for the current round
+    // Set up the next round
+    currentRound = progress.currentRound;
+    totalScore = progress.totalScore;
+    roundScores = progress.roundScores;
+    guessSubmitted = progress.guessSubmitted;
     loadRound(true);
 
-    // Restore markers if round was completed
-    if (guessSubmitted && progress.lastGuess && progress.lastActual) {
-        restoreRoundState(progress);
-    }
-
     return true;
-}
-
-// Helper function to restore round state
-function restoreRoundState(progress) {
-    userMarker = L.marker([progress.lastGuess.lat, progress.lastGuess.lng]).addTo(map);
-    userMarker.dragging.disable();
-    userMarker.bindPopup("Your Guess", {
-        permanent: true,
-        offset: [0, -5],
-        closeButton: false
-    }).openPopup();
-
-    actualMarker = L.marker([progress.lastActual.lat, progress.lastActual.lng]).addTo(map);
-    actualMarker.bindPopup("Correct Location", {
-        permanent: true,
-        offset: [0, -5],
-        closeButton: false
-    }).openPopup();
-
-    line = L.polyline([
-        [progress.lastGuess.lat, progress.lastGuess.lng],
-        [progress.lastActual.lat, progress.lastActual.lng]
-    ], {
-        color: 'var(--primary-color)',
-        dashArray: '5, 5'
-    }).addTo(map);
-
-    const distance = getDistance(
-        progress.lastGuess.lat,
-        progress.lastGuess.lng,
-        progress.lastActual.lat,
-        progress.lastActual.lng
-    );
-
-    document.getElementById("result").innerHTML = 
-        `<p>Your guess is <strong>${Math.round(distance)} meters</strong> away${distance <= 50 ? '!' : '.'}<br>Score: <strong>${roundScores[currentRound]}</strong></p>`;
-    document.getElementById("submit-guess").style.display = "none";
-    
-    if (currentRound === rounds.length - 1) {
-        document.getElementById("next-round").textContent = "See Results";
-    } else {
-        document.getElementById("next-round").textContent = "Next Round";
-    }
-    document.getElementById("next-round").style.display = "inline-block";
 }
 
 // Modify the loadRound function to update UI based on current round
