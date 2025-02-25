@@ -445,6 +445,10 @@ h1 {
     color: #FFCC00;
 }
 
+.perfect-score {
+    color: #FFCC00;
+}
+
 /* Mobile Responsive Design */
 @media screen and (max-width: 768px) {
     .game-content {

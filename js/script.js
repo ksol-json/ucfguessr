@@ -611,7 +611,7 @@ document.getElementById("next-round").addEventListener("click", function() {
 // Results Popup Functions
 // --------------------
 function showResults() {
-    document.getElementById("total-score").innerHTML = `Your total score: <strong>${totalScore}</strong> / 15000`;
+    document.getElementById("total-score").innerHTML = `Your total score: <strong class="${totalScore === 15000 ? 'perfect-score' : ''}">${totalScore}</strong> / 15000`;
     
     // Progress bar
     const existingProgress = document.querySelector('.score-progress');
