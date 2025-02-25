@@ -6,7 +6,23 @@ const easyPhotos = [
     "images/easy/IMG_7322.jpeg", // 2
     "images/easy/IMG_2747.jpeg", // 3
     "images/easy/IMG_0671.jpeg", // 4
-    "images/easy/IMG_1117.jpeg" // 5
+    "images/easy/IMG_1117.jpeg", // 5
+    "images/easy/IMG_5544.jpeg", // 6
+    "images/easy/IMG_2291.jpeg", // 7
+    "images/easy/IMG_5556.jpeg", // 8
+    "images/easy/IMG_5545.jpeg", // 9
+    "images/easy/IMG_5567.jpeg", // 10
+    "images/easy/IMG_2102.jpeg", // 11
+    "images/easy/IMG_2439.jpeg", // 12
+    "images/easy/IMG_5548.jpeg", // 13
+    "images/easy/IMG_5549.jpeg", // 14
+    "images/easy/IMG_5551.jpeg", // 15
+    "images/easy/IMG_5561.jpeg", // 16
+    "images/easy/IMG_5562.jpeg", // 17
+    "images/easy/IMG_5572.jpeg", // 18
+    "images/easy/IMG_5576.jpeg", // 19
+    "images/easy/IMG_5583.jpeg", // 20
+    "images/easy/IMG_5579.jpeg" // 21
 ];
 
 const mediumPhotos = [
@@ -14,7 +30,23 @@ const mediumPhotos = [
     "images/medium/IMG_7859.jpeg", // 2
     "images/medium/IMG_9438.jpeg", // 3
     "images/medium/IMG_3440.jpeg", // 4
-    "images/medium/IMG_1555.jpeg" // 5
+    "images/medium/IMG_1555.jpeg", // 5
+    "images/medium/IMG_4170.jpeg", // 6
+    "images/medium/IMG_5582.jpeg", // 7
+    "images/medium/IMG_5570.jpeg", // 8
+    "images/medium/IMG_5577.jpeg", // 9
+    "images/medium/IMG_5565.jpeg", // 10
+    "images/medium/IMG_5555.jpeg", // 11
+    "images/medium/IMG_5578.jpeg", // 12
+    "images/medium/IMG_5553.jpeg", // 13
+    "images/medium/IMG_5540.jpeg", // 14
+    "images/medium/IMG_5569.jpeg", // 15
+    "images/medium/IMG_5558.jpeg", // 16
+    "images/medium/IMG_5547.jpeg", // 17
+    "images/medium/IMG_5550.jpeg", // 18
+    "images/medium/IMG_5568.jpeg", // 19
+    "images/medium/IMG_5554.jpeg", // 20
+    "images/medium/IMG_5552.jpeg" // 21
 ];
 
 const hardPhotos = [
@@ -22,7 +54,16 @@ const hardPhotos = [
     "images/hard/IMG_1770.jpeg", // 2
     "images/hard/IMG_9488.jpeg", // 3
     "images/hard/IMG_5283.jpeg", // 4
-    "images/hard/IMG_0128.jpeg" // 5
+    "images/hard/IMG_0128.jpeg", // 5
+    "images/hard/IMG_5451.jpeg", // 6
+    "images/hard/IMG_4822.jpeg", // 7
+    "images/hard/IMG_5560.jpeg", // 8
+    "images/hard/IMG_0139.jpeg", // 9
+    "images/hard/IMG_5563.jpeg", // 10
+    "images/hard/IMG_5580.jpeg", // 11
+    "images/hard/IMG_5575.jpeg", // 12
+    "images/hard/IMG_0823.jpeg", // 13
+    "images/hard/IMG_0369.jpeg" // 14
 ];
 
 const isMobile = window.innerWidth <= 768;
