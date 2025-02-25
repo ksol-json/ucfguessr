@@ -676,8 +676,3 @@ window.addEventListener('resize', () => {
         canvas.height = window.innerHeight;
     }
 });
-
-// Initialize the game with saved progress or start new game
-window.addEventListener('load', function() {
-    loadRound();
-});
