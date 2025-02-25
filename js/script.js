@@ -342,12 +342,12 @@ function convertDMSToDD(dms, ref) {
 // --------------------
 let activeImageIndex = 1;
 
-function loadImage(imageUrl) {
+function loadImage(imageUrl, skipExifCheck = false) {
     const currentImage = document.getElementById(`challenge-image-${activeImageIndex}`);
     const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
     
-    if (isFirstLoad) {
-        // On first load, show the image immediately
+    if (isFirstLoad || skipExifCheck) {
+        // On first load or when restoring progress, show the image immediately
         currentImage.src = imageUrl;
         currentImage.classList.add('visible');
         currentImage.classList.remove('hidden');
@@ -373,10 +373,15 @@ document.querySelectorAll('.challenge-image').forEach(img => {
     });
 });
 
-function loadRound() {
+function loadRound(skipExifCheck = false) {
     const round = rounds[currentRound];
-    const challengeImage = document.getElementById("challenge-image");
     
+    if (skipExifCheck) {
+        // When restoring progress, load image directly
+        loadImage(round.src, true);
+        return;
+    }
+
     // Create a temporary image to force a fresh load and EXIF extraction
     const tempImg = new Image();
     tempImg.crossOrigin = "Anonymous"; 
@@ -507,6 +512,8 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
             block: "center"
         });
     }
+
+    saveGameProgress();
 });
 
 document.getElementById("next-round").addEventListener("click", function() {
@@ -534,6 +541,8 @@ document.getElementById("next-round").addEventListener("click", function() {
             });
         }
     }
+
+    saveGameProgress();
 });
 
 // --------------------
@@ -541,6 +550,9 @@ document.getElementById("next-round").addEventListener("click", function() {
 // --------------------
 function showResults() {
     document.getElementById("total-score").innerHTML = `Your total score: <strong>${totalScore}</strong> / 15000`;
+    
+    // Save final progress
+    saveGameProgress();
     
     // Progress bar
     const existingProgress = document.querySelector('.score-progress');
@@ -637,5 +649,174 @@ window.addEventListener('resize', () => {
     if (canvas) {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+    }
+});
+
+// --------------------
+// Progress Persistence
+// --------------------
+function saveGameProgress() {
+    const progress = {
+        currentRound: currentRound,
+        totalScore: totalScore,
+        roundScores: roundScores,
+        day: daysSinceEpoch,
+        guessSubmitted: guessSubmitted,
+        lastGuess: userMarker ? userMarker.getLatLng() : null,
+        lastActual: actualMarker ? actualMarker.getLatLng() : null,
+        gameCompleted: currentRound === rounds.length - 1 && guessSubmitted // Add this flag
+    };
+    localStorage.setItem('gameProgress', JSON.stringify(progress));
+}
+
+function loadGameProgress() {
+    const saved = localStorage.getItem('gameProgress');
+    if (!saved) return false;
+    
+    const progress = JSON.parse(saved);
+    
+    // Only restore if it's the same day
+    if (progress.day !== daysSinceEpoch) {
+        localStorage.removeItem('gameProgress');
+        return false;
+    }
+
+    currentRound = progress.currentRound;
+    totalScore = progress.totalScore;
+    roundScores = progress.roundScores;
+    guessSubmitted = progress.guessSubmitted;
+
+    // If game was completed, show results directly
+    if (progress.gameCompleted) {
+        loadRound(true);
+        // Restore final round state
+        if (progress.lastGuess && progress.lastActual) {
+            restoreRoundState(progress);
+        }
+        showResults();
+        return true;
+    }
+
+    // Load the correct image for the current round
+    loadRound(true);
+
+    // Restore markers if round was completed
+    if (guessSubmitted && progress.lastGuess && progress.lastActual) {
+        restoreRoundState(progress);
+    }
+
+    return true;
+}
+
+// Helper function to restore round state
+function restoreRoundState(progress) {
+    userMarker = L.marker([progress.lastGuess.lat, progress.lastGuess.lng]).addTo(map);
+    userMarker.dragging.disable();
+    userMarker.bindPopup("Your Guess", {
+        permanent: true,
+        offset: [0, -5],
+        closeButton: false
+    }).openPopup();
+
+    actualMarker = L.marker([progress.lastActual.lat, progress.lastActual.lng]).addTo(map);
+    actualMarker.bindPopup("Correct Location", {
+        permanent: true,
+        offset: [0, -5],
+        closeButton: false
+    }).openPopup();
+
+    line = L.polyline([
+        [progress.lastGuess.lat, progress.lastGuess.lng],
+        [progress.lastActual.lat, progress.lastActual.lng]
+    ], {
+        color: 'var(--primary-color)',
+        dashArray: '5, 5'
+    }).addTo(map);
+
+    const distance = getDistance(
+        progress.lastGuess.lat,
+        progress.lastGuess.lng,
+        progress.lastActual.lat,
+        progress.lastActual.lng
+    );
+
+    document.getElementById("result").innerHTML = 
+        `<p>Your guess is <strong>${Math.round(distance)} meters</strong> away${distance <= 50 ? '!' : '.'}<br>Score: <strong>${roundScores[currentRound]}</strong></p>`;
+    document.getElementById("submit-guess").style.display = "none";
+    
+    if (currentRound === rounds.length - 1) {
+        document.getElementById("next-round").textContent = "See Results";
+    } else {
+        document.getElementById("next-round").textContent = "Next Round";
+    }
+    document.getElementById("next-round").style.display = "inline-block";
+}
+
+// Modify the loadRound function to update UI based on current round
+function loadRound() {
+    const round = rounds[currentRound];
+    const challengeImage = document.getElementById("challenge-image");
+    
+    // Create a temporary image to force a fresh load and EXIF extraction
+    const tempImg = new Image();
+    tempImg.crossOrigin = "Anonymous"; 
+    const urlWithTimestamp = round.src + "?t=" + new Date().getTime();
+    tempImg.src = urlWithTimestamp;
+    
+    // Extract EXIF data
+    tempImg.onload = function() {
+        EXIF.getData(tempImg, function() {
+            const lat = EXIF.getTag(tempImg, "GPSLatitude");
+            const latRef = EXIF.getTag(tempImg, "GPSLatitudeRef") || "N";
+            const lon = EXIF.getTag(tempImg, "GPSLongitude");
+            const lonRef = EXIF.getTag(tempImg, "GPSLongitudeRef") || "W";
+            if (lat && lon) {
+                const latitude = convertDMSToDD(lat, latRef);
+                const longitude = convertDMSToDD(lon, lonRef);
+                actualCoords = { lat: latitude, lng: longitude };
+                console.log("Extracted Coordinates for round " + (currentRound + 1) + ":", actualCoords);
+            } else {
+                console.error("No GPS data found in image: " + round.src);
+            }
+        });
+        loadImage(urlWithTimestamp);
+    };
+
+    // Reset game state for new round
+    currentZoom = 1;
+    translateX = 0;
+    translateY = 0;
+    updateImageTransform();
+    
+    map.setView([28.602053, -81.200421], 15);
+    if (userMarker) map.removeLayer(userMarker);
+    if (actualMarker) map.removeLayer(actualMarker);
+    if (line) map.removeLayer(line);
+    userMarker = null;
+    actualMarker = null;
+    line = null;
+
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("next-round").style.display = "none";
+    document.getElementById("submit-guess").style.display = "inline-block";
+    document.getElementById("submit-guess").disabled = true;
+    guessSubmitted = false;
+
+    // Bold round indicators without strikethrough
+    for (let i = 0; i < 3; i++) {
+        const roundText = document.getElementById(`round${i+1}-text`);
+        if (i === currentRound) {
+            roundText.style.fontWeight = "bold";
+        } else {
+            roundText.style.fontWeight = "normal";
+        }
+        roundText.style.textDecoration = "none";  // Ensure no strikethrough
+    }
+}
+
+// Initialize the game with saved progress or start new game
+window.addEventListener('load', function() {
+    if (!loadGameProgress()) {
+        loadRound();
     }
 });
