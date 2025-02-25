@@ -296,8 +296,10 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 let userMarker = null;
+
+// Modify map click handler to prevent new guesses after game completion
 map.on('click', function(e) {
-    if (guessSubmitted) return;
+    if (guessSubmitted || currentRound === rounds.length - 1 && isGameCompleted()) return;
     if (userMarker) {
         userMarker.setLatLng(e.latlng);
     } else {
@@ -311,6 +313,11 @@ map.on('click', function(e) {
     }).openPopup();
     document.getElementById("submit-guess").disabled = false;
 });
+
+// Add helper function to check if game is completed
+function isGameCompleted() {
+    return currentRound === rounds.length - 1 && guessSubmitted;
+}
 
 function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; // Earth's radius in km
@@ -373,41 +380,40 @@ document.querySelectorAll('.challenge-image').forEach(img => {
     });
 });
 
-function loadRound(skipExifCheck = false) {
+function loadRound(skipExifCheck = false, completed = false) {
     const round = rounds[currentRound];
     
-    if (skipExifCheck) {
-        // When restoring progress, load image directly
+    if (!skipExifCheck) {
+        // Create a temporary image to force a fresh load and EXIF extraction
+        const tempImg = new Image();
+        tempImg.crossOrigin = "Anonymous"; 
+        const urlWithTimestamp = round.src + "?t=" + new Date().getTime();
+        tempImg.src = urlWithTimestamp;
+        
+        // Extract EXIF data
+        tempImg.onload = function() {
+            EXIF.getData(tempImg, function() {
+                const lat = EXIF.getTag(tempImg, "GPSLatitude");
+                const latRef = EXIF.getTag(tempImg, "GPSLatitudeRef") || "N";
+                const lon = EXIF.getTag(tempImg, "GPSLongitude");
+                const lonRef = EXIF.getTag(tempImg, "GPSLongitudeRef") || "W";
+                if (lat && lon) {
+                    const latitude = convertDMSToDD(lat, latRef);
+                    const longitude = convertDMSToDD(lon, lonRef);
+                    actualCoords = { lat: latitude, lng: longitude };
+                    console.log("Extracted Coordinates for round " + (currentRound + 1) + ":", actualCoords);
+                } else {
+                    console.error("No GPS data found in image: " + round.src);
+                }
+            });
+            loadImage(urlWithTimestamp);
+        };
+    } else {
+        // Skip EXIF extraction and just load the image directly.
         loadImage(round.src, true);
-        return;
     }
-
-    // Create a temporary image to force a fresh load and EXIF extraction
-    const tempImg = new Image();
-    tempImg.crossOrigin = "Anonymous"; 
-    const urlWithTimestamp = round.src + "?t=" + new Date().getTime();
-    tempImg.src = urlWithTimestamp;
     
-    // Extract EXIF data
-    tempImg.onload = function() {
-        EXIF.getData(tempImg, function() {
-            const lat = EXIF.getTag(tempImg, "GPSLatitude");
-            const latRef = EXIF.getTag(tempImg, "GPSLatitudeRef") || "N";
-            const lon = EXIF.getTag(tempImg, "GPSLongitude");
-            const lonRef = EXIF.getTag(tempImg, "GPSLongitudeRef") || "W";
-            if (lat && lon) {
-                const latitude = convertDMSToDD(lat, latRef);
-                const longitude = convertDMSToDD(lon, lonRef);
-                actualCoords = { lat: latitude, lng: longitude };
-                console.log("Extracted Coordinates for round " + (currentRound + 1) + ":", actualCoords);
-            } else {
-                console.error("No GPS data found in image: " + round.src);
-            }
-        });
-        loadImage(urlWithTimestamp);
-    };
-
-    // Reset game state for new round
+    // Reset game state for new round (this code always runs)
     currentZoom = 1;
     translateX = 0;
     translateY = 0;
@@ -422,10 +428,20 @@ function loadRound(skipExifCheck = false) {
     line = null;
 
     document.getElementById("result").innerHTML = "";
-    document.getElementById("next-round").style.display = "none";
-    document.getElementById("submit-guess").style.display = "inline-block";
-    document.getElementById("submit-guess").disabled = true;
-    guessSubmitted = false;
+    
+    // If the game is completed, set up final round UI.
+    if (completed) {
+        document.getElementById("submit-guess").style.display = "none";
+        const nextButton = document.getElementById("next-round");
+        nextButton.textContent = "See Results";
+        nextButton.style.display = "inline-block";
+        guessSubmitted = true;
+    } else {
+        document.getElementById("next-round").style.display = "none";
+        document.getElementById("submit-guess").style.display = "inline-block";
+        document.getElementById("submit-guess").disabled = true;
+        guessSubmitted = false;
+    }
 
     // Bold round indicators
     document.getElementById("round1-text").style.fontWeight = currentRound === 0 ? "bold" : "normal";
@@ -515,6 +531,15 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
             block: "center"
         });
     }
+
+    // Add GA4 event tracking for game completion on round 3
+    if (currentRound === rounds.length - 1) {
+        gtag('event', 'game_complete', {
+            'event_category': 'gameplay',
+            'event_label': `Day ${daysSinceEpoch + 1}`,
+            'value': totalScore
+        });
+    }
 });
 
 document.getElementById("next-round").addEventListener("click", function() {
@@ -601,6 +626,13 @@ function copyResults() {
     const shareText = `UCFGuessr ${gameDay} ${totalScore}/15000\n\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.xyz`;
     
     navigator.clipboard.writeText(shareText).then(() => {
+        // Track share event with GA4
+        gtag('event', 'share_results', {
+            'event_category': 'engagement',
+            'event_label': `Day ${daysSinceEpoch + 1}`,
+            'value': totalScore
+        });
+
         const copiedMessage = document.getElementById("copied-message");
         copiedMessage.style.visibility = "visible";
         copiedMessage.style.opacity = "1";
@@ -656,18 +688,20 @@ window.addEventListener('resize', () => {
 // --------------------
 function saveGameProgress() {
     const progress = {
-        currentRound: currentRound + (guessSubmitted ? 1 : 0), // Increment round if guess was submitted
+        currentRound: currentRound + (guessSubmitted ? 1 : 0),
         totalScore: totalScore,
         roundScores: roundScores,
         day: daysSinceEpoch,
-        guessSubmitted: false, // Reset for next round
-        lastGuess: null, // Reset for next round
-        lastActual: null, // Reset for next round
+        // Preserve the guessSubmitted flag so that if round 3 is finished it remains true
+        guessSubmitted: guessSubmitted,
+        lastGuess: null,
+        lastActual: null,
         gameCompleted: currentRound === rounds.length - 1 && guessSubmitted
     };
     localStorage.setItem('gameProgress', JSON.stringify(progress));
 }
 
+// Update loadGameProgress to auto-load the results popup after round 3 is finished
 function loadGameProgress() {
     const saved = localStorage.getItem('gameProgress');
     if (!saved) return false;
@@ -680,17 +714,20 @@ function loadGameProgress() {
         return false;
     }
 
-    if (progress.currentRound >= rounds.length) {
-        // Game is completed, show final round and results
+    if (progress.gameCompleted) {
+        // Game is completed, restore completed game state
         currentRound = rounds.length - 1;
         totalScore = progress.totalScore;
         roundScores = progress.roundScores;
-        loadRound(true);
+        guessSubmitted = true;
+        // Load the final round in "completed" mode...
+        loadRound(true, true);
+        // ...and automatically show the results popup
         showResults();
         return true;
     }
 
-    // Set up the next round
+    // Set up the next round for an in-progress game
     currentRound = progress.currentRound;
     totalScore = progress.totalScore;
     roundScores = progress.roundScores;
@@ -698,68 +735,6 @@ function loadGameProgress() {
     loadRound(true);
 
     return true;
-}
-
-// Modify the loadRound function to update UI based on current round
-function loadRound() {
-    const round = rounds[currentRound];
-    const challengeImage = document.getElementById("challenge-image");
-    
-    // Create a temporary image to force a fresh load and EXIF extraction
-    const tempImg = new Image();
-    tempImg.crossOrigin = "Anonymous"; 
-    const urlWithTimestamp = round.src + "?t=" + new Date().getTime();
-    tempImg.src = urlWithTimestamp;
-    
-    // Extract EXIF data
-    tempImg.onload = function() {
-        EXIF.getData(tempImg, function() {
-            const lat = EXIF.getTag(tempImg, "GPSLatitude");
-            const latRef = EXIF.getTag(tempImg, "GPSLatitudeRef") || "N";
-            const lon = EXIF.getTag(tempImg, "GPSLongitude");
-            const lonRef = EXIF.getTag(tempImg, "GPSLongitudeRef") || "W";
-            if (lat && lon) {
-                const latitude = convertDMSToDD(lat, latRef);
-                const longitude = convertDMSToDD(lon, lonRef);
-                actualCoords = { lat: latitude, lng: longitude };
-                console.log("Extracted Coordinates for round " + (currentRound + 1) + ":", actualCoords);
-            } else {
-                console.error("No GPS data found in image: " + round.src);
-            }
-        });
-        loadImage(urlWithTimestamp);
-    };
-
-    // Reset game state for new round
-    currentZoom = 1;
-    translateX = 0;
-    translateY = 0;
-    updateImageTransform();
-    
-    map.setView([28.602053, -81.200421], 15);
-    if (userMarker) map.removeLayer(userMarker);
-    if (actualMarker) map.removeLayer(actualMarker);
-    if (line) map.removeLayer(line);
-    userMarker = null;
-    actualMarker = null;
-    line = null;
-
-    document.getElementById("result").innerHTML = "";
-    document.getElementById("next-round").style.display = "none";
-    document.getElementById("submit-guess").style.display = "inline-block";
-    document.getElementById("submit-guess").disabled = true;
-    guessSubmitted = false;
-
-    // Bold round indicators without strikethrough
-    for (let i = 0; i < 3; i++) {
-        const roundText = document.getElementById(`round${i+1}-text`);
-        if (i === currentRound) {
-            roundText.style.fontWeight = "bold";
-        } else {
-            roundText.style.fontWeight = "normal";
-        }
-        roundText.style.textDecoration = "none";  // Ensure no strikethrough
-    }
 }
 
 // Initialize the game with saved progress or start new game
