@@ -10,8 +10,8 @@ const easyPhotos = [
     "images/easy/IMG_5544.jpeg", // 6
     "images/easy/IMG_2291.jpeg", // 7
     "images/easy/IMG_5556.jpeg", // 8
-    "images/easy/IMG_5545.jpeg", // 9
-    "images/easy/IMG_5567.jpeg", // 10
+    "images/easy/IMG_5567.jpeg", // 9
+    "images/easy/IMG_5545.jpeg", // 10
     "images/easy/IMG_2102.jpeg", // 11
     "images/easy/IMG_2439.jpeg", // 12
     "images/easy/IMG_5548.jpeg", // 13
@@ -35,9 +35,9 @@ const mediumPhotos = [
     "images/medium/IMG_5582.jpeg", // 7
     "images/medium/IMG_5570.jpeg", // 8
     "images/medium/IMG_5577.jpeg", // 9
-    "images/medium/IMG_5565.jpeg", // 10
-    "images/medium/IMG_5555.jpeg", // 11
-    "images/medium/IMG_5578.jpeg", // 12
+    "images/medium/IMG_5555.jpeg", // 10
+    "images/medium/IMG_5578.jpeg", // 11
+    "images/medium/IMG_5565.jpeg", // 12
     "images/medium/IMG_5553.jpeg", // 13
     "images/medium/IMG_5540.jpeg", // 14
     "images/medium/IMG_5569.jpeg", // 15
