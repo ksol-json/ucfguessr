@@ -511,9 +511,6 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     }
     document.getElementById("next-round").style.display = "inline-block";
 
-    // Save progress immediately after submitting guess
-    saveGameProgress();
-
     // Check if the result element is fully visible
     const resultElement = document.getElementById("result");
     const rect = resultElement.getBoundingClientRect();
@@ -574,9 +571,6 @@ document.getElementById("next-round").addEventListener("click", function() {
 // --------------------
 function showResults() {
     document.getElementById("total-score").innerHTML = `Your total score: <strong>${totalScore}</strong> / 15000`;
-    
-    // Save final progress
-    saveGameProgress();
     
     // Progress bar
     const existingProgress = document.querySelector('.score-progress');
@@ -683,63 +677,7 @@ window.addEventListener('resize', () => {
     }
 });
 
-// --------------------
-// Progress Persistence
-// --------------------
-function saveGameProgress() {
-    const progress = {
-        currentRound: currentRound + (guessSubmitted ? 1 : 0),
-        totalScore: totalScore,
-        roundScores: roundScores,
-        day: daysSinceEpoch,
-        // Preserve the guessSubmitted flag so that if round 3 is finished it remains true
-        guessSubmitted: guessSubmitted,
-        lastGuess: null,
-        lastActual: null,
-        gameCompleted: currentRound === rounds.length - 1 && guessSubmitted
-    };
-    localStorage.setItem('gameProgress', JSON.stringify(progress));
-}
-
-// Update loadGameProgress to auto-load the results popup after round 3 is finished
-function loadGameProgress() {
-    const saved = localStorage.getItem('gameProgress');
-    if (!saved) return false;
-    
-    const progress = JSON.parse(saved);
-    
-    // Only restore if it's the same day
-    if (progress.day !== daysSinceEpoch) {
-        localStorage.removeItem('gameProgress');
-        return false;
-    }
-
-    if (progress.gameCompleted) {
-        // Game is completed, restore completed game state
-        currentRound = rounds.length - 1;
-        totalScore = progress.totalScore;
-        roundScores = progress.roundScores;
-        guessSubmitted = true;
-        // Load the final round in "completed" mode...
-        loadRound(true, true);
-        // ...and automatically show the results popup
-        showResults();
-        return true;
-    }
-
-    // Set up the next round for an in-progress game
-    currentRound = progress.currentRound;
-    totalScore = progress.totalScore;
-    roundScores = progress.roundScores;
-    guessSubmitted = progress.guessSubmitted;
-    loadRound(true);
-
-    return true;
-}
-
 // Initialize the game with saved progress or start new game
 window.addEventListener('load', function() {
-    if (!loadGameProgress()) {
-        loadRound();
-    }
+    loadRound();
 });
