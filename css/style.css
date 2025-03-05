@@ -275,6 +275,15 @@ h1 {
     z-index: 2000;
 }
 
+#results-popup a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+#results-popup a:hover {
+    text-decoration: underline;
+}
+
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -333,7 +342,7 @@ h1 {
     padding: 30px;
     border-radius: 16px;
     box-shadow: var(--card-shadow);
-    width: 50%;
+    width: 70%;
     max-width: 600px;
     text-align: center;
     display: none;
@@ -520,7 +529,8 @@ h1 {
     }
 
     .theme-button,
-    .help-button {
+    .help-button,
+    .archive-button {
         width: 28px;
         height: 28px;
         font-size: 10px;
@@ -530,6 +540,12 @@ h1 {
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .archive-button {
+         width: 28px !important;
+         height: 28px !important;
+         font-size: 10px !important;
     }
 
     .title-group {
@@ -587,6 +603,19 @@ h1 {
     .current-date {
         display: none;
     }
+    
+    #archive-popup {
+        width: 90%;
+        max-width: 320px;
+        padding: 20px;
+    }
+
+    .photo-credit {
+        bottom: 10px;
+        left: 10px;
+        padding: 4px 8px;
+        font-size: 12px;
+    }
 }
 
 .notification-popup {
@@ -633,4 +662,172 @@ h1 {
 
 .leaflet-control-attribution.show {
     display: block !important;
+}
+
+.archive-button {
+    position: relative;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s, background-color var(--transition-duration);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.archive-button:hover {
+    transform: scale(1.1);
+}
+
+#archive-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--popup-bg);
+    color: var(--text-color);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    width: 320px;
+    display: none;
+    z-index: 2000;
+}
+
+#archive-popup h2 {
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.calendar-container {
+    margin-top: 20px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.calendar-header button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.calendar-grid {
+    display: grid;
+    gap: 5px;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.calendar-day {
+    padding: 8px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.calendar-day:hover {
+    background-color: var(--primary-color);
+    color: white;
+    opacity: 0.5;
+}
+
+.calendar-day.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.calendar-day.selected {
+    background-color: var(--primary-color);
+    opacity: 0.5;
+    font-weight: bold;
+    color: white;
+}
+
+.calendar-day.selected:hover {
+    background-color: var(--primary-color);
+    opacity: 1;
+    color: white;
+}
+
+.calendar-day.today {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    opacity: 1;
+}
+
+.calendar-day.today:hover {
+    background-color: var(--primary-color);
+    opacity: 1;
+    color: white;
+}
+
+.calendar-day.today {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.photo-credit {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.photo-credit.visible {
+    opacity: 1;
 }

@@ -13,16 +13,21 @@ const easyPhotos = [
     "images/easy/IMG_5567.jpeg", // 9
     "images/easy/IMG_5545.jpeg", // 10
     "images/easy/IMG_2102.jpeg", // 11
-    "images/easy/IMG_2439.jpeg", // 12
-    "images/easy/IMG_5548.jpeg", // 13
-    "images/easy/IMG_5549.jpeg", // 14
-    "images/easy/IMG_5551.jpeg", // 15
-    "images/easy/IMG_5561.jpeg", // 16
-    "images/easy/IMG_5562.jpeg", // 17
-    "images/easy/IMG_5572.jpeg", // 18
-    "images/easy/IMG_5576.jpeg", // 19
-    "images/easy/IMG_5583.jpeg", // 20
-    "images/easy/IMG_5579.jpeg" // 21
+    "images/easy/590359509979892670--Nick.jpeg", // 12
+    "images/easy/IMG_2439.jpeg", // 13
+    "images/easy/IMG_5548.jpeg", // 14
+    "images/easy/IMG_5549.jpeg", // 15
+    "images/easy/IMG_5551.jpeg", // 16
+    "images/easy/IMG_5561.jpeg", // 17
+    "images/easy/IMG_5562.jpeg", // 18
+    "images/easy/IMG_5572.jpeg", // 19
+    "images/easy/IMG_5576.jpeg", // 20
+    "images/easy/IMG_5583.jpeg", // 21
+    "images/easy/IMG_5579.jpeg", // 22
+    "images/easy/IMG_5709.jpeg", // 23
+    "images/easy/IMG_5722.jpeg", // 24
+    "images/easy/IMG_5714.jpeg", // 25
+    "images/easy/IMG_5736.jpeg" // 26
 ];
 
 const mediumPhotos = [
@@ -37,16 +42,23 @@ const mediumPhotos = [
     "images/medium/IMG_5577.jpeg", // 9
     "images/medium/IMG_5555.jpeg", // 10
     "images/medium/IMG_5578.jpeg", // 11
-    "images/medium/IMG_5565.jpeg", // 12
-    "images/medium/IMG_5553.jpeg", // 13
-    "images/medium/IMG_5540.jpeg", // 14
-    "images/medium/IMG_5569.jpeg", // 15
-    "images/medium/IMG_5558.jpeg", // 16
-    "images/medium/IMG_5547.jpeg", // 17
-    "images/medium/IMG_5550.jpeg", // 18
-    "images/medium/IMG_5568.jpeg", // 19
-    "images/medium/IMG_5554.jpeg", // 20
-    "images/medium/IMG_5552.jpeg" // 21
+    "images/medium/DDD83CD5-5D99-42FA-9C11-B31E9D6A3760--Olive.jpeg", // 12
+    "images/medium/IMG_5565.jpeg", // 13
+    "images/medium/IMG_5553.jpeg", // 14
+    "images/medium/IMG_5540.jpeg", // 15
+    "images/medium/IMG_5569.jpeg", // 16
+    "images/medium/IMG_5558.jpeg", // 17
+    "images/medium/IMG_5732.jpeg", // 18
+    "images/medium/IMG_5547.jpeg", // 19
+    "images/medium/IMG_5550.jpeg", // 20
+    "images/medium/IMG_5568.jpeg", // 21
+    "images/medium/IMG_5554.jpeg", // 22
+    "images/medium/IMG_5720.jpeg", // 23
+    "images/medium/IMG_5552.jpeg", // 24
+    "images/medium/IMG_5727.jpeg", // 25
+    "images/medium/IMG_5724.jpeg", // 26
+    "images/medium/IMG_5725.jpeg", // 27
+    "images/medium/IMG_5728.jpeg" // 28
 ];
 
 const hardPhotos = [
@@ -61,10 +73,19 @@ const hardPhotos = [
     "images/hard/IMG_0139.jpeg", // 9
     "images/hard/IMG_5563.jpeg", // 10
     "images/hard/IMG_5580.jpeg", // 11
-    "images/hard/IMG_5575.jpeg", // 12
-    "images/hard/IMG_0823.jpeg", // 13
-    "images/hard/IMG_0369.jpeg" // 14
+    "images/hard/IMG_4440--Josh Padilla.jpeg", // 12
+    "images/hard/IMG_5575.jpeg", // 13
+    "images/hard/IMG_0823.jpeg", // 14
+    "images/hard/IMG_5729.jpeg", // 15
+    "images/hard/IMG_5723.jpeg", // 16
+    "images/hard/IMG_5730.jpeg", // 17
+    "images/hard/IMG_5735.jpeg", // 18
+    "images/hard/IMG_0369.jpeg", // 19
+    "images/hard/IMG_5726.jpeg" // 20
 ];
+
+// Debug: Set to null for normal operation, or set to a number+1 to override the current day
+const debugDay = null;
 
 const isMobile = window.innerWidth <= 768;
 
@@ -160,6 +181,14 @@ const savedTheme = localStorage.getItem('theme') ||
 setTheme(savedTheme);
 
 document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        // Close any open popup
+        closePopup();
+        closeHelp();
+        closeArchive();
+    }
+    
+    // Existing space key handler
     if (event.code === 'Space') {
         event.preventDefault();
         
@@ -181,7 +210,7 @@ document.addEventListener('keydown', function(event) {
 // --------------------
 const epoch = new Date("February 22, 2025 00:00:00");  // Starting date (Feb 22)
 const now = new Date();
-const daysSinceEpoch = Math.floor((now - epoch) / (1000 * 60 * 60 * 24));
+const daysSinceEpoch = debugDay !== null ? debugDay : Math.floor((now - epoch) / (1000 * 60 * 60 * 24));
 
 // Use modulo so that the index cycles through each array
 const dailyEasyIndex = daysSinceEpoch % easyPhotos.length;
@@ -393,25 +422,55 @@ let activeImageIndex = 1;
 function loadImage(imageUrl, skipExifCheck = false) {
     const currentImage = document.getElementById(`challenge-image-${activeImageIndex}`);
     const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
+    const spinner = document.querySelector('.loading-spinner');
+    
+    // Handle photo credit
+    const creditMatch = imageUrl.match(/--(.*?)\.jpeg/);
+    let credit = creditMatch ? creditMatch[1] : null;
+    
+    // Remove old credit if it exists
+    const oldCredit = document.querySelector('.photo-credit');
+    if (oldCredit) {
+        oldCredit.remove();
+    }
+    
+    // Create new credit if we have one
+    if (credit) {
+        const creditDiv = document.createElement('div');
+        creditDiv.className = 'photo-credit';
+        creditDiv.textContent = `Submitted by ${credit}`;
+        document.getElementById('image-container').appendChild(creditDiv);
+        
+        // Show credit after a short delay
+        setTimeout(() => {
+            creditDiv.classList.add('visible');
+        }, 100);
+    }
+    
+    // Show spinner before loading starts
+    spinner.style.display = 'block';
     
     if (isFirstLoad || skipExifCheck) {
-        // On first load or when restoring progress, show the image immediately
+        currentImage.onload = () => {
+            spinner.style.display = 'none';
+            currentImage.classList.add('visible');
+            currentImage.classList.remove('hidden');
+        };
         currentImage.src = imageUrl;
-        currentImage.classList.add('visible');
-        currentImage.classList.remove('hidden');
         isFirstLoad = false;
         return;
     }
     
     // Normal crossfade for subsequent loads
-    nextImage.src = imageUrl;
     nextImage.onload = () => {
+        spinner.style.display = 'none';
         currentImage.classList.remove('visible');
         currentImage.classList.add('hidden');
         nextImage.classList.remove('hidden');
         nextImage.classList.add('visible');
         activeImageIndex = activeImageIndex === 1 ? 2 : 1;
     };
+    nextImage.src = imageUrl;
 }
 
 document.querySelectorAll('.challenge-image').forEach(img => {
@@ -634,9 +693,16 @@ function showResults() {
     
     document.getElementById("round-scores").innerHTML = `Easy: ${roundScores[0]}<br>Medium: ${roundScores[1]}<br>Hard: ${roundScores[2]}`;
     
-    const newText = document.createElement('p');
-    newText.textContent = "Come back tomorrow for a new challenge!";
-    document.getElementById("round-scores").appendChild(newText);
+    const comeBackText = document.createElement('p');
+    comeBackText.textContent = "Come back tomorrow for a new challenge!";
+    const uploadLink = document.createElement('a');
+    uploadLink.href = "https://docs.google.com/forms/d/e/1FAIpQLScUbMUont8pCtntTDSOJbxaVXJ0cao8AK2v-GS068TTyXii5A/viewform?usp=dialog";
+    uploadLink.textContent = "Want your photos featured in the game? Upload them here!";
+    uploadLink.target = "_blank";
+    uploadLink.style.fontWeight = "bold";
+    
+    document.getElementById("round-scores").appendChild(comeBackText);
+    document.getElementById("round-scores").appendChild(uploadLink);
     
     document.getElementById("results-popup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
@@ -657,14 +723,18 @@ function copyResults() {
         return '🟩'.repeat(greenSquares) + '⬛'.repeat(blackSquares);
     }
 
-    const gameDay = daysSinceEpoch + 1;
+    const gameDay = isArchiveMode ? 
+        Math.floor((selectedArchiveDate - epoch) / (1000 * 60 * 60 * 24)) + 1 :
+        daysSinceEpoch + 1;
+    
+    const archivePrefix = isArchiveMode ? '(Archive) ' : '';
     const shareText = `UCFGuessr ${gameDay} ${totalScore}/15000\n\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.xyz`;
     
     navigator.clipboard.writeText(shareText).then(() => {
         // Track share event with GA4
         gtag('event', 'share_results', {
             'event_category': 'engagement',
-            'event_label': `Day ${daysSinceEpoch + 1}`,
+            'event_label': `${archivePrefix}Day ${gameDay}`,
             'value': totalScore
         });
 
@@ -716,4 +786,128 @@ window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
+});
+
+// Add these variables at the top with other global variables
+let isArchiveMode = false;
+let selectedArchiveDate = null;
+let currentCalendarDate = new Date();
+let currentPlayingDate = new Date();
+
+// Add these functions before the loadRound function
+function showArchive() {
+    document.getElementById("archive-popup").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+    updateCalendar();
+}
+
+function closeArchive() {
+    document.getElementById("archive-popup").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
+
+function updateCalendar() {
+    const calendarMonth = document.getElementById("calendar-month");
+    const weekdaysDiv = document.querySelector(".calendar-weekdays");
+    const daysDiv = document.querySelector(".calendar-days");
+    const today = new Date();
+    
+    // Set month and year
+    calendarMonth.textContent = currentCalendarDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+    
+    // Set weekdays
+    if (!weekdaysDiv.children.length) {
+        const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+        weekdays.forEach(day => {
+            const dayDiv = document.createElement('div');
+            dayDiv.textContent = day;
+            weekdaysDiv.appendChild(dayDiv);
+        });
+    }
+    
+    // Clear previous days
+    daysDiv.innerHTML = '';
+    
+    // Calculate days
+    const firstDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 1);
+    const lastDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + 1, 0);
+    
+    // Add empty spaces for starting position
+    for (let i = 0; i < firstDay.getDay(); i++) {
+        const emptyDay = document.createElement('div');
+        daysDiv.appendChild(emptyDay);
+    }
+    
+    // Add days
+    for (let i = 1; i <= lastDay.getDate(); i++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'calendar-day';
+        dayDiv.textContent = i;
+        
+        const dateToCheck = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), i);
+        
+        // Mark today's date
+        if (dateToCheck.toDateString() === today.toDateString()) {
+            dayDiv.classList.add('today');
+        }
+        
+        // Mark currently selected/playing date
+        if (dateToCheck.toDateString() === currentPlayingDate.toDateString()) {
+            dayDiv.classList.add('selected');
+        }
+        
+        if (dateToCheck > new Date() || dateToCheck < epoch) {
+            dayDiv.classList.add('disabled');
+        } else {
+            dayDiv.onclick = () => selectArchiveDate(dateToCheck);
+        }
+        
+        daysDiv.appendChild(dayDiv);
+    }
+}
+
+function prevMonth() {
+    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+    updateCalendar();
+}
+
+function nextMonth() {
+    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+    updateCalendar();
+}
+
+function selectArchiveDate(date) {
+    const daysSinceEpochArchive = Math.floor((date - epoch) / (1000 * 60 * 60 * 24));
+    const today = new Date();
+    
+    // Update current playing date
+    currentPlayingDate = date;
+    
+    // Reset game state
+    currentRound = 0;
+    totalScore = 0;
+    roundScores = [];
+    isArchiveMode = date.toDateString() !== today.toDateString();
+    selectedArchiveDate = date;
+    
+    // Update daily indices for archive date
+    const archiveEasyIndex = daysSinceEpochArchive % easyPhotos.length;
+    const archiveMediumIndex = daysSinceEpochArchive % mediumPhotos.length;
+    const archiveHardIndex = daysSinceEpochArchive % hardPhotos.length;
+    
+    // Update rounds array
+    rounds[0].src = easyPhotos[archiveEasyIndex];
+    rounds[1].src = mediumPhotos[archiveMediumIndex];
+    rounds[2].src = hardPhotos[archiveHardIndex];
+    
+    closeArchive();
+    loadRound();
+    
+    const archiveLabel = date.toDateString() !== today.toDateString() ? ' (Archive)' : '';
+    document.getElementById('current-date').textContent = formatDate(date) + archiveLabel;
+}
+
+// Initialize currentPlayingDate when the game loads
+document.addEventListener('DOMContentLoaded', () => {
+    currentPlayingDate = new Date();
 });

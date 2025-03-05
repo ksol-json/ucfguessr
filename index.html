@@ -30,6 +30,7 @@
         <span class="current-date" id="current-date"></span>
       </div>
       <div class="controls-group">
+        <button class="archive-button" onclick="showArchive()">📅</button>
         <button class="theme-button" onclick="toggleDarkMode()">🌙</button>
         <button class="help-button" onclick="showHelp()">?</button>
       </div>
@@ -44,6 +45,7 @@
         <div class="image-wrapper">
           <img class="challenge-image visible" id="challenge-image-1">
           <img class="challenge-image hidden" id="challenge-image-2">
+          <div class="loading-spinner"></div>
         </div>
         <!-- Added zoom controls -->
         <div class="zoom-controls">
@@ -77,9 +79,27 @@
       <h2>How to Play</h2>
       <p>Guess where each photo was taken at UCF.<br><br>
       Click on the map where you think the photographer was standing. Submit to place your guess.<br><br>
-      There are 3 rounds of increasing difficulty. All photos are located on campus.<br><br>
-      Try to get the highest score possible, and share the game with friends!<br><br>
-      <i>Made by Kian S.</i></p>
+      There are 3 rounds. All photos are located on campus.<br><br>
+      Try to get the highest score possible, and share the game with friends!<br><hr>
+      <i>Made by Kian S.</i><br>
+      <i>Inspired by Geoguessr and Wordle.</i></p>
+    </div>
+
+    <!-- Archive popup -->
+    <div id="archive-popup">
+      <button class="close-x" onclick="closeArchive()">×</button>
+      <h2>Archives</h2>
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button onclick="prevMonth()">&lt;</button>
+          <span id="calendar-month">Month Year</span>
+          <button onclick="nextMonth()">&gt;</button>
+        </div>
+        <div class="calendar-grid">
+          <div class="calendar-weekdays"></div>
+          <div class="calendar-days"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Add canvas before scripts but after other content -->
