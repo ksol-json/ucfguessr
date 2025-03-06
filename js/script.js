@@ -48,8 +48,8 @@ const mediumPhotos = [
     "images/medium/IMG_5540.jpeg", // 15
     "images/medium/IMG_5569.jpeg", // 16
     "images/medium/IMG_5558.jpeg", // 17
-    "images/medium/IMG_5732.jpeg", // 18
-    "images/medium/IMG_5547.jpeg", // 19
+    "images/medium/IMG_5547.jpeg", // 18
+    "images/medium/IMG_5735.jpeg", // 19
     "images/medium/IMG_5550.jpeg", // 20
     "images/medium/IMG_5568.jpeg", // 21
     "images/medium/IMG_5554.jpeg", // 22
@@ -79,13 +79,13 @@ const hardPhotos = [
     "images/hard/IMG_5729.jpeg", // 15
     "images/hard/IMG_5723.jpeg", // 16
     "images/hard/IMG_5730.jpeg", // 17
-    "images/hard/IMG_5735.jpeg", // 18
+    "images/hard/IMG_5732.jpeg", // 18
     "images/hard/IMG_0369.jpeg", // 19
     "images/hard/IMG_5726.jpeg" // 20
 ];
 
-// Debug: Set to null for normal operation, or set to a number+1 to override the current day
-const debugDay = null;
+// Debug: Set to null for normal operation, or set to a number-1 to override the current day
+const debugDay = 19-1;
 
 const isMobile = window.innerWidth <= 768;
 
