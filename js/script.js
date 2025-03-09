@@ -84,9 +84,6 @@ const hardPhotos = [
     "images/hard/IMG_5726.jpeg" // 20
 ];
 
-// Debug: Set to null for normal operation, or set to a number-1 to override the current day
-const debugDay = 19-1;
-
 const isMobile = window.innerWidth <= 768;
 
 function showNotification(message) {
@@ -208,9 +205,16 @@ document.addEventListener('keydown', function(event) {
 // --------------------
 // Compute Daily Indices Based on Days Since Start
 // --------------------
-const epoch = new Date("February 22, 2025 00:00:00");  // Starting date (Feb 22)
-const now = new Date();
-const daysSinceEpoch = debugDay !== null ? debugDay : Math.floor((now - epoch) / (1000 * 60 * 60 * 24));
+const epoch = new Date(Date.UTC(2025, 1, 22)); // February 22, 2025 00:00:00 UTC
+
+function getETDate() {
+    const now = new Date();
+    const etOptions = { timeZone: 'America/New_York' };
+    return new Date(now.toLocaleString('en-US', etOptions));
+}
+
+const etNow = getETDate();
+const daysSinceEpoch = Math.floor((Date.UTC(etNow.getFullYear(), etNow.getMonth(), etNow.getDate()) - epoch.getTime()) / (1000 * 60 * 60 * 24));
 
 // Use modulo so that the index cycles through each array
 const dailyEasyIndex = daysSinceEpoch % easyPhotos.length;
@@ -770,9 +774,10 @@ function formatDate(date) {
         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
     
-    const month = months[date.getMonth()];
-    const day = date.getDate();
-    const year = date.getFullYear();
+    const etDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    const month = months[etDate.getMonth()];  
+    const day = etDate.getDate();
+    const year = etDate.getFullYear();
     
     return `${month} ${day}, ${year}`;
 }
@@ -877,8 +882,10 @@ function nextMonth() {
 }
 
 function selectArchiveDate(date) {
-    const daysSinceEpochArchive = Math.floor((date - epoch) / (1000 * 60 * 60 * 24));
-    const today = new Date();
+    // Convert the selected date to ET midnight
+    const etDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    const daysSinceEpochArchive = Math.floor((Date.UTC(etDate.getFullYear(), etDate.getMonth(), etDate.getDate()) - epoch.getTime()) / (1000 * 60 * 60 * 24));
+    const etNow = getETDate();
     
     // Update current playing date
     currentPlayingDate = date;
@@ -887,7 +894,7 @@ function selectArchiveDate(date) {
     currentRound = 0;
     totalScore = 0;
     roundScores = [];
-    isArchiveMode = date.toDateString() !== today.toDateString();
+    isArchiveMode = date.toDateString() !== etNow.toDateString();
     selectedArchiveDate = date;
     
     // Update daily indices for archive date
@@ -903,7 +910,7 @@ function selectArchiveDate(date) {
     closeArchive();
     loadRound();
     
-    const archiveLabel = date.toDateString() !== today.toDateString() ? ' (Archive)' : '';
+    const archiveLabel = date.toDateString() !== etNow.toDateString() ? ' (Archive)' : '';
     document.getElementById('current-date').textContent = formatDate(date) + archiveLabel;
 }
 
