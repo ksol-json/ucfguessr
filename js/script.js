@@ -13,21 +13,24 @@ const easyPhotos = [
     "images/easy/IMG_5567.jpeg", // 9
     "images/easy/IMG_5545.jpeg", // 10
     "images/easy/IMG_2102.jpeg", // 11
-    "images/easy/590359509979892670--Nick.jpeg", // 12
+    "images/easy/590359509979892670 - Nick.jpeg", // 12
     "images/easy/IMG_2439.jpeg", // 13
     "images/easy/IMG_5548.jpeg", // 14
     "images/easy/IMG_5549.jpeg", // 15
     "images/easy/IMG_5551.jpeg", // 16
     "images/easy/IMG_5561.jpeg", // 17
     "images/easy/IMG_5562.jpeg", // 18
-    "images/easy/IMG_5572.jpeg", // 19
-    "images/easy/IMG_5576.jpeg", // 20
-    "images/easy/IMG_5583.jpeg", // 21
-    "images/easy/IMG_5579.jpeg", // 22
-    "images/easy/IMG_5709.jpeg", // 23
-    "images/easy/IMG_5722.jpeg", // 24
-    "images/easy/IMG_5714.jpeg", // 25
-    "images/easy/IMG_5736.jpeg" // 26
+    "images/easy/fireworks - Zach Morris.jpeg", // 19
+    "images/easy/IMG_5572.jpeg", // 20
+    "images/easy/PXL_20211111_221010397 - Dipsik Arwan.jpeg", // 21
+    "images/easy/IMG_5576.jpeg", // 22
+    "images/easy/statue launch - Zach Morris.jpeg", // 23
+    "images/easy/IMG_5583.jpeg", // 24
+    "images/easy/IMG_5579.jpeg", // 25
+    "images/easy/IMG_5709.jpeg", // 26
+    "images/easy/IMG_5722.jpeg", // 27
+    "images/easy/IMG_5714.jpeg", // 28
+    "images/easy/IMG_5736.jpeg" // 29
 ];
 
 const mediumPhotos = [
@@ -42,23 +45,26 @@ const mediumPhotos = [
     "images/medium/IMG_5577.jpeg", // 9
     "images/medium/IMG_5555.jpeg", // 10
     "images/medium/IMG_5578.jpeg", // 11
-    "images/medium/DDD83CD5-5D99-42FA-9C11-B31E9D6A3760--Olive.jpeg", // 12
+    "images/medium/DDD83CD5-5D99-42FA-9C11-B31E9D6A3760 - Olive.jpeg", // 12
     "images/medium/IMG_5565.jpeg", // 13
     "images/medium/IMG_5553.jpeg", // 14
     "images/medium/IMG_5540.jpeg", // 15
     "images/medium/IMG_5569.jpeg", // 16
     "images/medium/IMG_5558.jpeg", // 17
     "images/medium/IMG_5547.jpeg", // 18
-    "images/medium/IMG_5735.jpeg", // 19
-    "images/medium/IMG_5550.jpeg", // 20
-    "images/medium/IMG_5568.jpeg", // 21
-    "images/medium/IMG_5554.jpeg", // 22
-    "images/medium/IMG_5720.jpeg", // 23
-    "images/medium/IMG_5552.jpeg", // 24
-    "images/medium/IMG_5727.jpeg", // 25
-    "images/medium/IMG_5724.jpeg", // 26
-    "images/medium/IMG_5725.jpeg", // 27
-    "images/medium/IMG_5728.jpeg" // 28
+    "images/medium/1000101336 - Jeremy Weed.jpeg", // 19
+    "images/medium/IMG_5735.jpeg", // 20
+    "images/medium/UCF_Campus-110 - josh.jpeg", // 21
+    "images/medium/IMG_5550.jpeg", // 22
+    "images/medium/20241125_165339 - Xavier B..jpeg", // 23
+    "images/medium/IMG_5568.jpeg", // 24
+    "images/medium/IMG_5554.jpeg", // 25
+    "images/medium/IMG_5720.jpeg", // 26
+    "images/medium/IMG_5552.jpeg", // 27
+    "images/medium/IMG_5727.jpeg", // 28
+    "images/medium/IMG_5724.jpeg", // 29
+    "images/medium/IMG_5725.jpeg", // 30
+    "images/medium/IMG_5728.jpeg" // 31
 ];
 
 const hardPhotos = [
@@ -73,15 +79,18 @@ const hardPhotos = [
     "images/hard/IMG_0139.jpeg", // 9
     "images/hard/IMG_5563.jpeg", // 10
     "images/hard/IMG_5580.jpeg", // 11
-    "images/hard/IMG_4440--Josh Padilla.jpeg", // 12
+    "images/hard/IMG_4440 - Josh Padilla.jpeg", // 12
     "images/hard/IMG_5575.jpeg", // 13
     "images/hard/IMG_0823.jpeg", // 14
     "images/hard/IMG_5729.jpeg", // 15
     "images/hard/IMG_5723.jpeg", // 16
     "images/hard/IMG_5730.jpeg", // 17
     "images/hard/IMG_5732.jpeg", // 18
-    "images/hard/IMG_0369.jpeg", // 19
-    "images/hard/IMG_5726.jpeg" // 20
+    "images/hard/IMG_1507 - Anonymous.jpeg", // 19
+    "images/hard/IMG_0369.jpeg", // 20
+    "images/hard/1000043199 - Alex.jpeg", //21
+    "images/hard/IMG_5726.jpeg", // 22
+    "images/hard/secretphoto - Emzee.jpeg" // 23
 ];
 
 const isMobile = window.innerWidth <= 768;
@@ -247,6 +256,8 @@ let perfectRange = 30;
 let isFirstLoad = true;
 
 const imageWrapper = document.querySelector('.image-wrapper');
+// Show loading spinner initially
+document.querySelector('.loading-spinner').style.display = 'block';
 
 // --------------------
 // Zoom & Pan Functionality
@@ -428,15 +439,15 @@ function loadImage(imageUrl, skipExifCheck = false) {
     const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
     const spinner = document.querySelector('.loading-spinner');
     
-    // Handle photo credit
-    const creditMatch = imageUrl.match(/--(.*?)\.jpeg/);
-    let credit = creditMatch ? creditMatch[1] : null;
-    
     // Remove old credit if it exists
     const oldCredit = document.querySelector('.photo-credit');
     if (oldCredit) {
         oldCredit.remove();
     }
+    
+    // Handle photo credit
+    const creditMatch = imageUrl.match(/ - (.*?)\.jpeg/);
+    let credit = creditMatch ? creditMatch[1] : null;
     
     // Create new credit if we have one
     if (credit) {
@@ -445,15 +456,11 @@ function loadImage(imageUrl, skipExifCheck = false) {
         creditDiv.textContent = `Submitted by ${credit}`;
         document.getElementById('image-container').appendChild(creditDiv);
         
-        // Show credit after a short delay
         setTimeout(() => {
             creditDiv.classList.add('visible');
         }, 100);
     }
-    
-    // Show spinner before loading starts
-    spinner.style.display = 'block';
-    
+
     if (isFirstLoad || skipExifCheck) {
         currentImage.onload = () => {
             spinner.style.display = 'none';
