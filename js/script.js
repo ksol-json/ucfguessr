@@ -64,7 +64,8 @@ const mediumPhotos = [
     "images/medium/IMG_5727.jpeg", // 28
     "images/medium/IMG_5724.jpeg", // 29
     "images/medium/IMG_5725.jpeg", // 30
-    "images/medium/IMG_5728.jpeg" // 31
+    "images/medium/IMG_5728.jpeg", // 31
+    "images/medium/IMG_5937.jpeg" // 32
 ];
 
 const hardPhotos = [
@@ -90,7 +91,9 @@ const hardPhotos = [
     "images/hard/IMG_0369.jpeg", // 20
     "images/hard/1000043199 - Alex.jpeg", //21
     "images/hard/IMG_5726.jpeg", // 22
-    "images/hard/secretphoto - Emzee.jpeg" // 23
+    "images/hard/secretphoto - Emzee.jpeg", // 23
+    "images/hard/IMG_5953.jpeg", // 24
+    "images/hard/IMG_5940.jpeg" // 25
 ];
 
 const isMobile = window.innerWidth <= 768;
@@ -446,7 +449,7 @@ function loadImage(imageUrl, skipExifCheck = false) {
     }
     
     // Handle photo credit
-    const creditMatch = imageUrl.match(/ - (.*?)\.jpeg/);
+    const creditMatch = imageUrl.match(/(?: - |--)(.*?)(?:\.jpeg|\.jpg)/);
     let credit = creditMatch ? creditMatch[1] : null;
     
     // Create new credit if we have one
