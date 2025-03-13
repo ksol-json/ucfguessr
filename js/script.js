@@ -612,7 +612,7 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     }).addTo(map);
     */
 
-    document.getElementById("result").innerHTML = `<p>Your guess is <strong>${Math.round(distance)} meters</strong> away${distance <= 50 ? '!' : '.'}<br>Score: <strong>${score}</strong></p>`;
+    document.getElementById("result").innerHTML = `<p>Your guess is <strong>${Math.round(distance)} ${Math.round(distance) === 1 ? 'meter' : 'meters'}</strong> away${distance <= 50 ? '!' : '.'}<br>Score: <strong>${score}</strong></p>`;
     document.getElementById("submit-guess").style.display = "none";
     
     if (currentRound === rounds.length - 1) {
@@ -708,7 +708,7 @@ function showResults() {
     comeBackText.textContent = "Come back tomorrow for a new challenge!";
     const uploadLink = document.createElement('a');
     uploadLink.href = "https://docs.google.com/forms/d/e/1FAIpQLScUbMUont8pCtntTDSOJbxaVXJ0cao8AK2v-GS068TTyXii5A/viewform?usp=dialog";
-    uploadLink.textContent = "Want your photos featured in the game? Upload them here!";
+    uploadLink.innerHTML = "Want your photos featured in the game?<br>Upload them here!";
     uploadLink.target = "_blank";
     uploadLink.style.fontWeight = "bold";
     
