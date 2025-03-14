@@ -13,24 +13,25 @@ const easyPhotos = [
     "images/easy/IMG_5567.jpeg", // 9
     "images/easy/IMG_5545.jpeg", // 10
     "images/easy/IMG_2102.jpeg", // 11
-    "images/easy/590359509979892670 - Nick.jpeg", // 12
+    "images/easy/590359509979892670--Nick.jpeg", // 12
     "images/easy/IMG_2439.jpeg", // 13
     "images/easy/IMG_5548.jpeg", // 14
     "images/easy/IMG_5549.jpeg", // 15
     "images/easy/IMG_5551.jpeg", // 16
     "images/easy/IMG_5561.jpeg", // 17
     "images/easy/IMG_5562.jpeg", // 18
-    "images/easy/fireworks - Zach Morris.jpeg", // 19
+    "images/easy/fireworks--Zach Morris.jpeg", // 19
     "images/easy/IMG_5572.jpeg", // 20
-    "images/easy/PXL_20211111_221010397 - Dipsik Arwan.jpeg", // 21
+    "images/easy/PXL_20211111_221010397--Dipsik Arwan.jpeg", // 21
     "images/easy/IMG_5576.jpeg", // 22
-    "images/easy/statue launch - Zach Morris.jpeg", // 23
+    "images/easy/statue launch--Zach Morris.jpeg", // 23
     "images/easy/IMG_5583.jpeg", // 24
     "images/easy/IMG_5579.jpeg", // 25
     "images/easy/IMG_5709.jpeg", // 26
     "images/easy/IMG_5722.jpeg", // 27
     "images/easy/IMG_5714.jpeg", // 28
-    "images/easy/IMG_5736.jpeg" // 29
+    "images/easy/IMG_5736.jpeg", // 29
+    "images/easy/IMG_5960.jpeg" // 30
 ];
 
 const mediumPhotos = [
@@ -45,18 +46,18 @@ const mediumPhotos = [
     "images/medium/IMG_5577.jpeg", // 9
     "images/medium/IMG_5555.jpeg", // 10
     "images/medium/IMG_5578.jpeg", // 11
-    "images/medium/DDD83CD5-5D99-42FA-9C11-B31E9D6A3760 - Olive.jpeg", // 12
+    "images/medium/DDD83CD5-5D99-42FA-9C11-B31E9D6A3760--Olive.jpeg", // 12
     "images/medium/IMG_5565.jpeg", // 13
     "images/medium/IMG_5553.jpeg", // 14
     "images/medium/IMG_5540.jpeg", // 15
     "images/medium/IMG_5569.jpeg", // 16
     "images/medium/IMG_5558.jpeg", // 17
     "images/medium/IMG_5547.jpeg", // 18
-    "images/medium/1000101336 - Jeremy Weed.jpeg", // 19
+    "images/medium/1000101336--Jeremy Weed.jpeg", // 19
     "images/medium/IMG_5735.jpeg", // 20
-    "images/medium/UCF_Campus-110 - josh.jpeg", // 21
+    "images/medium/UCF_Campus-110--josh.jpeg", // 21
     "images/medium/IMG_5550.jpeg", // 22
-    "images/medium/20241125_165339 - Xavier B..jpeg", // 23
+    "images/medium/20241125_165339--Xavier B..jpeg", // 23
     "images/medium/IMG_5568.jpeg", // 24
     "images/medium/IMG_5554.jpeg", // 25
     "images/medium/IMG_5720.jpeg", // 26
@@ -65,7 +66,8 @@ const mediumPhotos = [
     "images/medium/IMG_5724.jpeg", // 29
     "images/medium/IMG_5725.jpeg", // 30
     "images/medium/IMG_5728.jpeg", // 31
-    "images/medium/IMG_5937.jpeg" // 32
+    "images/medium/IMG_5937.jpeg", // 32
+    "images/medium/IMG_5958.jpeg" // 33
 ];
 
 const hardPhotos = [
@@ -80,20 +82,21 @@ const hardPhotos = [
     "images/hard/IMG_0139.jpeg", // 9
     "images/hard/IMG_5563.jpeg", // 10
     "images/hard/IMG_5580.jpeg", // 11
-    "images/hard/IMG_4440 - Josh Padilla.jpeg", // 12
+    "images/hard/IMG_4440--Josh Padilla.jpeg", // 12
     "images/hard/IMG_5575.jpeg", // 13
     "images/hard/IMG_0823.jpeg", // 14
     "images/hard/IMG_5729.jpeg", // 15
     "images/hard/IMG_5723.jpeg", // 16
     "images/hard/IMG_5730.jpeg", // 17
     "images/hard/IMG_5732.jpeg", // 18
-    "images/hard/IMG_1507 - Anonymous.jpeg", // 19
+    "images/hard/IMG_1507--Anonymous.jpeg", // 19
     "images/hard/IMG_0369.jpeg", // 20
-    "images/hard/1000043199 - Alex.jpeg", //21
-    "images/hard/IMG_5726.jpeg", // 22
-    "images/hard/secretphoto - Emzee.jpeg", // 23
-    "images/hard/IMG_5953.jpeg", // 24
-    "images/hard/IMG_5940.jpeg" // 25
+    "images/hard/1000043199--Alex.jpeg", //21
+    "images/hard/IMG_5953.jpeg", // 22
+    "images/hard/secretphoto--Emzee.jpeg", // 23
+    "images/hard/IMG_5726.jpeg", // 24
+    "images/hard/IMG_5940.jpeg", // 25
+    "images/hard/IMG_5959.jpeg" // 26
 ];
 
 const isMobile = window.innerWidth <= 768;
@@ -442,6 +445,14 @@ function loadImage(imageUrl, skipExifCheck = false) {
     const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
     const spinner = document.querySelector('.loading-spinner');
     
+    // Start with spinner hidden
+    spinner.style.display = 'none';
+    
+    // Show spinner after 1.5s if image hasn't loaded
+    const spinnerTimeout = setTimeout(() => {
+        spinner.style.display = 'block';
+    }, 1500);
+    
     // Remove old credit if it exists
     const oldCredit = document.querySelector('.photo-credit');
     if (oldCredit) {
@@ -456,7 +467,7 @@ function loadImage(imageUrl, skipExifCheck = false) {
     if (credit) {
         const creditDiv = document.createElement('div');
         creditDiv.className = 'photo-credit';
-        creditDiv.textContent = `Submitted by ${credit}`;
+        creditDiv.innerHTML = `Submitted by <strong>${credit}</strong>`;
         document.getElementById('image-container').appendChild(creditDiv);
         
         setTimeout(() => {
@@ -466,6 +477,7 @@ function loadImage(imageUrl, skipExifCheck = false) {
 
     if (isFirstLoad || skipExifCheck) {
         currentImage.onload = () => {
+            clearTimeout(spinnerTimeout);
             spinner.style.display = 'none';
             currentImage.classList.add('visible');
             currentImage.classList.remove('hidden');
@@ -477,6 +489,7 @@ function loadImage(imageUrl, skipExifCheck = false) {
     
     // Normal crossfade for subsequent loads
     nextImage.onload = () => {
+        clearTimeout(spinnerTimeout);
         spinner.style.display = 'none';
         currentImage.classList.remove('visible');
         currentImage.classList.add('hidden');
