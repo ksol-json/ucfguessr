@@ -31,7 +31,9 @@ const easyPhotos = [
     "images/easy/IMG_5722.jpeg", // 27
     "images/easy/IMG_5714.jpeg", // 28
     "images/easy/IMG_5736.jpeg", // 29
-    "images/easy/IMG_5960.jpeg" // 30
+    "images/easy/IMG_5960.jpeg", // 30
+    "images/easy/PXL_20250205_032438690--Jeremiah N..jpeg", // 31
+    "images/easy/109B7E7B-1A7F.jpeg" // 32
 ];
 
 const mediumPhotos = [
@@ -91,12 +93,17 @@ const hardPhotos = [
     "images/hard/IMG_5732.jpeg", // 18
     "images/hard/IMG_1507--Anonymous.jpeg", // 19
     "images/hard/IMG_0369.jpeg", // 20
-    "images/hard/1000043199--Alex.jpeg", //21
+    "images/hard/1000043199--Alex.jpeg", // 21
     "images/hard/IMG_5953.jpeg", // 22
     "images/hard/secretphoto--Emzee.jpeg", // 23
     "images/hard/IMG_5726.jpeg", // 24
     "images/hard/IMG_5940.jpeg", // 25
-    "images/hard/IMG_5959.jpeg" // 26
+    "images/hard/IMG_5959.jpeg", // 26
+    "images/hard/06471588-D128--Olive.jpeg", // 27
+    "images/hard/statue--Emzee.jpeg", // 28
+    "images/hard/9BDC2D04-CE8D--Olive.jpeg", // 29
+    "images/hard/IMG_9493--thanks for one month of ucfguessr.jpeg", // 30
+    "images/hard/IMG_3082.jpeg" // 31
 ];
 
 const isMobile = window.innerWidth <= 768;
@@ -658,11 +665,19 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
 
     // Add GA4 event tracking for game completion on round 3
     if (currentRound === rounds.length - 1) {
-        gtag('event', 'game_complete', {
-            'event_category': 'gameplay',
-            'event_label': `Day ${daysSinceEpoch + 1}`,
-            'value': totalScore
-        });
+        if (isArchiveMode) {
+            gtag('event', 'archive_game_complete', {
+                'event_category': 'gameplay',
+                'event_label': `Archive Day ${Math.floor((selectedArchiveDate - epoch) / (1000 * 60 * 60 * 24)) + 1}`,
+                'value': totalScore
+            });
+        } else {
+            gtag('event', 'game_complete', {
+                'event_category': 'gameplay',
+                'event_label': `Day ${daysSinceEpoch + 1}`,
+                'value': totalScore
+            });
+        }
     }
 });
 
@@ -759,11 +774,19 @@ function copyResults() {
     
     navigator.clipboard.writeText(shareText).then(() => {
         // Track share event with GA4
-        gtag('event', 'share_results', {
-            'event_category': 'engagement',
-            'event_label': `${archivePrefix}Day ${gameDay}`,
-            'value': totalScore
-        });
+        if (isArchiveMode) {
+            gtag('event', 'share_archive_results', {
+                'event_category': 'engagement',
+                'event_label': `Archive Day ${Math.floor((selectedArchiveDate - epoch) / (1000 * 60 * 60 * 24)) + 1}`,
+                'value': totalScore
+            });
+        } else {
+            gtag('event', 'share_results', {
+                'event_category': 'engagement',
+                'event_label': `Day ${daysSinceEpoch + 1}`,
+                'value': totalScore
+            });
+        }
 
         const copiedMessage = document.getElementById("copied-message");
         copiedMessage.style.visibility = "visible";
