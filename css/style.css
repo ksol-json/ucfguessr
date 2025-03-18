@@ -530,7 +530,8 @@ h1 {
 
     .theme-button,
     .help-button,
-    .archive-button {
+    .archive-button,
+    .coverage-button {
         width: 28px;
         height: 28px;
         font-size: 10px;
@@ -830,4 +831,25 @@ h1 {
 
 .photo-credit.visible {
     opacity: 1;
+}
+
+.coverage-button {
+    position: relative;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s, background-color var(--transition-duration);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.coverage-button:hover {
+    transform: scale(1.1);
 }
