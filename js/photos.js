@@ -28,8 +28,8 @@ const easyPhotos = [
     "images/easy/IMG_5709.jpeg", // 27
     "images/easy/IMG_5722.jpeg", // 28
     "images/easy/IMG_5714.jpeg", // 29
-    "images/easy/IMG_5736.jpeg", // 30
-    "images/easy/IMG_5960.jpeg", // 31
+    "images/easy/IMG_5960.jpeg", // 30
+    "images/easy/IMG_5736.jpeg", // 31
     "images/easy/PXL_20250205_032438690--Jeremiah N..jpeg", // 32
     "images/easy/109B7E7B-1A7F.jpeg" // 33
 ];
@@ -64,8 +64,8 @@ const mediumPhotos = [
     "images/medium/IMG_5720.jpeg", // 27
     "images/medium/IMG_5727.jpeg", // 28
     "images/medium/IMG_5552.jpeg", // 29
-    "images/medium/IMG_5724.jpeg", // 30
-    "images/medium/IMG_5725.jpeg", // 31
+    "images/medium/IMG_5725.jpeg", // 30
+    "images/medium/IMG_5724.jpeg", // 31
     "images/medium/IMG_5728.jpeg", // 32
     "images/medium/IMG_5937.jpeg", // 33
     "images/medium/IMG_5958.jpeg" // 34
@@ -101,8 +101,8 @@ const hardPhotos = [
     "images/hard/IMG_5959.jpeg", // 27
     "images/hard/06471588-D128--Olive.jpeg", // 28
     "images/hard/statue--Emzee.jpeg", // 29
-    "images/hard/9BDC2D04-CE8D--Olive.jpeg", // 30
-    "images/hard/IMG_9493--thanks for one month of ucfguessr.jpeg", // 31
+    "images/hard/IMG_9493--thanks for one month of ucfguessr.jpeg", // 30
+    "images/hard/9BDC2D04-CE8D--Olive.jpeg", // 31
     "images/hard/IMG_3082.jpeg", // 32
     "images/hard/IMG_5712.jpeg", // 33
 ];
