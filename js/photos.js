@@ -24,13 +24,14 @@ const easyPhotos = [
     "images/easy/statue launch--Zach Morris.jpeg", // 23
     "images/easy/IMG_5583.jpeg", // 24
     "images/easy/IMG_5579.jpeg", // 25
-    "images/easy/IMG_5709.jpeg", // 26
-    "images/easy/IMG_5722.jpeg", // 27
-    "images/easy/IMG_5714.jpeg", // 28
-    "images/easy/IMG_5736.jpeg", // 29
-    "images/easy/IMG_5960.jpeg", // 30
-    "images/easy/PXL_20250205_032438690--Jeremiah N..jpeg", // 31
-    "images/easy/109B7E7B-1A7F.jpeg" // 32
+    "images/easy/oldlibrary--UCF, c. early 1970s.jpeg", // 26
+    "images/easy/IMG_5709.jpeg", // 27
+    "images/easy/IMG_5722.jpeg", // 28
+    "images/easy/IMG_5714.jpeg", // 29
+    "images/easy/IMG_5736.jpeg", // 30
+    "images/easy/IMG_5960.jpeg", // 31
+    "images/easy/PXL_20250205_032438690--Jeremiah N..jpeg", // 32
+    "images/easy/109B7E7B-1A7F.jpeg" // 33
 ];
 
 const mediumPhotos = [
@@ -59,14 +60,15 @@ const mediumPhotos = [
     "images/medium/20241125_165339--Xavier B..jpeg", // 23
     "images/medium/IMG_5568.jpeg", // 24
     "images/medium/IMG_5554.jpeg", // 25
-    "images/medium/IMG_5720.jpeg", // 26
-    "images/medium/IMG_5552.jpeg", // 27
+    "images/medium/oldsu--UCF, c. 1991.jpeg", // 26
+    "images/medium/IMG_5720.jpeg", // 27
     "images/medium/IMG_5727.jpeg", // 28
-    "images/medium/IMG_5724.jpeg", // 29
-    "images/medium/IMG_5725.jpeg", // 30
-    "images/medium/IMG_5728.jpeg", // 31
-    "images/medium/IMG_5937.jpeg", // 32
-    "images/medium/IMG_5958.jpeg" // 33
+    "images/medium/IMG_5552.jpeg", // 29
+    "images/medium/IMG_5724.jpeg", // 30
+    "images/medium/IMG_5725.jpeg", // 31
+    "images/medium/IMG_5728.jpeg", // 32
+    "images/medium/IMG_5937.jpeg", // 33
+    "images/medium/IMG_5958.jpeg" // 34
 ];
 
 const hardPhotos = [
@@ -95,10 +97,11 @@ const hardPhotos = [
     "images/hard/secretphoto--Emzee.jpeg", // 23
     "images/hard/IMG_5726.jpeg", // 24
     "images/hard/IMG_5940.jpeg", // 25
-    "images/hard/IMG_5959.jpeg", // 26
-    "images/hard/06471588-D128--Olive.jpeg", // 27
-    "images/hard/statue--Emzee.jpeg", // 28
-    "images/hard/9BDC2D04-CE8D--Olive.jpeg", // 29
-    "images/hard/IMG_9493--thanks for one month of ucfguessr.jpeg", // 30
-    "images/hard/IMG_3082.jpeg" // 31
+    "images/hard/oldroad--UCF.jpeg", // 26
+    "images/hard/IMG_5959.jpeg", // 27
+    "images/hard/06471588-D128--Olive.jpeg", // 28
+    "images/hard/statue--Emzee.jpeg", // 29
+    "images/hard/9BDC2D04-CE8D--Olive.jpeg", // 30
+    "images/hard/IMG_9493--thanks for one month of ucfguessr.jpeg", // 31
+    "images/hard/IMG_3082.jpeg" // 32
 ];

@@ -121,6 +121,13 @@
                 const title = document.createElement('h4');
                 title.textContent = `${photo.difficulty} Photo`;
                 
+                const filename = document.createElement('div');
+                filename.textContent = photo.src.split('/').pop();
+                filename.style.fontSize = '0.9em';
+                filename.style.color = '#666';
+                filename.style.marginTop = '-10px';
+                filename.style.marginBottom = '10px';
+                
                 const img = new Image();
                 img.src = photo.src;
                 img.crossOrigin = "Anonymous";
@@ -150,6 +157,7 @@
                 };
                 
                 card.appendChild(title);
+                card.appendChild(filename);
                 card.appendChild(img);
                 card.appendChild(mapDiv);
                 previewDiv.appendChild(card);
@@ -162,6 +170,12 @@
 
         // Set min date for date input
         document.getElementById('dateInput').min = epoch.toISOString().split('T')[0];
+
+        // Set default to today's date
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        document.getElementById('dateInput').value = todayStr;
+        updateFromDate(todayStr);
     </script>
 </body>
 </html>
