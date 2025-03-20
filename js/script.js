@@ -115,11 +115,11 @@ document.addEventListener('keydown', function(event) {
             if (konamiCodeActivations === 3) {
                 showNotification('That was all. No more secrets modes.');
             } if (konamiCodeActivations === 4) {
-                showNotification('I\'m serious. Nothing else to see here.');
+                showNotification('Nothing else to see here.');
             } if (konamiCodeActivations === 5) {
-                showNotification('You can stop trying now.');
+                showNotification('I\'m serious. You can stop trying now.');
             } if (konamiCodeActivations === 6) {
-                showNotification('Ok, going away now. No more secret messenges.');
+                showNotification('Ok, going away now. No more secret messages.');
             } else if (konamiCodeActivations > 6) {
                 showNotification('This text will keep repeating.');
             konamiIndex = 0;
