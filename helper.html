@@ -26,9 +26,7 @@
             padding: 10px;
             border-radius: 8px;
             display: grid;
-            grid-template-rows: auto auto;
-            gap: 10px;
-        }
+            grid-template-rows: auto auto;        }
         img {
             max-width: 100%;
             height: auto;
@@ -168,11 +166,17 @@
         document.getElementById('dayInput').addEventListener('input', e => updateFromDay(parseInt(e.target.value)));
         document.getElementById('dateInput').addEventListener('input', e => updateFromDate(e.target.value));
 
+        function getTodayInET() {
+            const options = { timeZone: 'America/New_York' };
+            const etDate = new Date().toLocaleString('en-US', options);
+            return new Date(etDate);
+        }
+
         // Set min date for date input
         document.getElementById('dateInput').min = epoch.toISOString().split('T')[0];
 
-        // Set default to today's date
-        const today = new Date();
+        // Set default to today's date in ET
+        const today = getTodayInET();
         const todayStr = today.toISOString().split('T')[0];
         document.getElementById('dateInput').value = todayStr;
         updateFromDate(todayStr);

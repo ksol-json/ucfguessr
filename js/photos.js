@@ -68,7 +68,8 @@ const mediumPhotos = [
     "images/medium/IMG_5724.jpeg", // 31
     "images/medium/IMG_5728.jpeg", // 32
     "images/medium/IMG_5937.jpeg", // 33
-    "images/medium/IMG_5958.jpeg" // 34
+    "images/medium/IMG_5958.jpeg", // 34
+    "images/medium/IMG_5712.jpeg" // 35
 ];
 
 const hardPhotos = [
@@ -103,6 +104,5 @@ const hardPhotos = [
     "images/hard/statue--Emzee.jpeg", // 29
     "images/hard/IMG_9493--thanks for one month of ucfguessr.jpeg", // 30
     "images/hard/9BDC2D04-CE8D--Olive.jpeg", // 31
-    "images/hard/IMG_3082.jpeg", // 32
-    "images/hard/IMG_5712.jpeg", // 33
+    "images/hard/IMG_3082.jpeg" // 32
 ];

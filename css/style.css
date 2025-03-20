@@ -11,7 +11,7 @@
 
 [data-theme="dark"] {
     --primary-color: #4752ef;
-    --secondary-color: #a1b4c7;
+    --secondary-color: #909cd1;
     --background-color: #18191a;
     --card-shadow: 0 8px 16px rgba(0,0,0,0.3);
     --text-color: #e0e0e0;
@@ -516,6 +516,7 @@ h1 {
         width: 100%;
         max-width: 100%;
         padding: 0;
+        text-align: center;
     }
 
     .controls-group {
@@ -549,6 +550,12 @@ h1 {
          font-size: 10px !important;
     }
 
+    .coverage-button {
+         width: 28px !important;
+         height: 28px !important;
+         font-size: 10px !important;
+    }
+
     .title-group {
         flex-direction: column;
         align-items: center;
@@ -556,10 +563,13 @@ h1 {
         gap: 5px;
         width: 100%;
         justify-content: center;
+        margin: 0 auto;
     }
 
     h1 {
         font-size: 2em;
+        margin: 0 auto;
+        text-align: center;
     }
 
     .current-date {
@@ -845,7 +855,7 @@ h1 {
     cursor: pointer;
     box-shadow: var(--card-shadow);
     transition: transform 0.2s, background-color var(--transition-duration);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
 }

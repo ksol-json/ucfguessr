@@ -91,15 +91,28 @@ const savedTheme = localStorage.getItem('theme') ||
     (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 setTheme(savedTheme);
 
+const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
+let konamiIndex = 0;
+
+// Key handlers
 document.addEventListener('keydown', function(event) {
+    if (event.key === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+            document.querySelector('.coverage-button').style.display = 'flex';
+            showNotification('Coverage mode unlocked!');
+            konamiIndex = 0;
+        }
+    } else {
+        konamiIndex = 0;
+    }
+
     if (event.key === 'Escape') {
-        // Close any open popup
         closePopup();
         closeHelp();
         closeArchive();
     }
     
-    // Existing space key handler
     if (event.code === 'Space') {
         event.preventDefault();
         
@@ -157,7 +170,7 @@ let currentZoom = 1;
 let isDragging = false;
 let startX, startY, translateX = 0, translateY = 0;
 let actualCoords;
-let perfectRange = 30;
+let perfectRange = 25;
 let isFirstLoad = true;
 
 const imageWrapper = document.querySelector('.image-wrapper');
@@ -494,7 +507,7 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     }).openPopup();
     
     const distance = getDistance(guessLatLng.lat, guessLatLng.lng, actualCoords.lat, actualCoords.lng);
-    let score = distance <= perfectRange ? 5000 : Math.round(5500 * Math.exp(-3 * (distance / 800)));
+    let score = distance <= perfectRange ? 5000 : Math.round(5500 * Math.exp(-3 * (distance / 700)));
     score = distance > 1000 ? 0 : score;
     
     if (score === 5000) {
