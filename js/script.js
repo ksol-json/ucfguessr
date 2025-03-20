@@ -93,15 +93,37 @@ setTheme(savedTheme);
 
 const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
 let konamiIndex = 0;
+let konamiCodeActivations = 0;
 
 // Key handlers
 document.addEventListener('keydown', function(event) {
     if (event.key === konamiCode[konamiIndex]) {
         konamiIndex++;
         if (konamiIndex === konamiCode.length) {
+            konamiCodeActivations++;
             document.querySelector('.coverage-button').style.display = 'flex';
-            showNotification('Coverage mode unlocked!');
+            
+            if (konamiCodeActivations === 1) {
+                showNotification('Coverage mode unlocked!');
+            } else if (konamiCodeActivations === 2) {
+                showNotification('Full coverage mode unlocked!');
+                if (coverageMarkersVisible) {
+                    toggleCoverageMarkers();
+                    toggleCoverageMarkers();
+                }
+            }
+            if (konamiCodeActivations === 3) {
+                showNotification('That was all. No more secrets modes.');
+            } if (konamiCodeActivations === 4) {
+                showNotification('I\'m serious. Nothing else to see here.');
+            } if (konamiCodeActivations === 5) {
+                showNotification('You can stop trying now.');
+            } if (konamiCodeActivations === 6) {
+                showNotification('Ok, going away now. No more secret messenges.');
+            } else if (konamiCodeActivations > 6) {
+                showNotification('This text will keep repeating.');
             konamiIndex = 0;
+            }
         }
     } else {
         konamiIndex = 0;
@@ -870,37 +892,45 @@ document.addEventListener('DOMContentLoaded', () => {
     currentPlayingDate = new Date();
 });
 
-// Coverage markers functionality (toggle in html, remove comment)
 let coverageMarkers = [];
 let coverageMarkersVisible = false;
 
 function toggleCoverageMarkers() {
     if (coverageMarkersVisible) {
         coverageMarkers.forEach(marker => map.removeLayer(marker));
-        coverageMarkersVisible = false;
-    } else {
-        // Clear existing markers
-        coverageMarkers.forEach(marker => map.removeLayer(marker));
         coverageMarkers = [];
-        
-        const allPhotos = [...easyPhotos, ...mediumPhotos, ...hardPhotos];
-        let processed = 0;
-        
-        allPhotos.forEach(photoUrl => {
-            const img = new Image();
-            img.crossOrigin = "Anonymous";
-            img.src = photoUrl;
-            
-            img.onload = function() {
-                EXIF.getData(this, function() {
-                    const lat = EXIF.getTag(this, "GPSLatitude");
-                    const latRef = EXIF.getTag(this, "GPSLatitudeRef") || "N";
-                    const lon = EXIF.getTag(this, "GPSLongitude");
-                    const lonRef = EXIF.getTag(this, "GPSLongitudeRef") || "W";
-                    
-                    if (lat && lon) {
-                        const latitude = convertDMSToDD(lat, latRef);
-                        const longitude = convertDMSToDD(lon, lonRef);
+        coverageMarkersVisible = false;
+        return;
+    }
+
+    const allPhotos = [...easyPhotos, ...mediumPhotos, ...hardPhotos];
+    let processed = 0;
+    coverageMarkers = [];
+
+    // Get current ET date for comparison
+    const currentETDate = getETDate();
+    const currentDaysSinceEpoch = Math.floor((Date.UTC(currentETDate.getFullYear(), currentETDate.getMonth(), currentETDate.getDate()) - epoch.getTime()) / (1000 * 60 * 60 * 24));
+
+    allPhotos.forEach((photoUrl, index) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.src = photoUrl;
+
+        img.onload = function() {
+            EXIF.getData(this, function() {
+                const lat = EXIF.getTag(this, "GPSLatitude");
+                const latRef = EXIF.getTag(this, "GPSLatitudeRef") || "N";
+                const lon = EXIF.getTag(this, "GPSLongitude");
+                const lonRef = EXIF.getTag(this, "GPSLongitudeRef") || "W";
+
+                if (lat && lon) {
+                    const latitude = convertDMSToDD(lat, latRef);
+                    const longitude = convertDMSToDD(lon, lonRef);
+                    const photoIndex = index % (allPhotos.length / 3);
+                    const photoDaysSinceEpoch = photoIndex;
+
+                    if (konamiCodeActivations === 1 && photoDaysSinceEpoch < currentDaysSinceEpoch ||
+                        konamiCodeActivations === 2) {
                         
                         const marker = L.circleMarker([latitude, longitude], {
                             radius: 5,
@@ -913,15 +943,16 @@ function toggleCoverageMarkers() {
                         
                         coverageMarkers.push(marker);
                     }
-                    
-                    processed++;
-                    if (processed === allPhotos.length) {
-                        showNotification(`Showing ${coverageMarkers.length} photo locations`);
-                    }
-                });
-            };
-        });
-        
-        coverageMarkersVisible = true;
-    }
+                }
+
+                processed++;
+                if (processed === allPhotos.length) {
+                    const mode = konamiCodeActivations === 1 ? 'historical' : 'all';
+                    showNotification(`Showing ${coverageMarkers.length} ${mode} photo locations`);
+                }
+            });
+        };
+    });
+
+    coverageMarkersVisible = true;
 }
