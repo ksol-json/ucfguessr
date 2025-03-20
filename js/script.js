@@ -907,7 +907,6 @@ function toggleCoverageMarkers() {
     let processed = 0;
     coverageMarkers = [];
 
-    // Get current ET date for comparison
     const currentETDate = getETDate();
     const currentDaysSinceEpoch = Math.floor((Date.UTC(currentETDate.getFullYear(), currentETDate.getMonth(), currentETDate.getDate()) - epoch.getTime()) / (1000 * 60 * 60 * 24));
 
@@ -926,10 +925,24 @@ function toggleCoverageMarkers() {
                 if (lat && lon) {
                     const latitude = convertDMSToDD(lat, latRef);
                     const longitude = convertDMSToDD(lon, lonRef);
-                    const photoIndex = index % (allPhotos.length / 3);
+                    
+                    let photoType = '';
+                    let photoIndex = 0;
+                    
+                    if (index < easyPhotos.length) {
+                        photoType = 'easy';
+                        photoIndex = index;
+                    } else if (index < easyPhotos.length + mediumPhotos.length) {
+                        photoType = 'medium';
+                        photoIndex = index - easyPhotos.length;
+                    } else {
+                        photoType = 'hard';
+                        photoIndex = index - easyPhotos.length - mediumPhotos.length;
+                    }
+                    
                     const photoDaysSinceEpoch = photoIndex;
-
-                    if (konamiCodeActivations === 1 && photoDaysSinceEpoch < currentDaysSinceEpoch ||
+                    
+                    if ((konamiCodeActivations === 1 && photoDaysSinceEpoch < currentDaysSinceEpoch) ||
                         konamiCodeActivations === 2) {
                         
                         const marker = L.circleMarker([latitude, longitude], {
@@ -947,8 +960,7 @@ function toggleCoverageMarkers() {
 
                 processed++;
                 if (processed === allPhotos.length) {
-                    const mode = konamiCodeActivations === 1 ? 'historical' : 'all';
-                    showNotification(`Showing ${coverageMarkers.length} ${mode} photo locations`);
+                    showNotification(`Showing ${coverageMarkers.length} photo locations`);
                 }
             });
         };
