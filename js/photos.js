@@ -102,7 +102,7 @@ const hardPhotos = [
     "images/hard/IMG_5959.jpeg", // 27
     "images/hard/06471588-D128--Olive.jpeg", // 28
     "images/hard/statue--Emzee.jpeg", // 29
-    "images/hard/IMG_9493--thanks for one month of ucfguessr.jpeg", // 30
+    "images/hard/IMG_9493~~thanks for one month of ucfguessr.jpeg", // 30
     "images/hard/9BDC2D04-CE8D--Olive.jpeg", // 31
     "images/hard/IMG_3082.jpeg", // 32
     "images/hard/IMG_2749.jpeg" // 33

@@ -393,17 +393,28 @@ function loadImage(imageUrl, skipExifCheck = false) {
         oldCredit.remove();
     }
     
-    // Handle photo credit
-    const creditMatch = imageUrl.match(/(?: - |--)(.*?)(?:\.jpeg|\.jpg)/);
-    let credit = creditMatch ? creditMatch[1] : null;
+    // Handle photo credit/label
+    let credit = null;
+    let useSubmittedBy = true;
     
-    // Create new credit if we have one
+    const tildeMatch = imageUrl.match(/~~([^.]+)\.jpe?g/i);
+    if (tildeMatch) {
+        credit = tildeMatch[1];
+        useSubmittedBy = false;
+    } else {
+        const creditMatch = imageUrl.match(/(?: - |--)(.*?)(?=\.jpe?g)/i);
+        credit = creditMatch ? creditMatch[1].trim() : null;
+    }
+
     if (credit) {
         const creditDiv = document.createElement('div');
         creditDiv.className = 'photo-credit';
-        creditDiv.innerHTML = `Submitted by <strong>${credit}</strong>`;
+        if (useSubmittedBy) {
+            creditDiv.innerHTML = `Submitted by <strong>${credit}</strong>`;
+        } else {
+            creditDiv.innerHTML = `<strong>${credit}</strong>`;
+        }
         document.getElementById('image-container').appendChild(creditDiv);
-        
         setTimeout(() => {
             creditDiv.classList.add('visible');
         }, 100);
