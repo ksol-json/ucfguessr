@@ -206,21 +206,20 @@ let maxZoom = 7.5;
 
 function updateImageTransform() {
     const containerRect = imageWrapper.getBoundingClientRect();
-    // Base dimensions = container dimensions (since image fills container initially)
     const baseWidth = containerRect.width;
     const baseHeight = containerRect.height;
-    // Scaled dimensions:
     const scaledWidth = baseWidth * currentZoom;
     const scaledHeight = baseHeight * currentZoom;
     const maxX = Math.max(0, (scaledWidth - containerRect.width) / 2);
     const maxY = Math.max(0, (scaledHeight - containerRect.height) / 2);
-    // Restrict pan offsets
+    
     translateX = Math.max(-maxX, Math.min(translateX, maxX));
     translateY = Math.max(-maxY, Math.min(translateY, maxY));
     
     const image = document.querySelector('.challenge-image.visible');
     if (image) {
-        image.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+        image.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${currentZoom})`;
+        image.style.willChange = 'transform';
     }
 }
 
@@ -247,17 +246,25 @@ function drag(e) {
     } else if (e.type === 'touchmove') {
         e.preventDefault();
         e.stopPropagation();
+        if (e.touches.length !== 1) return;
         currentX = e.touches[0].clientX;
         currentY = e.touches[0].clientY;
     }
     
-    const dx = (currentX - startX) * 1.25;
-    const dy = (currentY - startY) * 1.25;
+    // Add smoothing factor for more controlled movement
+    const smoothing = 1.25;
+    const dx = (currentX - startX) * smoothing;
+    const dy = (currentY - startY) * smoothing;
+    
     translateX += dx;
     translateY += dy;
     startX = currentX;
     startY = currentY;
-    updateImageTransform();
+    
+    // Use requestAnimationFrame for smoother updates
+    requestAnimationFrame(() => {
+        updateImageTransform();
+    });
 }
 
 function stopDragging() {
@@ -331,8 +338,10 @@ imageWrapper.addEventListener('wheel', function(e) {
     const offsetX = mouseX - containerRect.width / 2;
     const offsetY = mouseY - containerRect.height / 2;
     
-    // Determine zoom direction
-    const delta = e.deltaY * -0.002;
+    // Determine zoom direction and speed based on input type
+    const isPinch = e.ctrlKey || (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents);
+    const zoomSpeed = isPinch ? -0.008 : -0.002;
+    const delta = e.deltaY * zoomSpeed;
     const newZoom = Math.min(Math.max(currentZoom * (1 + delta), 1), maxZoom);
     const factor = newZoom / currentZoom;
     
@@ -342,6 +351,63 @@ imageWrapper.addEventListener('wheel', function(e) {
     currentZoom = newZoom;
     
     updateImageTransform();
+});
+
+let lastTouchDistance = 0;
+
+imageWrapper.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 2) {
+        e.preventDefault();
+        const touch1 = e.touches[0];
+        const touch2 = e.touches[1];
+        lastTouchDistance = Math.hypot(
+            touch2.clientX - touch1.clientX,
+            touch2.clientY - touch1.clientY
+        );
+    }
+});
+
+imageWrapper.addEventListener('touchmove', function(e) {
+    if (e.touches.length === 2) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const touch1 = e.touches[0];
+        const touch2 = e.touches[1];
+        const currentDistance = Math.hypot(
+            touch2.clientX - touch1.clientX,
+            touch2.clientY - touch1.clientY
+        );
+        
+        if (lastTouchDistance) {
+            const midX = (touch1.clientX + touch2.clientX) / 2;
+            const midY = (touch1.clientY + touch2.clientY) / 2;
+            const containerRect = imageWrapper.getBoundingClientRect();
+            const offsetX = midX - containerRect.left - containerRect.width / 2;
+            const offsetY = midY - containerRect.top - containerRect.height / 2;
+            
+            // Calculate zoom factor based on the change in distance
+            const factor = currentDistance / lastTouchDistance;
+            const newZoom = Math.min(Math.max(currentZoom * factor, 1), maxZoom);
+            const zoomFactor = newZoom / currentZoom;
+            
+            // Adjust translation to zoom towards the midpoint of the pinch
+            translateX = (translateX - offsetX) * zoomFactor + offsetX;
+            translateY = (translateY - offsetY) * zoomFactor + offsetY;
+            currentZoom = newZoom;
+            
+            updateImageTransform();
+        }
+        
+        lastTouchDistance = currentDistance;
+    }
+});
+
+imageWrapper.addEventListener('touchend', function(e) {
+    lastTouchDistance = 0;
+    if (e.touches.length === 0) {
+        stopDragging();
+    }
 });
 
 // --------------------
