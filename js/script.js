@@ -230,6 +230,7 @@ function startDragging(e) {
         startX = e.clientX;
         startY = e.clientY;
     } else if (e.type === 'touchstart') {
+        e.preventDefault();
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
     }
@@ -237,12 +238,15 @@ function startDragging(e) {
 
 function drag(e) {
     if (!isDragging) return;
-    e.preventDefault();
+    
     let currentX, currentY;
     if (e.type === 'mousemove') {
+        e.preventDefault();
         currentX = e.clientX;
         currentY = e.clientY;
     } else if (e.type === 'touchmove') {
+        e.preventDefault();
+        e.stopPropagation();
         currentX = e.touches[0].clientX;
         currentY = e.touches[0].clientY;
     }
@@ -287,6 +291,12 @@ imageWrapper.addEventListener('mouseup', stopDragging);
 imageWrapper.addEventListener('mouseleave', stopDragging);
 imageWrapper.addEventListener('touchend', stopDragging);
 
+// Add touch-action CSS property to prevent browser handling of all touch actions
+imageWrapper.style.touchAction = 'none';
+
+// Prevent pull-to-refresh on mobile when zoomed in
+document.body.style.overscrollBehaviorY = 'contain';
+
 // Double click to zoom
 imageWrapper.addEventListener('dblclick', function(e) {
     e.preventDefault();
@@ -308,6 +318,29 @@ imageWrapper.addEventListener('dblclick', function(e) {
         translateY = (translateY - offsetY) * factor + offsetY;
         currentZoom = newZoom;
     }
+    updateImageTransform();
+});
+
+// Add wheel zoom functionality
+imageWrapper.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    
+    const containerRect = imageWrapper.getBoundingClientRect();
+    const mouseX = e.clientX - containerRect.left;
+    const mouseY = e.clientY - containerRect.top;
+    const offsetX = mouseX - containerRect.width / 2;
+    const offsetY = mouseY - containerRect.height / 2;
+    
+    // Determine zoom direction
+    const delta = e.deltaY * -0.002;
+    const newZoom = Math.min(Math.max(currentZoom * (1 + delta), 1), maxZoom);
+    const factor = newZoom / currentZoom;
+    
+    // Adjust translation to zoom towards mouse position
+    translateX = (translateX - offsetX) * factor + offsetX;
+    translateY = (translateY - offsetY) * factor + offsetY;
+    currentZoom = newZoom;
+    
     updateImageTransform();
 });
 
