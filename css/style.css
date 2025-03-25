@@ -766,7 +766,7 @@ h1 {
 .calendar-day:hover {
     background-color: var(--primary-color);
     color: white;
-    opacity: 0.5;
+    opacity: 1;
 }
 
 .calendar-day.disabled {
@@ -776,7 +776,7 @@ h1 {
 
 .calendar-day.selected {
     background-color: var(--primary-color);
-    opacity: 0.5;
+    opacity: 0.7;
     font-weight: bold;
     color: white;
 }

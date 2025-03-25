@@ -194,6 +194,7 @@ let startX, startY, translateX = 0, translateY = 0;
 let actualCoords;
 let perfectRange = 25;
 let isFirstLoad = true;
+let currentDay = daysSinceEpoch + 1;  
 
 const imageWrapper = document.querySelector('.image-wrapper');
 // Show loading spinner initially
@@ -337,15 +338,12 @@ imageWrapper.addEventListener('wheel', function(e) {
     const mouseY = e.clientY - containerRect.top;
     const offsetX = mouseX - containerRect.width / 2;
     const offsetY = mouseY - containerRect.height / 2;
-    
-    // Determine zoom direction and speed based on input type
     const isPinch = e.ctrlKey || (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents);
     const zoomSpeed = isPinch ? -0.008 : -0.002;
     const delta = e.deltaY * zoomSpeed;
     const newZoom = Math.min(Math.max(currentZoom * (1 + delta), 1), maxZoom);
     const factor = newZoom / currentZoom;
     
-    // Adjust translation to zoom towards mouse position
     translateX = (translateX - offsetX) * factor + offsetX;
     translateY = (translateY - offsetY) * factor + offsetY;
     currentZoom = newZoom;
@@ -385,13 +383,10 @@ imageWrapper.addEventListener('touchmove', function(e) {
             const containerRect = imageWrapper.getBoundingClientRect();
             const offsetX = midX - containerRect.left - containerRect.width / 2;
             const offsetY = midY - containerRect.top - containerRect.height / 2;
-            
-            // Calculate zoom factor based on the change in distance
             const factor = currentDistance / lastTouchDistance;
             const newZoom = Math.min(Math.max(currentZoom * factor, 1), maxZoom);
             const zoomFactor = newZoom / currentZoom;
             
-            // Adjust translation to zoom towards the midpoint of the pinch
             translateX = (translateX - offsetX) * zoomFactor + offsetX;
             translateY = (translateY - offsetY) * zoomFactor + offsetY;
             currentZoom = newZoom;
@@ -749,7 +744,7 @@ document.getElementById("next-round").addEventListener("click", function() {
 // Results Popup Functions
 // --------------------
 function showResults() {
-    document.getElementById("total-score").innerHTML = `Your total score: <strong class="${totalScore === 15000 ? 'perfect-score' : ''}">${totalScore}</strong> / 15000`;
+    document.getElementById("total-score").innerHTML += `Your total score: <strong class="${totalScore === 15000 ? 'perfect-score' : ''}">${totalScore}</strong> / 15000`;
     
     // Progress bar
     const existingProgress = document.querySelector('.score-progress');
@@ -801,26 +796,21 @@ function copyResults() {
         const blackSquares = 5 - greenSquares;
         return '🟩'.repeat(greenSquares) + '⬛'.repeat(blackSquares);
     }
-
-    const gameDay = isArchiveMode ? 
-        Math.floor((selectedArchiveDate - epoch) / (1000 * 60 * 60 * 24)) + 1 :
-        daysSinceEpoch + 1;
     
-    const archivePrefix = isArchiveMode ? '(Archive) ' : '';
-    const shareText = `UCFGuessr ${gameDay} ${totalScore}/15000\n\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.xyz`;
+    const shareText = `UCFGuessr ${currentDay} ${totalScore}/15000\n\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.xyz`;
     
     navigator.clipboard.writeText(shareText).then(() => {
         // Track share event with GA4
         if (isArchiveMode) {
             gtag('event', 'share_archive_results', {
                 'event_category': 'engagement',
-                'event_label': `Archive Day ${Math.floor((selectedArchiveDate - epoch) / (1000 * 60 * 60 * 24)) + 1}`,
+                'event_label': `Archive Day ${currentDay}`,
                 'value': totalScore
             });
         } else {
             gtag('event', 'share_results', {
                 'event_category': 'engagement',
-                'event_label': `Day ${daysSinceEpoch + 1}`,
+                'event_label': `Day ${currentDay}`,
                 'value': totalScore
             });
         }
@@ -970,8 +960,9 @@ function selectArchiveDate(date) {
     const daysSinceEpochArchive = Math.floor((Date.UTC(etDate.getFullYear(), etDate.getMonth(), etDate.getDate()) - epoch.getTime()) / (1000 * 60 * 60 * 24));
     const etNow = getETDate();
     
-    // Update current playing date
+    // Update current playing date and day number
     currentPlayingDate = date;
+    currentDay = daysSinceEpochArchive + 1;
     
     // Reset game state
     currentRound = 0;
