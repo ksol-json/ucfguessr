@@ -175,6 +175,22 @@
         // Set min date for date input
         document.getElementById('dateInput').min = epoch.toISOString().split('T')[0];
 
+        // Update keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const dayInput = document.getElementById('dayInput');
+            const currentDay = parseInt(dayInput.value) || 1;
+            
+            if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                dayInput.value = currentDay + 1;
+                dayInput.dispatchEvent(new Event('input'));
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                if (currentDay > 1) {
+                    dayInput.value = currentDay - 1;
+                    dayInput.dispatchEvent(new Event('input'));
+                }
+            }
+        });
+
         // Set default to today's date in ET
         const today = getTodayInET();
         const todayStr = today.toISOString().split('T')[0];

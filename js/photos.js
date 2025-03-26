@@ -78,7 +78,7 @@ const mediumPhotos = [
     "images/medium/IMG_5728.jpeg", // 32
     "images/medium/IMG_5937.jpeg", // 33
     "images/medium/IMG_5958.jpeg", // 34
-    "images/medium/IMG_5712.jpeg", // 35
+    "images/medium/IMG_6240.jpeg", // 35
     "images/medium/IMG_6210.jpeg", // 36
     "images/medium/IMG_6239.jpeg", // 37
     "images/medium/IMG_6216.jpeg", // 38
@@ -128,6 +128,7 @@ const hardPhotos = [
     "images/hard/IMG_6215.jpeg", // 36
     "images/hard/IMG_6219.jpeg", // 37
     "images/hard/IMG_3580--Dieguin.jpeg", // 38
+    "images/hard/IMG_5712.jpeg", // 39
     "images/hard/IMG_6236.jpeg", // 39
     "images/hard/IMG_6248.jpeg", // 40
 ];
