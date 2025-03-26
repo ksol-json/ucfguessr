@@ -31,7 +31,16 @@ const easyPhotos = [
     "images/easy/IMG_5960.jpeg", // 30
     "images/easy/IMG_5736.jpeg", // 31
     "images/easy/PXL_20250205_032438690--Jeremiah N..jpeg", // 32
-    "images/easy/109B7E7B-1A7F.jpeg" // 33
+    "images/easy/109B7E7B-1A7F.jpeg", // 33
+    "images/easy/IMG_6252.jpeg", // 34
+    "images/easy/IMG_6221.jpeg", // 35
+    "images/easy/IMG_5784--Aly.jpeg", // 36
+    "images/easy/IMG_6232.jpeg", // 37
+    "images/easy/IMG_6241.jpeg", // 38
+    "images/easy/IMG_6251.jpeg", // 39
+    "images/easy/IMG_9229.jpeg", // 40
+    "images/easy/IMG_6212.jpeg", // 41
+    "images/easy/IMG_2724.jpeg", // 42
 ];
 
 const mediumPhotos = [
@@ -69,7 +78,15 @@ const mediumPhotos = [
     "images/medium/IMG_5728.jpeg", // 32
     "images/medium/IMG_5937.jpeg", // 33
     "images/medium/IMG_5958.jpeg", // 34
-    "images/medium/IMG_5712.jpeg" // 35
+    "images/medium/IMG_5712.jpeg", // 35
+    "images/medium/IMG_6210.jpeg", // 36
+    "images/medium/IMG_6239.jpeg", // 37
+    "images/medium/IMG_6216.jpeg", // 38
+    "images/medium/IMG_1554.jpeg", // 39
+    "images/medium/IMG_6224.jpeg", // 40
+    "images/medium/IMG_6233.jpeg", // 41
+    "images/medium/UCF Geoguessr--Adi.jpeg", // 42
+    "images/medium/IMG_6213.jpeg", // 43
 ];
 
 const hardPhotos = [
@@ -105,5 +122,12 @@ const hardPhotos = [
     "images/hard/IMG_9493~~thanks for one month of ucfguessr.jpeg", // 30
     "images/hard/9BDC2D04-CE8D--Olive.jpeg", // 31
     "images/hard/IMG_3082.jpeg", // 32
-    "images/hard/IMG_2749.jpeg" // 33
+    "images/hard/IMG_2749.jpeg", // 33
+    "images/hard/IMG_6222.jpeg", // 34
+    "images/hard/1000100911--Jeremy Weed.jpeg", // 35
+    "images/hard/IMG_6215.jpeg", // 36
+    "images/hard/IMG_6219.jpeg", // 37
+    "images/hard/IMG_3580--Dieguin.jpeg", // 38
+    "images/hard/IMG_6236.jpeg", // 39
+    "images/hard/IMG_6248.jpeg", // 40
 ];

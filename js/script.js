@@ -1005,67 +1005,60 @@ function toggleCoverageMarkers() {
     }
 
     const allPhotos = [...easyPhotos, ...mediumPhotos, ...hardPhotos];
-    let processed = 0;
     coverageMarkers = [];
+    let validMarkerCount = 0;
 
     const currentETDate = getETDate();
     const currentDaysSinceEpoch = Math.floor((Date.UTC(currentETDate.getFullYear(), currentETDate.getMonth(), currentETDate.getDate()) - epoch.getTime()) / (1000 * 60 * 60 * 24));
 
-    allPhotos.forEach((photoUrl, index) => {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.src = photoUrl;
+    Promise.all(allPhotos.map((photoUrl, index) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = photoUrl;
 
-        img.onload = function() {
-            EXIF.getData(this, function() {
-                const lat = EXIF.getTag(this, "GPSLatitude");
-                const latRef = EXIF.getTag(this, "GPSLatitudeRef") || "N";
-                const lon = EXIF.getTag(this, "GPSLongitude");
-                const lonRef = EXIF.getTag(this, "GPSLongitudeRef") || "W";
+            img.onload = function() {
+                EXIF.getData(this, function() {
+                    const lat = EXIF.getTag(this, "GPSLatitude");
+                    const latRef = EXIF.getTag(this, "GPSLatitudeRef") || "N";
+                    const lon = EXIF.getTag(this, "GPSLongitude");
+                    const lonRef = EXIF.getTag(this, "GPSLongitudeRef") || "W";
 
-                if (lat && lon) {
-                    const latitude = convertDMSToDD(lat, latRef);
-                    const longitude = convertDMSToDD(lon, lonRef);
-                    
-                    let photoType = '';
-                    let photoIndex = 0;
-                    
-                    if (index < easyPhotos.length) {
-                        photoType = 'easy';
-                        photoIndex = index;
-                    } else if (index < easyPhotos.length + mediumPhotos.length) {
-                        photoType = 'medium';
-                        photoIndex = index - easyPhotos.length;
-                    } else {
-                        photoType = 'hard';
-                        photoIndex = index - easyPhotos.length - mediumPhotos.length;
-                    }
-                    
-                    const photoDaysSinceEpoch = photoIndex;
-                    
-                    if ((konamiCodeActivations === 1 && photoDaysSinceEpoch < currentDaysSinceEpoch) ||
-                        konamiCodeActivations === 2) {
+                    if (lat && lon) {
+                        const latitude = convertDMSToDD(lat, latRef);
+                        const longitude = convertDMSToDD(lon, lonRef);
                         
-                        const marker = L.circleMarker([latitude, longitude], {
-                            radius: 5,
-                            fillColor: '#ff4444',
-                            color: '#000',
-                            weight: 1,
-                            opacity: 1,
-                            fillOpacity: 0.8
-                        }).addTo(map);
+                        let photoIndex = index;
+                        if (index >= easyPhotos.length) {
+                            photoIndex = index - easyPhotos.length;
+                            if (index >= easyPhotos.length + mediumPhotos.length) {
+                                photoIndex = index - easyPhotos.length - mediumPhotos.length;
+                            }
+                        }
                         
-                        coverageMarkers.push(marker);
+                        if ((konamiCodeActivations === 1 && photoIndex < currentDaysSinceEpoch) ||
+                            konamiCodeActivations === 2) {
+                            
+                            const marker = L.circleMarker([latitude, longitude], {
+                                radius: 5,
+                                fillColor: '#ff4444',
+                                color: '#000',
+                                weight: 1,
+                                opacity: 1,
+                                fillOpacity: 0.8
+                            }).addTo(map);
+                            
+                            coverageMarkers.push(marker);
+                            validMarkerCount++;
+                        }
                     }
-                }
-
-                processed++;
-                if (processed === allPhotos.length) {
-                    showNotification(`Showing ${coverageMarkers.length} photo locations`);
-                }
-            });
-        };
+                    resolve();
+                });
+            };
+            img.onerror = () => resolve();
+        });
+    })).then(() => {
+        coverageMarkersVisible = true;
+        showNotification(`Showing ${validMarkerCount} photo locations`);
     });
-
-    coverageMarkersVisible = true;
 }
