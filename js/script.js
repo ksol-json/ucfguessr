@@ -410,7 +410,10 @@ imageWrapper.addEventListener('touchend', function(e) {
 // --------------------
 function isAprilFools2025() {
     const date = new Date();
-    return date.getFullYear() === 2025 && date.getMonth() === 3 && date.getDate() === 1;
+    const etDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    return etDate.getFullYear() === 2025 && 
+           etDate.getMonth() === 3 && 
+           etDate.getDate() === 1;
 }
 
 const map = L.map('map').setView([28.602053, -81.200421], isMobile ? 14 : 15);
@@ -750,7 +753,7 @@ document.getElementById("next-round").addEventListener("click", function() {
 // Results Popup Functions
 // --------------------
 function showResults() {
-    document.getElementById("total-score").innerHTML += `Your total score: <strong class="${totalScore === 15000 ? 'perfect-score' : ''}">${totalScore}</strong> / 15000`;
+    document.getElementById("total-score").innerHTML = `Your total score: <strong class="${totalScore === 15000 ? 'perfect-score' : ''}">${totalScore}</strong> / 15000`;
     
     // Progress bar
     const existingProgress = document.querySelector('.score-progress');
