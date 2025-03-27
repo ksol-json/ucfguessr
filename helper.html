@@ -63,9 +63,9 @@
             }
             return dd;
         }
-
+        
         const epoch = new Date(Date.UTC(2025, 1, 22));
-
+        
         function updateFromDay(day) {
             if (isNaN(day) || day < 1) {
                 document.getElementById('preview').innerHTML = '';
@@ -78,26 +78,26 @@
             document.getElementById('dateInput').value = date.toISOString().split('T')[0];
             showPhotosForDay(day - 1);
         }
-
+        
         function updateFromDate(dateStr) {
             if (!dateStr) {
                 document.getElementById('preview').innerHTML = '';
                 document.getElementById('dayInput').value = '';
                 return;
             }
-
+            
             const selectedDate = new Date(dateStr);
             const daysSinceEpoch = Math.floor((selectedDate - epoch) / (1000 * 60 * 60 * 24)) + 1;
-
+            
             if (daysSinceEpoch < 1) {
                 alert('Please select a date on or after February 22, 2025');
                 return;
             }
-
+            
             document.getElementById('dayInput').value = daysSinceEpoch;
             showPhotosForDay(daysSinceEpoch - 1);
         }
-
+        
         function showPhotosForDay(dayIndex) {
             const easyIndex = dayIndex % easyPhotos.length;
             const mediumIndex = dayIndex % mediumPhotos.length;
@@ -147,7 +147,7 @@
                             
                             const map = L.map(`map-${index}`).setView([latitude, longitude], 16);
                             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                attribution: '© OpenStreetMap contributors'
+                                attribution: ''
                             }).addTo(map);
                             L.marker([latitude, longitude]).addTo(map);
                         }

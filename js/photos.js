@@ -37,10 +37,11 @@ const easyPhotos = [
     "images/easy/IMG_5784--Aly.jpeg", // 36
     "images/easy/IMG_6232.jpeg", // 37
     "images/easy/IMG_6241.jpeg", // 38
-    "images/easy/IMG_6251.jpeg", // 39
-    "images/easy/IMG_9229.jpeg", // 40
+    "images/easy/IMG_7728.jpeg", // 39
+    "images/easy/IMG_6251.jpeg", // 40
     "images/easy/IMG_6212.jpeg", // 41
-    "images/easy/IMG_2724.jpeg", // 42
+    "images/easy/IMG_9229.jpeg", // 42
+    "images/easy/IMG_2724.jpeg", // 43
 ];
 
 const mediumPhotos = [
@@ -82,11 +83,12 @@ const mediumPhotos = [
     "images/medium/IMG_6210.jpeg", // 36
     "images/medium/IMG_6239.jpeg", // 37
     "images/medium/IMG_6216.jpeg", // 38
-    "images/medium/IMG_1554.jpeg", // 39
-    "images/medium/IMG_6224.jpeg", // 40
+    "images/medium/IMG_9271--Ana E..jpeg", // 39
+    "images/medium/IMG_1554.jpeg", // 40
     "images/medium/IMG_6233.jpeg", // 41
-    "images/medium/UCF Geoguessr--Adi.jpeg", // 42
-    "images/medium/IMG_6213.jpeg", // 43
+    "images/medium/IMG_6224.jpeg", // 42
+    "images/medium/UCF Geoguessr--Adi.jpeg", // 43
+    "images/medium/IMG_6213.jpeg", // 44
 ];
 
 const hardPhotos = [
@@ -128,7 +130,8 @@ const hardPhotos = [
     "images/hard/IMG_6215.jpeg", // 36
     "images/hard/IMG_6219.jpeg", // 37
     "images/hard/IMG_3580--Dieguin.jpeg", // 38
-    "images/hard/IMG_5712.jpeg", // 39
-    "images/hard/IMG_6236.jpeg", // 39
-    "images/hard/IMG_6248.jpeg", // 40
+    "images/hard/IMG_7736.jpeg", // 39
+    "images/hard/IMG_5712.jpeg", // 40
+    "images/hard/IMG_6248.jpeg", // 41
+    "images/hard/IMG_6236.jpeg", // 42
 ];

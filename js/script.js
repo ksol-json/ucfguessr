@@ -408,6 +408,11 @@ imageWrapper.addEventListener('touchend', function(e) {
 // --------------------
 // Map Setup
 // --------------------
+function isAprilFools2025() {
+    const date = new Date();
+    return date.getFullYear() === 2025 && date.getMonth() === 3 && date.getDate() === 1;
+}
+
 const map = L.map('map').setView([28.602053, -81.200421], isMobile ? 14 : 15);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -586,6 +591,7 @@ function loadRound(skipExifCheck = false, completed = false) {
     updateImageTransform();
     
     map.setView([28.602053, -81.200421], 15);
+    if (isAprilFools2025()) map.setView([29.64410123796475, -82.34763839012359], 15);
     if (userMarker) map.removeLayer(userMarker);
     if (actualMarker) map.removeLayer(actualMarker);
     if (line) map.removeLayer(line);
@@ -1061,4 +1067,11 @@ function toggleCoverageMarkers() {
         coverageMarkersVisible = true;
         showNotification(`Showing ${validMarkerCount} photo locations`);
     });
+}
+
+if (isAprilFools2025()) {
+    const title = document.querySelector('h1');
+    if (title) {
+        title.innerHTML = `<span style="color:rgb(251, 101, 60)">UF</span><span style="color:rgb(27, 60, 192)">Guessr</span>`;
+    }
 }
