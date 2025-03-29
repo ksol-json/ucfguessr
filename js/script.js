@@ -1,5 +1,7 @@
 const isMobile = window.innerWidth <= 768;
 
+let isImageLoaded = false;
+
 function showNotification(message) {
     let notification = document.querySelector('.notification-popup');
     if (!notification) {
@@ -197,8 +199,6 @@ let isFirstLoad = true;
 let currentDay = daysSinceEpoch + 1;  
 
 const imageWrapper = document.querySelector('.image-wrapper');
-// Show loading spinner initially
-document.querySelector('.loading-spinner').style.display = 'block';
 
 // --------------------
 // Zoom & Pan Functionality
@@ -438,7 +438,8 @@ map.on('click', function(e) {
         offset: [0, -5],
         closeButton: false
     }).openPopup();
-    document.getElementById("submit-guess").disabled = false;
+    const submitButton = document.getElementById('submit-guess');
+    submitButton.disabled = !isImageLoaded;  // Only enable if image is loaded
 });
 
 // Add helper function to check if game is completed
@@ -476,58 +477,42 @@ function convertDMSToDD(dms, ref) {
 // --------------------
 let activeImageIndex = 1;
 
+function handleImageLoad() {
+    isImageLoaded = true;
+    const submitButton = document.getElementById('submit-guess');
+    if (userMarker) {  // Only enable if there's also a marker placed
+        submitButton.disabled = false;
+    }
+}
+
 function loadImage(imageUrl, skipExifCheck = false) {
     const currentImage = document.getElementById(`challenge-image-${activeImageIndex}`);
     const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
     const spinner = document.querySelector('.loading-spinner');
     
-    // Start with spinner hidden
+    // Always start with spinner hidden
     spinner.style.display = 'none';
+    isImageLoaded = false;
     
-    // Show spinner after 1.5s if image hasn't loaded
-    const spinnerTimeout = setTimeout(() => {
-        spinner.style.display = 'block';
-    }, 1500);
-    
-    // Remove old credit if it exists
-    const oldCredit = document.querySelector('.photo-credit');
-    if (oldCredit) {
-        oldCredit.remove();
+    // Clear any existing timeout
+    if (window.spinnerTimeout) {
+        clearTimeout(window.spinnerTimeout);
     }
     
-    // Handle photo credit/label
-    let credit = null;
-    let useSubmittedBy = true;
-    
-    const tildeMatch = imageUrl.match(/~~([^.]+)\.jpe?g/i);
-    if (tildeMatch) {
-        credit = tildeMatch[1];
-        useSubmittedBy = false;
-    } else {
-        const creditMatch = imageUrl.match(/(?: - |--)(.*?)(?=\.jpe?g)/i);
-        credit = creditMatch ? creditMatch[1].trim() : null;
-    }
-
-    if (credit) {
-        const creditDiv = document.createElement('div');
-        creditDiv.className = 'photo-credit';
-        if (useSubmittedBy) {
-            creditDiv.innerHTML = `Submitted by <strong>${credit}</strong>`;
-        } else {
-            creditDiv.innerHTML = `<strong>${credit}</strong>`;
+    // Set up the delayed spinner
+    window.spinnerTimeout = setTimeout(() => {
+        if (!isImageLoaded) {
+            spinner.style.display = 'block';
         }
-        document.getElementById('image-container').appendChild(creditDiv);
-        setTimeout(() => {
-            creditDiv.classList.add('visible');
-        }, 100);
-    }
+    }, 1500);
 
     if (isFirstLoad || skipExifCheck) {
         currentImage.onload = () => {
-            clearTimeout(spinnerTimeout);
+            clearTimeout(window.spinnerTimeout);
             spinner.style.display = 'none';
             currentImage.classList.add('visible');
             currentImage.classList.remove('hidden');
+            handleImageLoad();
         };
         currentImage.src = imageUrl;
         isFirstLoad = false;
@@ -536,13 +521,14 @@ function loadImage(imageUrl, skipExifCheck = false) {
     
     // Normal crossfade for subsequent loads
     nextImage.onload = () => {
-        clearTimeout(spinnerTimeout);
+        clearTimeout(window.spinnerTimeout);
         spinner.style.display = 'none';
         currentImage.classList.remove('visible');
         currentImage.classList.add('hidden');
         nextImage.classList.remove('hidden');
         nextImage.classList.add('visible');
         activeImageIndex = activeImageIndex === 1 ? 2 : 1;
+        handleImageLoad();
     };
     nextImage.src = imageUrl;
 }
@@ -727,6 +713,8 @@ document.getElementById("next-round").addEventListener("click", function() {
         showResults();
     } else {
         currentRound++;
+        isImageLoaded = false;  // Reset image loaded state
+        document.getElementById("submit-guess").disabled = true;
         loadRound();
         
         // Check if the image wrapper is fully visible
