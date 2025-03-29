@@ -417,6 +417,7 @@ function isAprilFools2025() {
 }
 
 const map = L.map('map').setView([28.602053, -81.200421], isMobile ? 14 : 15);
+if (isAprilFools2025()) map.setView([29.64410123796475, -82.34763839012359], 14);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
