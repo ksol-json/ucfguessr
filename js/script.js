@@ -221,8 +221,6 @@ function updateImageTransform() {
     if (image) {
         image.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${currentZoom})`;
         image.style.willChange = 'transform';
-        image.style.imageRendering = 'high-quality';
-        image.style.imageRendering = '-webkit-optimize-contrast';
     }
 }
 
@@ -781,45 +779,105 @@ document.getElementById("next-round").addEventListener("click", function() {
 // --------------------
 // Results Popup Functions
 // --------------------
-function showResults() {
-    document.getElementById("total-score").innerHTML = `Your total score: <strong class="${totalScore === 15000 ? 'perfect-score' : ''}">${totalScore}</strong> / 15000`;
+let hasUpdatedDistribution = false;
+
+function updateScoreDistribution() {
+    if (hasUpdatedDistribution) return;
     
-    // Progress bar
-    const existingProgress = document.querySelector('.score-progress');
-    if (existingProgress) {
-        existingProgress.remove();
+    let dist = localStorage.getItem('scoreDistribution');
+    if (dist) {
+        dist = JSON.parse(dist);
+    } else {
+        dist = { bucket15000: 0, bucket10000: 0, bucket5000: 0, bucket0: 0 };
     }
-    const progressHTML = `
-        <div class="score-progress">
-            <div class="score-progress-bar" style="width: 0%"></div>
-        </div>
-    `;
-    document.getElementById("total-score").insertAdjacentHTML('afterend', progressHTML);
-    const progressBar = document.querySelector('.score-progress-bar');
+    
+    if (totalScore === 15000) {
+        dist.bucket15000++;
+    } else if (totalScore >= 10000) {
+        dist.bucket10000++;
+    } else if (totalScore >= 5000) {
+        dist.bucket5000++;
+    } else {
+        dist.bucket0++;
+    }
+    
+    localStorage.setItem('scoreDistribution', JSON.stringify(dist));
+    hasUpdatedDistribution = true;
+}
+
+function showScoreDistribution() {
+    let dist = localStorage.getItem('scoreDistribution');
+    if (dist) {
+        dist = JSON.parse(dist);
+    } else {
+        dist = { bucket15000: 0, bucket10000: 0, bucket5000: 0, bucket0: 0 };
+    }
+    
+    const values = [dist.bucket15000, dist.bucket10000, dist.bucket5000, dist.bucket0];
+    const maxValue = Math.max(...values, 1);
+    
+    const template = document.getElementById('histogram-template');
+    const clone = template.content.cloneNode(true);
+    
+    // Set the values
+    const valueSpans = clone.querySelectorAll('.histogram-value');
+    valueSpans[0].textContent = dist.bucket15000;
+    valueSpans[1].textContent = dist.bucket10000;
+    valueSpans[2].textContent = dist.bucket5000;
+    valueSpans[3].textContent = dist.bucket0;
+    
+    document.getElementById("results-popup").innerHTML = '';
+    document.getElementById("results-popup").appendChild(clone);
+    
+    // Animate the bars after a short delay
+    setTimeout(() => {
+        const bars = document.querySelectorAll('.histogram-bar');
+        bars[0].style.width = `${(dist.bucket15000 / maxValue * 85)}%`;
+        bars[1].style.width = `${(dist.bucket10000 / maxValue * 85)}%`;
+        bars[2].style.width = `${(dist.bucket5000 / maxValue * 85)}%`;
+        bars[3].style.width = `${(dist.bucket0 / maxValue * 85)}%`;
+    }, 50);
+}
+
+function showResults(fromStats = false) {
+    if (!fromStats) {
+        updateScoreDistribution();
+    }
+    
+    const template = document.getElementById('results-template');
+    const clone = template.content.cloneNode(true);
+    
+    // Update score and classes
+    const scoreElement = clone.querySelector('#total-score strong');
+    scoreElement.textContent = totalScore;
+    if (totalScore === 15000) {
+        scoreElement.classList.add('perfect-score');
+    }
+    
+    // Update round scores
+    clone.querySelector('#round-scores').innerHTML = 
+        `Easy: ${roundScores[0]}<br>Medium: ${roundScores[1]}<br>Hard: ${roundScores[2]}`;
+    
+    document.getElementById("results-popup").innerHTML = '';
+    document.getElementById("results-popup").appendChild(clone);
+
+    // Add stats button
+    const statsButton = document.createElement('button');
+    statsButton.className = 'stats-button';
+    statsButton.onclick = showScoreDistribution;
+    statsButton.innerHTML = '📊';
+    document.getElementById('results-popup').appendChild(statsButton);
     
     // Progress bar animation
     setTimeout(() => {
+        const progressBar = document.querySelector('.score-progress-bar');
         const progressPercentage = (totalScore / 15000) * 100;
         progressBar.style.width = `${progressPercentage}%`;
     }, 50);
     
-    document.getElementById("round-scores").innerHTML = `Easy: ${roundScores[0]}<br>Medium: ${roundScores[1]}<br>Hard: ${roundScores[2]}`;
-    
-    const comeBackText = document.createElement('p');
-    comeBackText.textContent = "Come back tomorrow for a new challenge!";
-    const uploadLink = document.createElement('a');
-    uploadLink.href = "https://docs.google.com/forms/d/e/1FAIpQLScUbMUont8pCtntTDSOJbxaVXJ0cao8AK2v-GS068TTyXii5A/viewform?usp=dialog";
-    uploadLink.innerHTML = "Want your photos featured in the game?<br>Upload them here!";
-    uploadLink.target = "_blank";
-    uploadLink.style.fontWeight = "bold";
-    
-    document.getElementById("round-scores").appendChild(comeBackText);
-    document.getElementById("round-scores").appendChild(uploadLink);
-    
     document.getElementById("results-popup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
     
-    // Show OpenStreetMap attribution at end of game
     document.querySelector('.leaflet-control-attribution').classList.add('show');
 }
 
@@ -1008,6 +1066,7 @@ function selectArchiveDate(date) {
     roundScores = [];
     isArchiveMode = date.toDateString() !== etNow.toDateString();
     selectedArchiveDate = date;
+    hasUpdatedDistribution = false;
     
     // Update daily indices for archive date
     const archiveEasyIndex = daysSinceEpochArchive % easyPhotos.length;
@@ -1029,6 +1088,7 @@ function selectArchiveDate(date) {
 // Initialize currentPlayingDate when the game loads
 document.addEventListener('DOMContentLoaded', () => {
     currentPlayingDate = new Date();
+    hasUpdatedDistribution = false;
 });
 
 let coverageMarkers = [];

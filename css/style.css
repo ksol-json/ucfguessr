@@ -18,7 +18,7 @@
     --border-color: #404040;
     --popup-bg: #2d2d2d;
 
-& .leaflet-layer,
+    & .leaflet-layer,
     & .leaflet-layer,
     & .leaflet-control-zoom-in,
     & .leaflet-control-zoom-out,
@@ -138,14 +138,6 @@ h1 {
     transition: transform 0.3s ease-out, opacity 0.35s ease-in-out;
     max-width: 100%;
     max-height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -o-crisp-edges;
-    image-rendering: crisp-edges;
-    image-rendering: high-quality;
-    -ms-interpolation-mode: nearest-neighbor;
 }
 
 .challenge-image.hidden {
@@ -280,13 +272,23 @@ h1 {
     width: 30%;
     max-width: 600px;
     text-align: center;
-    display: none;
     z-index: 2000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+}
+
+#results-popup > * {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 #results-popup a {
     color: var(--primary-color);
     text-decoration: none;
+    display: block;
+    margin-bottom: 20px;
 }
 
 #results-popup a:hover {
@@ -636,6 +638,28 @@ h1 {
         padding: 3px 8px;
         font-size: 10px;
     }
+
+    .histogram-label {
+        min-width: 90px;
+        font-size: 12px;
+    }
+    
+    .histogram-bar {
+        height: 20px;
+        min-width: 20px;
+    }
+    
+    .histogram-value {
+        font-size: 12px;
+    }
+
+    .stats-button {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        bottom: 15px;
+        left: 15px;
+    }
 }
 
 .notification-popup {
@@ -871,4 +895,96 @@ h1 {
 
 .coverage-button:hover {
     transform: scale(1.1);
+}
+
+.histogram-container {
+    margin: 30px 0;
+    width: 100%;
+    padding: 0 15px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.histogram-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 150px;  
+    height: 100%;
+    width: 2px;
+    background-color: var(--border-color);
+}
+
+.histogram-row {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+    gap: 15px;
+}
+
+.histogram-label {
+    min-width: 120px;
+    text-align: right;
+    font-size: 14px;
+    color: var(--text-color);
+    flex-shrink: 0;
+    padding-right: 15px;
+}
+
+.histogram-label[data-score="15000"] {
+    font-weight: bold;
+}
+
+.histogram-bar {
+    flex-grow: 0;
+    width: 0;
+    height: 24px;
+    background: var(--primary-color);
+    border-radius: 12px;
+    position: relative;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    margin-left: 15px;
+}
+
+.histogram-value {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.stats-button {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.stats-button:hover {
+    transform: scale(1.1);
+}
+
+.share-button {
+    margin-bottom: 20px;
+}
+
+.back-button {
+    margin-top: 20px;
 }
