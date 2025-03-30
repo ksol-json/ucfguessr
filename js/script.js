@@ -320,7 +320,7 @@ imageWrapper.addEventListener('dblclick', function(e) {
         translateX = 0;
         translateY = 0;
     } else {
-        const newZoom = Math.min(currentZoom * 1.5, maxZoom);
+        const newZoom = Math.min(currentZoom * 2, maxZoom);
         const factor = newZoom / currentZoom;
         translateX = (translateX - offsetX) * factor + offsetX;
         translateY = (translateY - offsetY) * factor + offsetY;
@@ -352,6 +352,9 @@ imageWrapper.addEventListener('wheel', function(e) {
 });
 
 let lastTouchDistance = 0;
+let lastTapTime = 0;
+let lastTouchX = 0;
+let lastTouchY = 0;
 
 imageWrapper.addEventListener('touchstart', function(e) {
     if (e.touches.length === 2) {
@@ -401,6 +404,41 @@ imageWrapper.addEventListener('touchmove', function(e) {
 imageWrapper.addEventListener('touchend', function(e) {
     lastTouchDistance = 0;
     if (e.touches.length === 0) {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        const touch = e.changedTouches[0];
+        const touchX = touch.clientX;
+        const touchY = touch.clientY;
+        
+        // Check if this is a double tap (time between taps < 300ms and touch positions are close)
+        if (tapLength < 300 && Math.abs(touchX - lastTouchX) < 30 && Math.abs(touchY - lastTouchY) < 30) {
+            e.preventDefault();
+            
+            const containerRect = imageWrapper.getBoundingClientRect();
+            const clickX = touchX - containerRect.left;
+            const clickY = touchY - containerRect.top;
+            const offsetX = clickX - containerRect.width / 2;
+            const offsetY = clickY - containerRect.height / 2;
+            
+            if (currentZoom >= maxZoom) {
+                currentZoom = 1;
+                translateX = 0;
+                translateY = 0;
+            } else {
+                const newZoom = Math.min(currentZoom * 2, maxZoom);
+                const factor = newZoom / currentZoom;
+                translateX = (translateX - offsetX) * factor + offsetX;
+                translateY = (translateY - offsetY) * factor + offsetY;
+                currentZoom = newZoom;
+            }
+            updateImageTransform();
+        }
+        
+        // Store the time and position of this tap
+        lastTapTime = currentTime;
+        lastTouchX = touchX;
+        lastTouchY = touchY;
+        
         stopDragging();
     }
 });
