@@ -221,6 +221,8 @@ function updateImageTransform() {
     if (image) {
         image.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${currentZoom})`;
         image.style.willChange = 'transform';
+        image.style.imageRendering = 'high-quality';
+        image.style.imageRendering = '-webkit-optimize-contrast';
     }
 }
 

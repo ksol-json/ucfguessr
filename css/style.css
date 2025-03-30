@@ -138,6 +138,14 @@ h1 {
     transition: transform 0.3s ease-out, opacity 0.35s ease-in-out;
     max-width: 100%;
     max-height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: high-quality;
+    -ms-interpolation-mode: nearest-neighbor;
 }
 
 .challenge-image.hidden {
