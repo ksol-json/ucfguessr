@@ -474,21 +474,12 @@ h1 {
     .game-content {
         flex-direction: column;
         gap: 15px;
-        align-items: center;
-        width: 100%;
-    }
-
-    #game-container {
-        padding: 15px;
-        width: calc(100% - 30px);
-        margin: 0 auto;
     }
 
     #image-container {
         height: 240px;
         width: 100%;
         position: relative;
-        margin: 0 auto;
     }
 
     .image-wrapper {
@@ -521,8 +512,6 @@ h1 {
 
     #map-container {
         height: 240px;
-        width: 100%;
-        margin: 0 auto;
     }
 
     #map {
@@ -531,11 +520,14 @@ h1 {
 
     .header-container {
         flex-direction: column;
+        gap: 10px;
+        padding: 0 15px;
         align-items: center;
-        justify-content: center;
+        margin-bottom: 0px; 
         width: 100%;
+        max-width: 100%;
         padding: 0;
-        margin: 0 auto 15px;
+        text-align: center;
     }
 
     .controls-group {
@@ -579,25 +571,24 @@ h1 {
         flex-direction: column;
         align-items: center;
         text-align: center;
+        gap: 5px;
         width: 100%;
+        justify-content: center;
         margin: 0 auto;
     }
 
     h1 {
-        text-align: center;
-        width: 100%;
         font-size: 2em;
+        margin: 0 auto;
+        text-align: center;
     }
 
     .current-date {
         font-size: 1em;
-        display: none;
     }
 
     .rounds-indicator {
-        text-align: center;
-        width: 100%;
-        margin: 10px auto;
+        font-size: 0.9em;
     }
 
     #results-popup {
@@ -631,6 +622,10 @@ h1 {
         padding: 10px 20px;
     }
 
+    .current-date {
+        display: none;
+    }
+    
     #archive-popup {
         width: 90%;
         max-width: 320px;
@@ -664,13 +659,6 @@ h1 {
         font-size: 16px;
         bottom: 15px;
         left: 15px;
-    }
-
-    .button-container {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        margin: 15px auto;
     }
 }
 
