@@ -446,20 +446,20 @@ imageWrapper.addEventListener('touchend', function(e) {
 // --------------------
 // Map Setup
 // --------------------
-function isAprilFools2025() {
-    const date = new Date();
-    const etDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-    return etDate.getFullYear() === 2025 && 
-           etDate.getMonth() === 3 && 
-           etDate.getDate() === 1;
+function isAprilFoolsDay(dayNumber) {
+    return dayNumber === 39; // April 1st, 2025 is day #39
 }
 
 const map = L.map('map').setView([28.602053, -81.200421], isMobile ? 14 : 15);
-if (isAprilFools2025()) map.setView([29.64410123796475, -82.34763839012359], 14);
+
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
+
+if (isAprilFoolsDay(daysSinceEpoch + 1)) {
+    map.setView([29.64410123796475, -82.34763839012359], 14);
+}
 
 let userMarker = null;
 
@@ -694,8 +694,12 @@ function loadRound(skipExifCheck = false, completed = false) {
     translateY = 0;
     updateImageTransform();
     
-    map.setView([28.602053, -81.200421], 15);
-    if (isAprilFools2025()) map.setView([29.64410123796475, -82.34763839012359], 15);
+    if (isAprilFoolsDay(currentDay)) {
+        map.setView([29.64410123796475, -82.34763839012359], 15);
+    } else {
+        map.setView([28.602053, -81.200421], 15);
+    }
+    
     if (userMarker) map.removeLayer(userMarker);
     if (actualMarker) map.removeLayer(actualMarker);
     if (line) map.removeLayer(line);
@@ -1130,6 +1134,17 @@ function nextMonth() {
     updateCalendar();
 }
 
+function updateTitleForAprilFoolsDay(dayNumber) {
+    const title = document.querySelector('h1');
+    if (title) {
+        if (isAprilFoolsDay(dayNumber)) {
+            title.innerHTML = `<span style="color:rgb(251, 101, 60)">UF</span><span style="color:rgb(27, 60, 192)">Guessr</span>`;
+        } else {
+            title.innerHTML = `<span class="title-ucf">UCF</span><span class="title-guessr">Guessr</span>`;
+        }
+    }
+}
+
 function selectArchiveDate(date) {
     // Convert the selected date to ET midnight
     const etDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
@@ -1158,6 +1173,14 @@ function selectArchiveDate(date) {
     rounds[1].src = mediumPhotos[archiveMediumIndex];
     rounds[2].src = hardPhotos[archiveHardIndex];
     
+    // Update map center and title based on the day number
+    if (isAprilFoolsDay(currentDay)) {
+        map.setView([29.64410123796475, -82.34763839012359], 15);
+    } else {
+        map.setView([28.602053, -81.200421], 15);
+    }
+    updateTitleForAprilFoolsDay(currentDay);
+    
     closeArchive();
     loadRound();
     
@@ -1169,6 +1192,7 @@ function selectArchiveDate(date) {
 document.addEventListener('DOMContentLoaded', () => {
     currentPlayingDate = new Date();
     hasUpdatedDistribution = false;
+    updateTitleForAprilFoolsDay(daysSinceEpoch + 1);
 });
 
 let coverageMarkers = [];
@@ -1239,11 +1263,4 @@ function toggleCoverageMarkers() {
         coverageMarkersVisible = true;
         showNotification(`Showing ${validMarkerCount} photo locations`);
     });
-}
-
-if (isAprilFools2025()) {
-    const title = document.querySelector('h1');
-    if (title) {
-        title.innerHTML = `<span style="color:rgb(251, 101, 60)">UF</span><span style="color:rgb(27, 60, 192)">Guessr</span>`;
-    }
 }
