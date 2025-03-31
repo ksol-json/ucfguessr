@@ -135,17 +135,25 @@ h1 {
     position: absolute;
     top: 0;
     left: 0;
-    transition: transform 0.3s ease-out, opacity 0.35s ease-in-out;
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(0.4, 0.0, 0.2, 1), transform 0.2s ease-out;
     max-width: 100%;
     max-height: 100%;
+    pointer-events: none;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
 }
 
 .challenge-image.hidden {
+    display: none;
     opacity: 0;
 }
 
 .challenge-image.visible {
-    opacity: 1;
+    display: block;
 }
 
 #challenge-image {

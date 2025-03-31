@@ -529,26 +529,58 @@ function loadImage(imageUrl, skipExifCheck = false) {
     const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
     const spinner = document.querySelector('.loading-spinner');
     
-    // Always start with spinner hidden
     spinner.style.display = 'none';
     isImageLoaded = false;
     
-    // Clear any existing timeout
     if (window.spinnerTimeout) {
         clearTimeout(window.spinnerTimeout);
     }
     
-    // Set up the delayed spinner
     window.spinnerTimeout = setTimeout(() => {
         if (!isImageLoaded) {
             spinner.style.display = 'block';
         }
     }, 1500);
+    
+    // Remove old credit if it exists
+    const oldCredit = document.querySelector('.photo-credit');
+    if (oldCredit) {
+        oldCredit.remove();
+    }
+    
+    // Handle photo credit/label
+    let credit = null;
+    let useSubmittedBy = true;
+    
+    const tildeMatch = imageUrl.match(/~~([^.]+)\.jpe?g/i);
+    if (tildeMatch) {
+        credit = tildeMatch[1];
+        useSubmittedBy = false;
+    } else {
+        const creditMatch = imageUrl.match(/(?: - |--)(.*?)(?=\.jpe?g)/i);
+        credit = creditMatch ? creditMatch[1].trim() : null;
+    }
 
-    if (isFirstLoad || skipExifCheck) {
+    if (credit) {
+        const creditDiv = document.createElement('div');
+        creditDiv.className = 'photo-credit';
+        if (useSubmittedBy) {
+            creditDiv.innerHTML = `Submitted by <strong>${credit}</strong>`;
+        } else {
+            creditDiv.innerHTML = `<strong>${credit}</strong>`;
+        }
+        document.getElementById('image-container').appendChild(creditDiv);
+        setTimeout(() => {
+            creditDiv.classList.add('visible');
+        }, 100);
+    }
+    
+    // Set the image source
+    if (isFirstLoad) {
         currentImage.onload = () => {
             clearTimeout(window.spinnerTimeout);
             spinner.style.display = 'none';
+            currentImage.style.opacity = '1';
             currentImage.classList.add('visible');
             currentImage.classList.remove('hidden');
             handleImageLoad();
@@ -558,18 +590,37 @@ function loadImage(imageUrl, skipExifCheck = false) {
         return;
     }
     
-    // Normal crossfade for subsequent loads
+    // Prepare next image while keeping current image visible
+    nextImage.style.opacity = '0';
+    nextImage.classList.remove('hidden');
+    nextImage.classList.add('visible');
+    nextImage.src = imageUrl;
+    
+    // Wait for next image to load before starting transition
     nextImage.onload = () => {
         clearTimeout(window.spinnerTimeout);
         spinner.style.display = 'none';
-        currentImage.classList.remove('visible');
-        currentImage.classList.add('hidden');
-        nextImage.classList.remove('hidden');
-        nextImage.classList.add('visible');
-        activeImageIndex = activeImageIndex === 1 ? 2 : 1;
-        handleImageLoad();
+        
+        // Reset transforms for both images
+        currentImage.style.transform = '';
+        nextImage.style.transform = '';
+        currentZoom = 1;
+        translateX = 0;
+        translateY = 0;
+        
+        // Start crossfade with slight delay for smoother transition
+        requestAnimationFrame(() => {
+            nextImage.style.opacity = '1';
+            currentImage.style.opacity = '0';
+            
+            setTimeout(() => {
+                currentImage.classList.remove('visible');
+                currentImage.classList.add('hidden');
+                activeImageIndex = activeImageIndex === 1 ? 2 : 1;
+                handleImageLoad();
+            }, 500); // Match CSS transition duration
+        });
     };
-    nextImage.src = imageUrl;
 }
 
 document.querySelectorAll('.challenge-image').forEach(img => {
@@ -1043,12 +1094,12 @@ function updateCalendar() {
 }
 
 function prevMonth() {
-    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+    currentCalendarDate = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() - 1, 1);
     updateCalendar();
 }
 
 function nextMonth() {
-    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+    currentCalendarDate = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + 1, 1);
     updateCalendar();
 }
 
