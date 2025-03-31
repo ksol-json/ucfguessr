@@ -582,14 +582,16 @@ document.querySelectorAll('.challenge-image').forEach(img => {
 function loadRound(skipExifCheck = false, completed = false) {
     const round = rounds[currentRound];
     
+    // Load and display the image immediately
+    loadImage(round.src, true);
+    
     if (!skipExifCheck) {
-        // Create a temporary image to force a fresh load and EXIF extraction
+        // Extract EXIF data in the background
         const tempImg = new Image();
         tempImg.crossOrigin = "Anonymous"; 
         const urlWithTimestamp = round.src + "?t=" + new Date().getTime();
         tempImg.src = urlWithTimestamp;
         
-        // Extract EXIF data
         tempImg.onload = function() {
             EXIF.getData(tempImg, function() {
                 const lat = EXIF.getTag(tempImg, "GPSLatitude");
@@ -605,14 +607,10 @@ function loadRound(skipExifCheck = false, completed = false) {
                     console.error("No GPS data found in image: " + round.src);
                 }
             });
-            loadImage(urlWithTimestamp);
         };
-    } else {
-        // Skip EXIF extraction and just load the image directly.
-        loadImage(round.src, true);
     }
     
-    // Reset game state for new round (this code always runs)
+    // Reset game state for new round
     currentZoom = 1;
     translateX = 0;
     translateY = 0;
@@ -814,7 +812,11 @@ function showScoreDistribution() {
     }
     
     const values = [dist.bucket15000, dist.bucket10000, dist.bucket5000, dist.bucket0];
-    const maxValue = Math.max(...values, 1);
+    const maxValue = Math.max(...values);
+    
+    // If all values are 0, set maxValue to 1 to avoid division by zero
+    const normalizer = maxValue === 0 ? 1 : maxValue;
+    const maxWidth = 50; // Maximum width in percentage
     
     const template = document.getElementById('histogram-template');
     const clone = template.content.cloneNode(true);
@@ -829,13 +831,13 @@ function showScoreDistribution() {
     document.getElementById("results-popup").innerHTML = '';
     document.getElementById("results-popup").appendChild(clone);
     
-    // Animate the bars after a short delay
+    // Animate the bars after a short delay with proportional widths
     setTimeout(() => {
         const bars = document.querySelectorAll('.histogram-bar');
-        bars[0].style.width = `${(dist.bucket15000 / maxValue * 85)}%`;
-        bars[1].style.width = `${(dist.bucket10000 / maxValue * 85)}%`;
-        bars[2].style.width = `${(dist.bucket5000 / maxValue * 85)}%`;
-        bars[3].style.width = `${(dist.bucket0 / maxValue * 85)}%`;
+        bars[0].style.width = `${(dist.bucket15000 / normalizer) * maxWidth}%`;
+        bars[1].style.width = `${(dist.bucket10000 / normalizer) * maxWidth}%`;
+        bars[2].style.width = `${(dist.bucket5000 / normalizer) * maxWidth}%`;
+        bars[3].style.width = `${(dist.bucket0 / normalizer) * maxWidth}%`;
     }, 50);
 }
 
