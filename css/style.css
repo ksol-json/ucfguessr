@@ -507,7 +507,7 @@ h1 {
         object-fit: contain;
         max-width: 100%;
         max-height: 100%;
-        transition: opacity 0.35s ease-in-out, transform 0.1s ease-out;
+        transition: none;
     }
 
     .challenge-image.hidden {
@@ -516,6 +516,7 @@ h1 {
 
     .challenge-image.visible {
         display: block; 
+        opacity: 1 !important;
     }
 
     #map-container {

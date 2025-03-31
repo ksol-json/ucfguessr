@@ -528,6 +528,7 @@ function loadImage(imageUrl, skipExifCheck = false) {
     const currentImage = document.getElementById(`challenge-image-${activeImageIndex}`);
     const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
     const spinner = document.querySelector('.loading-spinner');
+    const isMobileView = window.innerWidth <= 768;
     
     spinner.style.display = 'none';
     isImageLoaded = false;
@@ -540,7 +541,7 @@ function loadImage(imageUrl, skipExifCheck = false) {
         if (!isImageLoaded) {
             spinner.style.display = 'block';
         }
-    }, 1500);
+    }, 1000);
     
     // Remove old credit if it exists
     const oldCredit = document.querySelector('.photo-credit');
@@ -590,13 +591,39 @@ function loadImage(imageUrl, skipExifCheck = false) {
         return;
     }
     
-    // Prepare next image while keeping current image visible
+    // Mobile: Simple swap without transition
+    if (isMobileView) {
+        nextImage.onload = () => {
+            clearTimeout(window.spinnerTimeout);
+            spinner.style.display = 'none';
+            
+            // Reset transforms
+            currentImage.style.transform = '';
+            nextImage.style.transform = '';
+            currentZoom = 1;
+            translateX = 0;
+            translateY = 0;
+            
+            // Instant swap
+            currentImage.classList.remove('visible');
+            currentImage.classList.add('hidden');
+            nextImage.classList.remove('hidden');
+            nextImage.classList.add('visible');
+            
+            activeImageIndex = activeImageIndex === 1 ? 2 : 1;
+            handleImageLoad();
+        };
+        nextImage.src = imageUrl;
+        return;
+    }
+    
+    // Desktop: Keep existing crossfade transition logic
     nextImage.style.opacity = '0';
     nextImage.classList.remove('hidden');
     nextImage.classList.add('visible');
     nextImage.src = imageUrl;
     
-    // Wait for next image to load before starting transition
+// Wait for next image to load before starting transition
     nextImage.onload = () => {
         clearTimeout(window.spinnerTimeout);
         spinner.style.display = 'none';
