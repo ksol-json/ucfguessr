@@ -809,7 +809,7 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
         });
     }
 
-    // Add GA4 event tracking for game completion on round 3
+    // GA4 event tracking for game completion
     if (currentRound === rounds.length - 1) {
         if (isArchiveMode) {
             gtag('event', 'archive_game_complete', {
@@ -980,7 +980,7 @@ function copyResults() {
     const shareText = `UCFGuessr ${currentDay} ${totalScore}/15000\n\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.xyz`;
     
     navigator.clipboard.writeText(shareText).then(() => {
-        // Track share event with GA4
+        // GA4 event tracking for sharing results
         if (isArchiveMode) {
             gtag('event', 'share_archive_results', {
                 'event_category': 'engagement',

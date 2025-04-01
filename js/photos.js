@@ -39,11 +39,12 @@ const easyPhotos = [
     "images/easy/IMG_6241.jpeg", // 38
     "images/easy/IMG_7728.jpeg", // 39
     "images/easy/IMG_6251.jpeg", // 40
-    "images/easy/IMG_6212.jpeg", // 41
-    "images/easy/IMG_9229.jpeg", // 42
-    "images/easy/IMG_2724.jpeg", // 43
-    "images/easy/Gl8bYFNX--KnightedNate.jpeg", // 44
-    "images/easy/IMG_6261.jpeg", // 45
+    "images/easy/IMG_6358.jpeg", // 41
+    "images/easy/IMG_6212.jpeg", // 42
+    "images/easy/IMG_9229.jpeg", // 43
+    "images/easy/IMG_2724.jpeg", // 44
+    "images/easy/Gl8bYFNX--KnightedNate.jpeg", // 45
+    "images/easy/IMG_6261.jpeg", // 46
 ];
 
 const mediumPhotos = [
@@ -87,11 +88,12 @@ const mediumPhotos = [
     "images/medium/IMG_6216.jpeg", // 38
     "images/medium/IMG_9271--Ana E..jpeg", // 39
     "images/medium/IMG_1554.jpeg", // 40
-    "images/medium/IMG_6233.jpeg", // 41
-    "images/medium/IMG_6242.jpeg", // 42
-    "images/medium/UCF Geoguessr--Adi.jpeg", // 43
-    "images/medium/IMG_6213.jpeg", // 44
-    "images/medium/IMG_6224.jpeg", // 45
+    "images/medium/IMG_6220.jpeg", // 41
+    "images/medium/IMG_6233.jpeg", // 42
+    "images/medium/IMG_6242.jpeg", // 43
+    "images/medium/UCF Geoguessr--Adi.jpeg", // 44
+    "images/medium/IMG_6213.jpeg", // 45
+    "images/medium/IMG_6224.jpeg", // 46
 ];
 
 const hardPhotos = [
@@ -135,9 +137,10 @@ const hardPhotos = [
     "images/hard/IMG_6236.jpeg", // 38
     "images/hard/IMG_7736.jpeg", // 39
     "images/hard/IMG_5712.jpeg", // 40
-    "images/hard/IMG_6248.jpeg", // 41
-    "images/hard/IMG_3580--Dieguin.jpeg", // 42
-    "images/hard/IMG_6250.jpeg", // 43
-    "images/hard/IMG_6237.jpeg", // 44
-    "images/hard/IMG_6262.jpeg", // 45
+    "images/hard/20250327_161730--Zach Morris.jpeg", // 41
+    "images/hard/IMG_6248.jpeg", // 42
+    "images/hard/IMG_3580--Dieguin.jpeg", // 43
+    "images/hard/IMG_6250.jpeg", // 44
+    "images/hard/IMG_6237.jpeg", // 45
+    "images/hard/IMG_6262.jpeg", // 46
 ];
