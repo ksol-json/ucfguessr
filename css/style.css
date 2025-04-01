@@ -125,6 +125,10 @@ h1 {
     overflow: hidden;
     position: relative;
     cursor: grab;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .challenge-image {
@@ -145,6 +149,10 @@ h1 {
     -webkit-backface-visibility: hidden;
     transform-style: preserve-3d;
     perspective: 1000px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .challenge-image.hidden {
@@ -507,7 +515,7 @@ h1 {
         object-fit: contain;
         max-width: 100%;
         max-height: 100%;
-        transition: none;
+        transition: transform 0.2s ease-out;
     }
 
     .challenge-image.hidden {

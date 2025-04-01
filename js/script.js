@@ -308,6 +308,7 @@ document.body.style.overscrollBehaviorY = 'contain';
 // Double click to zoom
 imageWrapper.addEventListener('dblclick', function(e) {
     e.preventDefault();
+    e.stopPropagation();
     const containerRect = imageWrapper.getBoundingClientRect();
     // Get click offset from center of container
     const clickX = e.clientX - containerRect.left;
@@ -597,18 +598,23 @@ function loadImage(imageUrl, skipExifCheck = false) {
             clearTimeout(window.spinnerTimeout);
             spinner.style.display = 'none';
             
-            // Reset transforms
-            currentImage.style.transform = '';
-            nextImage.style.transform = '';
+            // Don't reset transforms immediately
             currentZoom = 1;
             translateX = 0;
             translateY = 0;
             
-            // Instant swap
+            // Instant swap of images
             currentImage.classList.remove('visible');
             currentImage.classList.add('hidden');
             nextImage.classList.remove('hidden');
             nextImage.classList.add('visible');
+            
+            // Apply transforms after swap
+            requestAnimationFrame(() => {
+                currentImage.style.transform = '';
+                nextImage.style.transform = `translate3d(0px, 0px, 0) scale(1)`;
+                updateImageTransform();
+            });
             
             activeImageIndex = activeImageIndex === 1 ? 2 : 1;
             handleImageLoad();
