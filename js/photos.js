@@ -45,6 +45,12 @@ const easyPhotos = [
     "images/easy/IMG_2724.jpeg", // 44
     "images/easy/Gl8bYFNX--KnightedNate.jpeg", // 45
     "images/easy/IMG_6261.jpeg", // 46
+    "images/easy/IMG_6344.jpeg", // 47
+    "images/easy/IMG_6342.jpeg", // 48
+    "images/easy/IMG_6361.jpeg", // 49
+    "images/easy/IMG_6355.jpeg", // 50
+    "images/easy/IMG_6223.jpeg", // 51
+    "images/easy/IMG_6362.jpeg", // 52
 ];
 
 const mediumPhotos = [
@@ -94,6 +100,14 @@ const mediumPhotos = [
     "images/medium/UCF Geoguessr--Adi.jpeg", // 44
     "images/medium/IMG_6213.jpeg", // 45
     "images/medium/IMG_6224.jpeg", // 46
+    "images/medium/IMG_6218.jpeg", // 47
+    "images/medium/20250313_193600--Lily.jpeg", // 48
+    "images/medium/Gl8bdpq--KnightedNate.jpeg", // 49
+    "images/medium/IMG_6329.jpeg", // 50
+    "images/medium/IMG_6378.jpeg", // 51
+    "images/medium/IMG_6369.jpeg", // 52
+    "images/medium/IMG_6227.jpeg", // 53
+    "images/medium/IMG_5954.jpeg", // 54
 ];
 
 const hardPhotos = [
@@ -143,4 +157,10 @@ const hardPhotos = [
     "images/hard/IMG_6250.jpeg", // 44
     "images/hard/IMG_6237.jpeg", // 45
     "images/hard/IMG_6262.jpeg", // 46
+    "images/hard/IMG_6340.jpeg", // 47
+    "images/hard/IMG_6372.jpeg", // 48
+    "images/hard/IMG_6374.jpeg", // 49
+    "images/hard/IMG_6245.jpeg", // 50
+    "images/hard/1000100906--Jeremy Weed.jpeg", // 51
+    "images/hard/IMG_6415.jpeg", // 52
 ];
