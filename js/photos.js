@@ -47,8 +47,8 @@ const easyPhotos = [
     "images/easy/IMG_6261.jpeg", // 46
     "images/easy/IMG_6344.jpeg", // 47
     "images/easy/IMG_6361.jpeg", // 48
-    "images/easy/IMG_6342.jpeg", // 49
-    "images/easy/IMG_6355.jpeg", // 50
+    "images/easy/IMG_6355.jpeg", // 49
+    "images/easy/IMG_6342.jpeg", // 50
     "images/easy/IMG_6223.jpeg", // 51
     "images/easy/IMG_6362.jpeg", // 52
     "images/easy/IMG_6469.jpeg", // 53
@@ -113,8 +113,8 @@ const mediumPhotos = [
     "images/medium/IMG_6224.jpeg", // 46
     "images/medium/IMG_6218.jpeg", // 47
     "images/medium/Gl8bdpq--KnightedNate.jpeg", // 48
-    "images/medium/20250313_193600--Lily.jpeg", // 49
-    "images/medium/IMG_6329.jpeg", // 50
+    "images/medium/IMG_6329.jpeg", // 49
+    "images/medium/20250313_193600--Lily.jpeg", // 50
     "images/medium/IMG_6378.jpeg", // 51
     "images/medium/IMG_6369.jpeg", // 52
     "images/medium/IMG_6227.jpeg", // 53
@@ -179,8 +179,8 @@ const hardPhotos = [
     "images/hard/IMG_6262.jpeg", // 46
     "images/hard/IMG_6340.jpeg", // 47
     "images/hard/IMG_6374.jpeg", // 48
-    "images/hard/IMG_6372.jpeg", // 49
-    "images/hard/IMG_6245.jpeg", // 50
+    "images/hard/IMG_6245.jpeg", // 49
+    "images/hard/IMG_6372.jpeg", // 50
     "images/hard/1000100906--Jeremy Weed.jpeg", // 51
     "images/hard/IMG_6415.jpeg", // 52
     "images/hard/IMG_3754--Joshua Yu.jpeg", // 53
