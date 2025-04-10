@@ -85,6 +85,11 @@ function setTheme(theme) {
 function toggleDarkMode() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    if (touchKonamiCode[touchKonamiIndex] === 'theme') {
+        touchKonamiIndex++;
+    } else {
+        touchKonamiIndex = touchKonamiCode[0] === 'theme' ? 1 : 0;
+    }
     setTheme(newTheme);
 }
 
@@ -94,38 +99,45 @@ const savedTheme = localStorage.getItem('theme') ||
 setTheme(savedTheme);
 
 const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
+const touchKonamiCode = ['calendar', 'closeArchive', 'theme', 'theme', 'help', 'closeHelp'];
 let konamiIndex = 0;
+let touchKonamiIndex = 0;
 let konamiCodeActivations = 0;
+
+function handleKonamiSuccess() {
+    konamiCodeActivations++;
+    document.querySelector('.coverage-button').style.display = 'flex';
+    
+    if (konamiCodeActivations === 1) {
+        showNotification('Coverage mode unlocked!');
+    } else if (konamiCodeActivations === 2) {
+        showNotification('Full coverage mode unlocked!');
+        if (coverageMarkersVisible) {
+            toggleCoverageMarkers();
+            toggleCoverageMarkers();
+        }
+    }
+    if (konamiCodeActivations === 3) {
+        showNotification('That was all. No more secrets modes.');
+    } if (konamiCodeActivations === 4) {
+        showNotification('Nothing else to see here.');
+    } if (konamiCodeActivations === 5) {
+        showNotification('I\'m serious. You can stop trying now.');
+    } if (konamiCodeActivations === 6) {
+        showNotification('Ok, going away now. No more secret messages.');
+    } else if (konamiCodeActivations > 6) {
+        showNotification('This text will keep repeating.');
+    }
+    konamiIndex = 0;
+    touchKonamiIndex = 0;
+}
 
 // Key handlers
 document.addEventListener('keydown', function(event) {
     if (event.key === konamiCode[konamiIndex]) {
         konamiIndex++;
         if (konamiIndex === konamiCode.length) {
-            konamiCodeActivations++;
-            document.querySelector('.coverage-button').style.display = 'flex';
-            
-            if (konamiCodeActivations === 1) {
-                showNotification('Coverage mode unlocked!');
-            } else if (konamiCodeActivations === 2) {
-                showNotification('Full coverage mode unlocked!');
-                if (coverageMarkersVisible) {
-                    toggleCoverageMarkers();
-                    toggleCoverageMarkers();
-                }
-            }
-            if (konamiCodeActivations === 3) {
-                showNotification('That was all. No more secrets modes.');
-            } if (konamiCodeActivations === 4) {
-                showNotification('Nothing else to see here.');
-            } if (konamiCodeActivations === 5) {
-                showNotification('I\'m serious. You can stop trying now.');
-            } if (konamiCodeActivations === 6) {
-                showNotification('Ok, going away now. No more secret messages.');
-            } else if (konamiCodeActivations > 6) {
-                showNotification('This text will keep repeating.');
-            konamiIndex = 0;
-            }
+            handleKonamiSuccess();
         }
     } else {
         konamiIndex = 0;
@@ -1015,11 +1027,24 @@ function copyResults() {
 // Help Popup Functions
 // --------------------
 function showHelp() {
+    if (touchKonamiCode[touchKonamiIndex] === 'help') {
+        touchKonamiIndex++;
+    } else {
+        touchKonamiIndex = touchKonamiCode[0] === 'help' ? 1 : 0;
+    }
     document.getElementById("help-popup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 }
 
 function closeHelp() {
+    if (touchKonamiCode[touchKonamiIndex] === 'closeHelp') {
+        touchKonamiIndex++;
+        if (touchKonamiIndex === touchKonamiCode.length) {
+            handleKonamiSuccess();
+        }
+    } else {
+        touchKonamiIndex = touchKonamiCode[0] === 'closeHelp' ? 1 : 0;
+    }
     document.getElementById("help-popup").style.display = "none";
     document.getElementById("overlay").style.display = "none";
 } 
@@ -1060,12 +1085,22 @@ let currentPlayingDate = new Date();
 
 // Add these functions before the loadRound function
 function showArchive() {
+    if (touchKonamiCode[touchKonamiIndex] === 'calendar') {
+        touchKonamiIndex++;
+    } else {
+        touchKonamiIndex = touchKonamiCode[0] === 'calendar' ? 1 : 0;
+    }
     document.getElementById("archive-popup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
     updateCalendar();
 }
 
 function closeArchive() {
+    if (touchKonamiCode[touchKonamiIndex] === 'closeArchive') {
+        touchKonamiIndex++;
+    } else {
+        touchKonamiIndex = touchKonamiCode[0] === 'closeArchive' ? 1 : 0;
+    }
     document.getElementById("archive-popup").style.display = "none";
     document.getElementById("overlay").style.display = "none";
 }
@@ -1203,12 +1238,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let coverageMarkers = [];
 let coverageMarkersVisible = false;
+let markerHoverTimeout = null;
+let previewElement = null;
+
+function createPreviewElement() {
+    if (!previewElement) {
+        previewElement = document.createElement('div');
+        previewElement.className = 'marker-preview';
+        previewElement.style.cssText = `
+            position: absolute;
+            z-index: 1000;
+            background: white;
+            padding: 2px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            pointer-events: none;
+            display: none;
+            transition: opacity 0.2s;
+        `;
+        document.body.appendChild(previewElement);
+    }
+    return previewElement;
+}
+
+function showPreview(photoUrl, latlng) {
+    const preview = createPreviewElement();
+    const img = new Image();
+    img.onload = () => {
+        const maxWidth = 200;
+        const maxHeight = 150;
+        const scale = Math.min(maxWidth / img.width, maxHeight / img.height);
+        const width = img.width * scale;
+        const height = img.height * scale;
+        
+        // Get the marker's pixel position on the map
+        const point = map.latLngToContainerPoint(latlng);
+        const mapContainer = map.getContainer();
+        const mapRect = mapContainer.getBoundingClientRect();
+        
+        // Calculate initial position
+        let left = mapRect.left + point.x - (width / 2);
+        let top = mapRect.top + point.y - height - 15; // 15px above marker
+        
+        // Adjust if preview would appear off-screen
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        // Keep preview within horizontal bounds
+        if (left < 10) left = 10;
+        if (left + width > viewportWidth - 10) left = viewportWidth - width - 10;
+        
+        // If preview would appear above viewport, show it below the marker instead
+        if (top < 10) {
+            top = mapRect.top + point.y + 25; // 25px below marker
+        }
+        
+        // Position the preview
+        preview.style.width = `${width}px`;
+        preview.style.height = `${height}px`;
+        preview.style.left = `${left}px`;
+        preview.style.top = `${top}px`;
+        preview.style.display = 'block';
+        preview.style.opacity = '1';
+    };
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'contain';
+    preview.innerHTML = '';
+    preview.appendChild(img);
+    img.src = photoUrl;
+}
+
+function hidePreview() {
+    if (previewElement) {
+        previewElement.style.opacity = '0';
+        setTimeout(() => {
+            previewElement.style.display = 'none';
+        }, 200);
+    }
+    if (markerHoverTimeout) {
+        clearTimeout(markerHoverTimeout);
+        markerHoverTimeout = null;
+    }
+}
 
 function toggleCoverageMarkers() {
     if (coverageMarkersVisible) {
         coverageMarkers.forEach(marker => map.removeLayer(marker));
         coverageMarkers = [];
         coverageMarkersVisible = false;
+        hidePreview();
         return;
     }
 
@@ -1255,6 +1375,20 @@ function toggleCoverageMarkers() {
                                 opacity: 1,
                                 fillOpacity: 0.8
                             }).addTo(map);
+
+                            marker.on('mouseover', (e) => {
+                                markerHoverTimeout = setTimeout(() => {
+                                    showPreview(photoUrl, e.latlng);
+                                }, 80);
+                            });
+
+                            marker.on('mouseout', () => {
+                                hidePreview();
+                            });
+
+                            marker.on('remove', () => {
+                                hidePreview();
+                            });
                             
                             coverageMarkers.push(marker);
                             validMarkerCount++;
@@ -1270,3 +1404,9 @@ function toggleCoverageMarkers() {
         showNotification(`Showing ${validMarkerCount} photo locations`);
     });
 }
+
+map.on('move', () => {
+    if (previewElement && previewElement.style.display === 'block') {
+        hidePreview();
+    }
+});

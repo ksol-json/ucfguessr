@@ -51,6 +51,17 @@ const easyPhotos = [
     "images/easy/IMG_6355.jpeg", // 50
     "images/easy/IMG_6223.jpeg", // 51
     "images/easy/IMG_6362.jpeg", // 52
+    "images/easy/IMG_6469.jpeg", // 53
+    "images/easy/IMG_2732.jpeg", // 54
+    "images/easy/IMG_6343.jpeg", // 55
+    "images/easy/IMG_6474.jpeg", // 56
+    "images/easy/IMG_5954.jpeg", // 57
+    "images/easy/IMG_6346.jpeg", // 58
+    "images/easy/IMG_6470.jpeg", // 59
+    "images/easy/IMG_6357.jpeg", // 60
+    "images/easy/IMG_6482.jpeg", // 61
+    "images/easy/IMG_6373.jpeg", // 62
+    "images/easy/IMG_6479.jpeg", // 63
 ];
 
 const mediumPhotos = [
@@ -107,7 +118,16 @@ const mediumPhotos = [
     "images/medium/IMG_6378.jpeg", // 51
     "images/medium/IMG_6369.jpeg", // 52
     "images/medium/IMG_6227.jpeg", // 53
-    "images/medium/IMG_5954.jpeg", // 54
+    "images/medium/IMG_6476.jpeg", // 54
+    "images/medium/IMG_6370.jpeg", // 55
+    "images/medium/IMG_6341.jpeg", // 56
+    "images/medium/IMG_6480.jpeg", // 57
+    "images/medium/IMG_8211.jpeg", // 58
+    "images/medium/PXL_20220712_234154275--@ucf.garf.jpeg", // 59
+    "images/medium/IMG_6477.jpeg", // 60
+    "images/medium/IMG_2518.jpeg", // 61
+    "images/medium/IMG_6473.jpeg", // 62
+    "images/medium/IMG_6475.jpeg", // 63
 ];
 
 const hardPhotos = [
@@ -163,4 +183,15 @@ const hardPhotos = [
     "images/hard/IMG_6245.jpeg", // 50
     "images/hard/1000100906--Jeremy Weed.jpeg", // 51
     "images/hard/IMG_6415.jpeg", // 52
+    "images/hard/IMG_3754--Joshua Yu.jpeg", // 53
+    "images/hard/IMG_5327.jpeg", // 54
+    "images/hard/IMG_6488.jpeg", // 55
+    "images/hard/IMG_6483.jpeg", // 56
+    "images/hard/IMG_6487.jpeg", // 57
+    "images/hard/IMG_6489.jpeg", // 58
+    "images/hard/IMG_6249.jpeg", // 59
+    "images/hard/IMG_6486.jpeg", // 60
+    "images/hard/IMG_6472.jpeg", // 61
+    "images/hard/IMG_4566.jpeg", // 62
+    "images/hard/IMG_6481.jpeg", // 63
 ];

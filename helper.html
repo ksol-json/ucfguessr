@@ -45,6 +45,7 @@
         <h3>Enter Day Number or Date</h3>
         <input type="number" id="dayInput" placeholder="Enter day number (1, 2, 3...)" min="1">
         <input type="date" id="dateInput" min="2025-02-22">
+        <span id="dayOfWeek"></span>
     </div>
 
     <div id="preview" class="preview"></div>
@@ -70,12 +71,14 @@
             if (isNaN(day) || day < 1) {
                 document.getElementById('preview').innerHTML = '';
                 document.getElementById('dateInput').value = '';
+                document.getElementById('dayOfWeek').textContent = '';
                 return;
             }
             
             const date = new Date(epoch);
             date.setUTCDate(date.getUTCDate() + day - 1);
             document.getElementById('dateInput').value = date.toISOString().split('T')[0];
+            updateDayOfWeek(date);
             showPhotosForDay(day - 1);
         }
         
@@ -83,10 +86,12 @@
             if (!dateStr) {
                 document.getElementById('preview').innerHTML = '';
                 document.getElementById('dayInput').value = '';
+                document.getElementById('dayOfWeek').textContent = '';
                 return;
             }
             
             const selectedDate = new Date(dateStr);
+            updateDayOfWeek(selectedDate);
             const daysSinceEpoch = Math.floor((selectedDate - epoch) / (1000 * 60 * 60 * 24)) + 1;
             
             if (daysSinceEpoch < 1) {
@@ -96,6 +101,12 @@
             
             document.getElementById('dayInput').value = daysSinceEpoch;
             showPhotosForDay(daysSinceEpoch - 1);
+        }
+
+        function updateDayOfWeek(date) {
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            const dayOfWeek = days[date.getDay()];
+            document.getElementById('dayOfWeek').textContent = ` ${dayOfWeek}`;
         }
         
         function showPhotosForDay(dayIndex) {
@@ -196,6 +207,10 @@
         const todayStr = today.toISOString().split('T')[0];
         document.getElementById('dateInput').value = todayStr;
         updateFromDate(todayStr);
+
+        // Add some styling for the day of week display
+        document.getElementById('dayOfWeek').style.marginLeft = '10px';
+        document.getElementById('dayOfWeek').style.color = '#666';
     </script>
 </body>
 </html>
