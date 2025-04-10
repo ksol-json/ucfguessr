@@ -537,6 +537,75 @@ function handleImageLoad() {
     }
 }
 
+let preloadedImages = new Map();
+let loadingPromises = new Map();
+
+function createImagePromise(imageUrl, priority = 'low') {
+    if (loadingPromises.has(imageUrl)) {
+        return loadingPromises.get(imageUrl);
+    }
+
+    const promise = new Promise((resolve, reject) => {
+        const img = new Image();
+        img.importance = priority;
+        img.loading = priority === 'high' ? 'eager' : 'lazy';
+        
+        const retryLoad = (attempts = 3) => {
+            img.onload = () => {
+                preloadedImages.set(imageUrl, img);
+                loadingPromises.delete(imageUrl);
+                resolve(img);
+            };
+            
+            img.onerror = () => {
+                if (attempts > 0) {
+                    setTimeout(() => retryLoad(attempts - 1), 1000);
+                } else {
+                    loadingPromises.delete(imageUrl);
+                    reject(new Error(`Failed to load image: ${imageUrl}`));
+                }
+            };
+            
+            img.src = imageUrl;
+        };
+        
+        retryLoad();
+    });
+    
+    loadingPromises.set(imageUrl, promise);
+    return promise;
+}
+
+function preloadImage(imageUrl, priority = 'low') {
+    if (preloadedImages.has(imageUrl)) {
+        return Promise.resolve(preloadedImages.get(imageUrl));
+    }
+    return createImagePromise(imageUrl, priority);
+}
+
+// Replace the existing preloadYesterdayImages function
+function preloadGameImages() {
+    // Preload today's images with high priority
+    [
+        easyPhotos[dailyEasyIndex],
+        mediumPhotos[dailyMediumIndex],
+        hardPhotos[dailyHardIndex]
+    ].forEach((url, index) => {
+        preloadImage(url, index === 0 ? 'high' : 'medium');
+    });
+    
+    // Preload yesterday's images with low priority
+    const yesterdayIndex = (daysSinceEpoch - 1);
+    if (yesterdayIndex >= 0) {
+        [
+            easyPhotos[yesterdayIndex % easyPhotos.length],
+            mediumPhotos[yesterdayIndex % mediumPhotos.length],
+            hardPhotos[yesterdayIndex % hardPhotos.length]
+        ].forEach(url => preloadImage(url, 'low'));
+    }
+}
+
+// Modify loadImage function to use the preloaded images
 function loadImage(imageUrl, skipExifCheck = false) {
     const currentImage = document.getElementById(`challenge-image-${activeImageIndex}`);
     const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
@@ -590,16 +659,21 @@ function loadImage(imageUrl, skipExifCheck = false) {
     }
     
     // Set the image source
+    const loadPromise = preloadImage(imageUrl, 'high');
+    
     if (isFirstLoad) {
-        currentImage.onload = () => {
+        loadPromise.then(() => {
             clearTimeout(window.spinnerTimeout);
             spinner.style.display = 'none';
+            currentImage.src = imageUrl;
             currentImage.style.opacity = '1';
             currentImage.classList.add('visible');
             currentImage.classList.remove('hidden');
             handleImageLoad();
-        };
-        currentImage.src = imageUrl;
+        }).catch(error => {
+            console.error('Failed to load image:', error);
+            showNotification('Failed to load image. Please refresh the page.');
+        });
         isFirstLoad = false;
         return;
     }
@@ -745,6 +819,11 @@ function loadRound(skipExifCheck = false, completed = false) {
     document.getElementById("round1-text").style.fontWeight = currentRound === 0 ? "bold" : "normal";
     document.getElementById("round2-text").style.fontWeight = currentRound === 1 ? "bold" : "normal";
     document.getElementById("round3-text").style.fontWeight = currentRound === 2 ? "bold" : "normal";
+
+    // Just preload next round if it exists
+    if (currentRound < rounds.length - 1) {
+        preloadImage(rounds[currentRound + 1].src, 'high');
+    }
 }
 
 loadRound();
@@ -1410,3 +1489,5 @@ map.on('move', () => {
         hidePreview();
     }
 });
+
+preloadGameImages();
