@@ -64,6 +64,13 @@ const easyPhotos = [
     "images/easy/IMG_6479.jpeg", // 63
     "images/easy/IMG_6343.jpeg", // 64
     "images/easy/IMG_6482.jpeg", // 65
+    "images/easy/6--Anonymous.jpeg", // 66
+    "images/easy/IMG_6359.jpeg", // 67
+    "images/easy/bridge launch--Zach Morris.jpeg", // 68
+    "images/easy/IMG_6235~~gl on today's.jpeg", // 69
+    "images/easy/IMG_5342--Anonymous.jpeg", // 70
+    "images/easy/IMG_6639.jpeg", // 71
+    "images/easy/IMG_6503.jpeg", // 72
 ];
 
 const mediumPhotos = [
@@ -133,6 +140,12 @@ const mediumPhotos = [
     "images/medium/IMG_6370.jpeg", // 64
     "images/medium/IMG_2518.jpeg", // 65
     "images/medium/IMG_6487.jpeg", // 66
+    "images/medium/IMG_6485.jpeg", // 67
+    "images/medium/bench--Emzee.jpeg", // 68
+    "images/medium/5--Anonymous.jpeg", // 69
+    "images/medium/IMG_6641.jpeg", // 70
+    "images/medium/IMG_6634.jpeg", // 71
+    "images/medium/IMG_6468.jpeg", // 72
 ];
 
 const hardPhotos = [
@@ -201,4 +214,11 @@ const hardPhotos = [
     "images/hard/IMG_6481.jpeg", // 63
     "images/hard/IMG_6488.jpeg", // 64
     "images/hard/IMG_6472.jpeg", // 65
+    "images/hard/IMG_6519.jpeg", // 66
+    "images/hard/IMG_9813--Mark S..jpeg", // 67
+    "images/hard/IMG_6405.jpeg", // 68
+    "images/hard/IMG_5351--Anonymous.jpeg", // 69
+    "images/hard/PXL_20221016--Jeremiah N.jpeg", // 70
+    "images/hard/IMG_6640.jpeg", // 71
+    "images/hard/IMG_6502.jpeg", // 72
 ];
