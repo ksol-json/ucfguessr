@@ -130,7 +130,7 @@ const mediumPhotos = [
     "images/medium/IMG_6476.jpeg", // 54
     "images/medium/IMG_6637.jpeg", // 55
     "images/medium/IMG_6341.jpeg", // 56
-    "images/medium/IMG_6480.jpeg", // 57
+    "images/medium/IMG_6693.jpeg", // 57
     "images/medium/IMG_8211.jpeg", // 58
     "images/medium/PXL_20220712_234154275--@ucf.garf.jpeg", // 59
     "images/medium/IMG_6477.jpeg", // 60
@@ -140,12 +140,14 @@ const mediumPhotos = [
     "images/medium/IMG_6370.jpeg", // 64
     "images/medium/IMG_2518.jpeg", // 65
     "images/medium/IMG_6487.jpeg", // 66
-    "images/medium/IMG_6485.jpeg", // 67
+    "images/medium/IMG_6686~~funny sidewalk.jpeg", // 67
     "images/medium/bench--Emzee.jpeg", // 68
     "images/medium/5--Anonymous.jpeg", // 69
     "images/medium/IMG_6641.jpeg", // 70
     "images/medium/IMG_6634.jpeg", // 71
     "images/medium/IMG_6468.jpeg", // 72
+    "images/medium/IMG_6480.jpeg", // 73
+    "images/medium/IMG_6485.jpeg", // 74
 ];
 
 const hardPhotos = [

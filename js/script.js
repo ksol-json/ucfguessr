@@ -114,7 +114,7 @@ function handleKonamiSuccess() {
         showNotification('Full coverage mode unlocked!');
         if (coverageMarkersVisible) {
             toggleCoverageMarkers();
-            toggleCoverageMarkers();
+            toggleCoverageMarkers(); // [sic]
         }
     }
     if (konamiCodeActivations === 3) {
