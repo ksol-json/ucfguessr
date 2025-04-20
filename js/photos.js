@@ -56,7 +56,7 @@ const easyPhotos = [
     "images/easy/IMG_6636.jpeg", // 55
     "images/easy/IMG_6474.jpeg", // 56
     "images/easy/IMG_5954.jpeg", // 57
-    "images/easy/IMG_6346.jpeg", // 58
+    "images/easy/IMG_2244~~ucfguessr irl*.jpeg", // 58
     "images/easy/IMG_6470.jpeg", // 59
     "images/easy/IMG_6357.jpeg", // 60
     "images/easy/IMG_5344--Anonymous.jpeg", // 61
@@ -71,6 +71,8 @@ const easyPhotos = [
     "images/easy/IMG_5342--Anonymous.jpeg", // 70
     "images/easy/IMG_6639.jpeg", // 71
     "images/easy/IMG_6503.jpeg", // 72
+    "images/easy/IMG_6679.jpeg", // 73
+    "images/easy/IMG_6346.jpeg", // 74
 ];
 
 const mediumPhotos = [
@@ -131,7 +133,7 @@ const mediumPhotos = [
     "images/medium/IMG_6637.jpeg", // 55
     "images/medium/IMG_6341.jpeg", // 56
     "images/medium/IMG_6693.jpeg", // 57
-    "images/medium/IMG_8211.jpeg", // 58
+    "images/medium/IMG_6252.jpeg", // 58
     "images/medium/PXL_20220712_234154275--@ucf.garf.jpeg", // 59
     "images/medium/IMG_6477.jpeg", // 60
     "images/medium/IMG_5348--Anonymous.jpeg", // 61
@@ -146,8 +148,10 @@ const mediumPhotos = [
     "images/medium/IMG_6641.jpeg", // 70
     "images/medium/IMG_6634.jpeg", // 71
     "images/medium/IMG_6468.jpeg", // 72
-    "images/medium/IMG_6480.jpeg", // 73
-    "images/medium/IMG_6485.jpeg", // 74
+    "images/medium/IMG_6694.jpeg", // 73
+    "images/medium/IMG_8211.jpeg", // 74
+    "images/medium/IMG_6480.jpeg", // 75
+    "images/medium/IMG_6485.jpeg", // 76
 ];
 
 const hardPhotos = [
@@ -208,7 +212,7 @@ const hardPhotos = [
     "images/hard/IMG_6638.jpeg", // 55
     "images/hard/IMG_6483.jpeg", // 56
     "images/hard/IMG_5299--Anonymous.jpeg", // 57
-    "images/hard/IMG_6489.jpeg", // 58
+    "images/hard/IMG_2246~~ucf scavenger hunt 4-24 @ 5 pm.jpeg", // 58
     "images/hard/IMG_6249.jpeg", // 59
     "images/hard/IMG_6486.jpeg", // 60
     "images/hard/IMG_5298--Anonymous.jpeg", // 61
@@ -223,4 +227,6 @@ const hardPhotos = [
     "images/hard/PXL_20221016--Jeremiah N.jpeg", // 70
     "images/hard/IMG_6640.jpeg", // 71
     "images/hard/IMG_6502.jpeg", // 72
+    "images/hard/IMG_6696.jpeg", // 73
+    "images/hard/IMG_6489.jpeg", // 74
 ];
