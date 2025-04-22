@@ -73,6 +73,11 @@ const easyPhotos = [
     "images/easy/IMG_6503.jpeg", // 72
     "images/easy/IMG_6679.jpeg", // 73
     "images/easy/IMG_6346.jpeg", // 74
+    "images/easy/IMG_6507.jpeg", // 75
+    "images/easy/20250416_112057 - Steven.jpeg", // 76
+    "images/easy/global-easy--vivi.jpeg", // 77
+    "images/easy/IMG_6414.jpeg", // 78
+    "images/easy/IMG_6239.jpeg", // 79
 ];
 
 const mediumPhotos = [
@@ -152,6 +157,9 @@ const mediumPhotos = [
     "images/medium/IMG_8211.jpeg", // 74
     "images/medium/IMG_6480.jpeg", // 75
     "images/medium/IMG_6485.jpeg", // 76
+    "images/medium/IMG_6643.jpeg", // 77
+    "images/medium/IMG_6632.jpeg", // 78
+    "images/medium/IMG_6511.jpeg", // 79
 ];
 
 const hardPhotos = [
@@ -229,4 +237,9 @@ const hardPhotos = [
     "images/hard/IMG_6502.jpeg", // 72
     "images/hard/IMG_6696.jpeg", // 73
     "images/hard/IMG_6489.jpeg", // 74
+    "images/hard/IMG_6508.jpeg", // 75
+    "images/hard/IMG_5296--Anonymous.jpeg", // 76
+    "images/hard/rehall--Emzee.jpeg", // 77
+    "images/hard/IMG_6648.jpeg", // 78
+    "images/hard/IMG_5349--Anonymous.jpeg", // 79
 ];

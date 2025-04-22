@@ -14,6 +14,9 @@
         }
         .input-group {
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .preview {
             display: grid;
@@ -26,7 +29,8 @@
             padding: 10px;
             border-radius: 8px;
             display: grid;
-            grid-template-rows: auto auto;        }
+            grid-template-rows: auto auto;        
+        }
         img {
             max-width: 100%;
             height: auto;
@@ -35,6 +39,54 @@
             height: 200px;
             width: 100%;
             border-radius: 4px;
+        }
+        .weekly-view {
+            display: none;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        .weekly-container {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(200px, 1fr));
+            gap: 20px;
+            min-width: min-content;
+        }
+        .day-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .day-column.current-day {
+            background-color: rgba(135, 206, 250, 0.1);
+        }
+        .day-header {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .toggle-view {
+            margin: 20px 0;
+        }
+        .week-nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .weekly-photo {
+            height: 150px;
+            object-fit: cover;
+            width: 100%;
+        }
+        .combined-map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
         }
     </style>
 </head>
@@ -46,9 +98,21 @@
         <input type="number" id="dayInput" placeholder="Enter day number (1, 2, 3...)" min="1">
         <input type="date" id="dateInput" min="2025-02-22">
         <span id="dayOfWeek"></span>
+        <button id="toggleView" class="toggle-view">Toggle Weekly View</button>
+    </div>
+
+    <div id="weekNav" class="week-nav" style="display: none;">
+        <button id="prevWeek">←</button>
+        <span id="weekRange"></span>
+        <button id="nextWeek">→</button>
     </div>
 
     <div id="preview" class="preview"></div>
+    <div id="weeklyView" class="weekly-view">
+        <div id="weeklyContainer" class="weekly-container"></div>
+    </div>
+    
+    <div id="combinedMap" class="combined-map"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -67,6 +131,33 @@
         
         const epoch = new Date(Date.UTC(2025, 1, 22));
         
+        let combinedMap = null;
+        let markers = [];
+
+        function initCombinedMap() {
+            if (!combinedMap) {
+                combinedMap = L.map('combinedMap', { attributionControl: false });
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: ''
+                }).addTo(combinedMap);
+            }
+            markers.forEach(marker => marker.remove());
+            markers = [];
+        }
+
+        function addMarkerToMap(lat, lon, title) {
+            const marker = L.marker([lat, lon]).addTo(combinedMap);
+            if (title) marker.bindPopup(title);
+            markers.push(marker);
+        }
+
+        function updateCombinedMapView() {
+            if (markers.length > 0) {
+                const group = L.featureGroup(markers);
+                combinedMap.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+
         function updateFromDay(day) {
             if (isNaN(day) || day < 1) {
                 document.getElementById('preview').innerHTML = '';
@@ -76,12 +167,35 @@
             }
             
             const date = new Date(epoch);
-            date.setUTCDate(date.getUTCDate() + day - 1);
+            date.setUTCDate(date.getUTCDate() + (day - 1));
             document.getElementById('dateInput').value = date.toISOString().split('T')[0];
             updateDayOfWeek(date);
-            showPhotosForDay(day - 1);
+            showPhotosForDay(day);
         }
-        
+
+        function formatDate(date) {
+            const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(date.getUTCDate()).padStart(2, '0');
+            const year = date.getUTCFullYear();
+            return `${month}/${day}/${year}`;
+        }
+
+        function getMondayUTC(date) {
+            const d = new Date(date);
+            const utcDay = d.getUTCDay();
+            const diff = d.getUTCDate() - utcDay + (utcDay === 0 ? -6 : 1);
+            d.setUTCDate(diff);
+            d.setUTCHours(0, 0, 0, 0);
+            return d;
+        }
+
+        function dayNumberFromUTC(date) {
+            const msPerDay = 86400000;
+            const utcMidnight = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+            const epochMidnight = Date.UTC(epoch.getUTCFullYear(), epoch.getUTCMonth(), epoch.getUTCDate());
+            return Math.floor((utcMidnight - epochMidnight) / msPerDay) + 1;
+        }
+
         function updateFromDate(dateStr) {
             if (!dateStr) {
                 document.getElementById('preview').innerHTML = '';
@@ -92,7 +206,7 @@
             
             const selectedDate = new Date(dateStr);
             updateDayOfWeek(selectedDate);
-            const daysSinceEpoch = Math.floor((selectedDate - epoch) / (1000 * 60 * 60 * 24)) + 1;
+            const daysSinceEpoch = Math.floor((selectedDate - epoch) / 86400000) + 1;
             
             if (daysSinceEpoch < 1) {
                 alert('Please select a date on or after February 22, 2025');
@@ -100,19 +214,21 @@
             }
             
             document.getElementById('dayInput').value = daysSinceEpoch;
-            showPhotosForDay(daysSinceEpoch - 1);
+            showPhotosForDay(daysSinceEpoch);
         }
 
         function updateDayOfWeek(date) {
-            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-            const dayOfWeek = days[date.getDay()];
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const dayOfWeek = days[date.getUTCDay()];
             document.getElementById('dayOfWeek').textContent = ` ${dayOfWeek}`;
         }
         
         function showPhotosForDay(dayIndex) {
-            const easyIndex = dayIndex % easyPhotos.length;
-            const mediumIndex = dayIndex % mediumPhotos.length;
-            const hardIndex = dayIndex % hardPhotos.length;
+            // Subtract 1 for array index since days start at 1
+            const arrayIndex = dayIndex - 1;
+            const easyIndex = arrayIndex % easyPhotos.length;
+            const mediumIndex = arrayIndex % mediumPhotos.length;
+            const hardIndex = arrayIndex % hardPhotos.length;
             
             const photos = [
                 { src: easyPhotos[easyIndex], difficulty: 'Easy', arraySize: easyPhotos.length, index: easyIndex },
@@ -122,6 +238,8 @@
             
             const previewDiv = document.getElementById('preview');
             previewDiv.innerHTML = '';
+            
+            initCombinedMap();
             
             photos.forEach((photo, index) => {
                 const card = document.createElement('div');
@@ -156,11 +274,16 @@
                             const latitude = convertDMSToDD(lat, latRef);
                             const longitude = convertDMSToDD(lon, lonRef);
                             
-                            const map = L.map(`map-${index}`).setView([latitude, longitude], 16);
+                            const map = L.map(`map-${index}`, { attributionControl: false }).setView([latitude, longitude], 16);
                             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                                 attribution: ''
                             }).addTo(map);
                             L.marker([latitude, longitude]).addTo(map);
+                            
+                            addMarkerToMap(latitude, longitude, `${photo.difficulty} Photo`);
+                            if (index === photos.length - 1) {
+                                updateCombinedMapView();
+                            }
                         }
                     });
                 };
@@ -173,18 +296,149 @@
             });
         }
 
+        function showPhotosForDayInColumn(dayIndex, container) {
+            // Subtract 1 for array index since days start at 1
+            const arrayIndex = dayIndex - 1;
+            const easyIndex = arrayIndex % easyPhotos.length;
+            const mediumIndex = arrayIndex % mediumPhotos.length;
+            const hardIndex = arrayIndex % hardPhotos.length;
+            
+            const photos = [
+                { src: easyPhotos[easyIndex], difficulty: 'Easy' },
+                { src: mediumPhotos[mediumIndex], difficulty: 'Medium' },
+                { src: hardPhotos[hardIndex], difficulty: 'Hard' }
+            ];
+            
+            photos.forEach((photo, index) => {
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                
+                const img = new Image();
+                img.src = photo.src;
+                img.className = 'weekly-photo';
+                img.crossOrigin = "Anonymous";
+                
+                img.onload = function() {
+                    EXIF.getData(this, function() {
+                        const lat = EXIF.getTag(this, "GPSLatitude");
+                        const latRef = EXIF.getTag(this, "GPSLatitudeRef") || "N";
+                        const lon = EXIF.getTag(this, "GPSLongitude");
+                        const lonRef = EXIF.getTag(this, "GPSLongitudeRef") || "W";
+                        
+                        if (lat && lon) {
+                            const latitude = convertDMSToDD(lat, latRef);
+                            const longitude = convertDMSToDD(lon, lonRef);
+                            addMarkerToMap(latitude, longitude, `Day ${dayIndex} - ${photo.difficulty}`);
+                            updateCombinedMapView();
+                        }
+                    });
+                };
+                
+                card.appendChild(img);
+                container.appendChild(card);
+            });
+        }
+
+        let currentWeekStart = 1;
+
+        function updateWeekRange() {
+            const startDate = new Date(epoch);
+            startDate.setUTCDate(startDate.getUTCDate() + (currentWeekStart - 1));
+            const endDate = new Date(startDate);
+            endDate.setUTCDate(endDate.getUTCDate() + 6);
+            
+            document.getElementById('weekRange').textContent = 
+                `${formatDate(startDate)} to ${formatDate(endDate)}`;
+        }
+
+        function showWeeklyView(startDayGuess) {
+            const guessDate = new Date(epoch);
+            guessDate.setUTCDate(guessDate.getUTCDate() + startDayGuess - 1);
+
+            const mondayDate = getMondayUTC(guessDate);
+            currentWeekStart = dayNumberFromUTC(mondayDate);
+            
+            const currentDayInput = parseInt(document.getElementById('dayInput').value) || 1;
+            
+            updateWeekRange();
+            const weeklyContainer = document.getElementById('weeklyContainer');
+            weeklyContainer.innerHTML = '';
+            
+            initCombinedMap();
+            
+            for (let i = 0; i < 7; i++) {
+                const dayColumn = document.createElement('div');
+                dayColumn.className = 'day-column';
+                
+                const currentDay = currentWeekStart + i;
+                if (currentDay === currentDayInput) {
+                    dayColumn.classList.add('current-day');
+                }
+                
+                const date = new Date(epoch);
+                date.setUTCDate(date.getUTCDate() + (currentDay - 1));
+                
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.textContent = `Day ${currentDay}\n${formatDate(date)}`;
+                dayColumn.appendChild(dayHeader);
+                
+                showPhotosForDayInColumn(currentDay, dayColumn);
+                weeklyContainer.appendChild(dayColumn);
+            }
+        }
+
+        // Update toggle view event listener
+        document.getElementById('toggleView').addEventListener('click', () => {
+            const preview = document.getElementById('preview');
+            const weeklyView = document.getElementById('weeklyView');
+            const weekNav = document.getElementById('weekNav');
+            const dayInput = document.getElementById('dayInput');
+            const currentDay = parseInt(dayInput.value) || 1;
+            
+            if (weeklyView.style.display === 'none' || !weeklyView.style.display) {
+                preview.style.display = 'none';
+                weeklyView.style.display = 'block';
+                weekNav.style.display = 'flex';
+                initCombinedMap();
+                showWeeklyView(currentDay);
+            } else {
+                preview.style.display = 'grid';
+                weeklyView.style.display = 'none';
+                weekNav.style.display = 'none';
+                initCombinedMap();
+                showPhotosForDay(currentDay);
+            }
+        });
+
+        // Add week navigation handlers
+        document.getElementById('prevWeek').addEventListener('click', () => {
+            if (currentWeekStart > 7) {
+                showWeeklyView(currentWeekStart - 7);
+            }
+        });
+
+        document.getElementById('nextWeek').addEventListener('click', () => {
+            showWeeklyView(currentWeekStart + 7);
+        });
+
         // Add event listeners
         document.getElementById('dayInput').addEventListener('input', e => updateFromDay(parseInt(e.target.value)));
         document.getElementById('dateInput').addEventListener('input', e => updateFromDate(e.target.value));
 
         function getTodayInET() {
+            const now = new Date();
             const options = { timeZone: 'America/New_York' };
-            const etDate = new Date().toLocaleString('en-US', options);
-            return new Date(etDate);
+            return new Date(now.toLocaleString('en-US', options));
         }
 
-        // Set min date for date input
-        document.getElementById('dateInput').min = epoch.toISOString().split('T')[0];
+        // Set default to today's date in ET
+        const today = getTodayInET();
+        const todayStr = today.toISOString().split('T')[0];
+        const todaySinceEpoch = Math.floor((today - epoch) / (1000 * 60 * 60 * 24)) + 1;
+        document.getElementById('dayInput').value = todaySinceEpoch;
+        document.getElementById('dateInput').value = todayStr;
+        updateFromDay(todaySinceEpoch);
 
         // Update keyboard navigation
         document.addEventListener('keydown', (e) => {
@@ -201,12 +455,6 @@
                 }
             }
         });
-
-        // Set default to today's date in ET
-        const today = getTodayInET();
-        const todayStr = today.toISOString().split('T')[0];
-        document.getElementById('dateInput').value = todayStr;
-        updateFromDate(todayStr);
 
         // Add some styling for the day of week display
         document.getElementById('dayOfWeek').style.marginLeft = '10px';
