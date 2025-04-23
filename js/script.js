@@ -820,6 +820,26 @@ function loadRound(skipExifCheck = false, completed = false) {
     document.getElementById("round2-text").style.fontWeight = currentRound === 1 ? "bold" : "normal";
     document.getElementById("round3-text").style.fontWeight = currentRound === 2 ? "bold" : "normal";
 
+    // Add/update highlight for current round indicator using a CSS class
+    const currentRoundId = "round" + (currentRound + 1) + "-text";
+    const currentElem = document.getElementById(currentRoundId);
+    const container = currentElem.parentElement; // common container for round texts
+    container.style.position = "relative";  // ensure container is positioned
+    let highlight = document.getElementById("round-highlight");
+    if (!highlight) {
+        highlight = document.createElement("div");
+        highlight.id = "round-highlight";
+        highlight.classList.add("round-highlight");
+        container.insertBefore(highlight, container.firstChild);
+    }
+    const containerRect = container.getBoundingClientRect();
+    const elemRect = currentElem.getBoundingClientRect();
+    const offsetLeft = elemRect.left - containerRect.left;
+    // Increase the highlight width by adding an extra 20px and adjust its left position accordingly.
+    const extraWidth = 20;
+    highlight.style.left = (offsetLeft - extraWidth / 2) + "px";
+    highlight.style.width = (elemRect.width + extraWidth) + "px";
+
     // Just preload next round if it exists
     if (currentRound < rounds.length - 1) {
         preloadImage(rounds[currentRound + 1].src, 'high');
@@ -1154,6 +1174,7 @@ window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
+    updateHighlightPosition(); // Add this line
 });
 
 // Add these variables at the top with other global variables
@@ -1489,5 +1510,19 @@ map.on('move', () => {
         hidePreview();
     }
 });
+
+function updateHighlightPosition() {
+    const highlight = document.getElementById("round-highlight");
+    if (!highlight) return;
+    
+    const currentElem = document.getElementById("round" + (currentRound + 1) + "-text");
+    const container = currentElem.parentElement;
+    const containerRect = container.getBoundingClientRect();
+    const elemRect = currentElem.getBoundingClientRect();
+    const offsetLeft = elemRect.left - containerRect.left;
+    const extraWidth = 20;
+    highlight.style.left = (offsetLeft - extraWidth / 2) + "px";
+    highlight.style.width = (elemRect.width + extraWidth) + "px";
+}
 
 preloadGameImages();

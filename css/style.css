@@ -92,6 +92,32 @@ h1 {
 .rounds-indicator {
     text-align: center;
     margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.rounds-indicator .divider {
+    height: 15px;
+    width: 1px;
+    background-color: var(--text-color);
+    opacity: 0.5;
+}
+
+.round-text {
+    padding: 4px 12px;
+}
+
+.round-highlight {
+    position: absolute;
+    top: -8px;
+    bottom: -8px;
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    transition: left 0.3s ease, width 0.3s ease;
+    z-index: -1;
+    opacity: 0.2;
 }
 
 #game-container {
@@ -483,6 +509,16 @@ h1 {
 
 .perfect-score {
     color: #FFCC00;
+}
+
+.round-highlight {
+    position: absolute;
+    top: -2px;  
+    bottom: -2px;
+    background-color: var(--primary-color);
+    border-radius: 6px;
+    transition: left 0.3s ease, width 0.3s ease;
+    z-index: -1;
 }
 
 /* Mobile Responsive Design */
