@@ -61,8 +61,8 @@ const easyPhotos = [
     "images/easy/IMG_6357.jpeg", // 60
     "images/easy/IMG_5344--Anonymous.jpeg", // 61
     "images/easy/IMG_6373.jpeg", // 62
-    "images/easy/IMG_6479.jpeg", // 63
-    "images/easy/IMG_6878.jpeg", // 64
+    "images/easy/IMG_6878.jpeg", // 63
+    "images/easy/IMG_6479.jpeg", // 64
     "images/easy/IMG_6482.jpeg", // 65
     "images/easy/6--Anonymous.jpeg", // 66
     "images/easy/IMG_6359.jpeg", // 67
@@ -145,8 +145,8 @@ const mediumPhotos = [
     "images/medium/IMG_6477.jpeg", // 60
     "images/medium/IMG_5348--Anonymous.jpeg", // 61
     "images/medium/IMG_6473.jpeg", // 62
-    "images/medium/IMG_6475.jpeg", // 63
-    "images/medium/IMG_6883.jpeg", // 64
+    "images/medium/IMG_6883.jpeg", // 63
+    "images/medium/IMG_6475.jpeg", // 64
     "images/medium/IMG_2518.jpeg", // 65
     "images/medium/IMG_6487.jpeg", // 66
     "images/medium/IMG_6686~~funny sidewalk.jpeg", // 67
@@ -229,8 +229,8 @@ const hardPhotos = [
     "images/hard/IMG_6486.jpeg", // 60
     "images/hard/IMG_5298--Anonymous.jpeg", // 61
     "images/hard/IMG_4566.jpeg", // 62
-    "images/hard/IMG_6481.jpeg", // 63
-    "images/hard/IMG_6887.jpeg", // 64
+    "images/hard/IMG_6887.jpeg", // 63
+    "images/hard/IMG_6481.jpeg", // 64
     "images/hard/IMG_6472.jpeg", // 65
     "images/hard/IMG_6519.jpeg", // 66
     "images/hard/IMG_9813--Mark S..jpeg", // 67
