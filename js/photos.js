@@ -237,8 +237,8 @@ const hardPhotos = [
     "images/hard/PXL_20221016--Jeremiah N.jpeg", // 68
     "images/hard/IMG_5351--Anonymous.jpeg", // 69
     "images/hard/IMG_6405.jpeg", // 70
-    "images/hard/IMG_6640.jpeg", // 71
-    "images/hard/IMG_6502.jpeg", // 72
+    "images/hard/IMG_6502.jpeg", // 71
+    "images/hard/IMG_6640.jpeg", // 72
     "images/hard/IMG_6642~~5.jpeg", // 73
     "images/hard/IMG_6696.jpeg", // 74
     "images/hard/IMG_6489.jpeg", // 75
