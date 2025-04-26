@@ -442,16 +442,27 @@
 
         // Update keyboard navigation
         document.addEventListener('keydown', (e) => {
+            const weeklyView = document.getElementById('weeklyView');
             const dayInput = document.getElementById('dayInput');
             const currentDay = parseInt(dayInput.value) || 1;
             
-            if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-                dayInput.value = currentDay + 1;
-                dayInput.dispatchEvent(new Event('input'));
-            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-                if (currentDay > 1) {
-                    dayInput.value = currentDay - 1;
+            if (weeklyView.style.display === 'block') {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                    showWeeklyView(currentWeekStart + 7);
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                    if (currentWeekStart > 7) {
+                        showWeeklyView(currentWeekStart - 7);
+                    }
+                }
+            } else {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                    dayInput.value = currentDay + 1;
                     dayInput.dispatchEvent(new Event('input'));
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                    if (currentDay > 1) {
+                        dayInput.value = currentDay - 1;
+                        dayInput.dispatchEvent(new Event('input'));
+                    }
                 }
             }
         });
