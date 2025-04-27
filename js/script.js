@@ -865,7 +865,7 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     }).openPopup();
     
     const distance = getDistance(guessLatLng.lat, guessLatLng.lng, actualCoords.lat, actualCoords.lng);
-    let score = distance <= perfectRange ? 5000 : Math.round(5500 * Math.exp(-3 * (distance / 700)));
+    let score = distance <= perfectRange ? 5000 : Math.round(5550 * Math.exp(-3 * (distance / 700)));
     score = distance > 1000 ? 0 : score;
     
     if (score === 5000) {
