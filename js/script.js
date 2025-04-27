@@ -15,7 +15,7 @@ function showNotification(message) {
     
     setTimeout(() => {
         notification.classList.remove('show');
-    }, 3000);
+    }, 4000);
 }
 
 function createConfetti() {
@@ -1094,7 +1094,7 @@ function copyResults() {
         return '🟩'.repeat(greenSquares) + '⬛'.repeat(blackSquares);
     }
     
-    const shareText = `UCFGuessr ${currentDay} ${totalScore}/15000\n\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.xyz`;
+    const shareText = `UCFGuessr ${currentDay} ${totalScore}/15000\n\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.com`;
     
     navigator.clipboard.writeText(shareText).then(() => {
         // GA4 event tracking for sharing results
@@ -1525,4 +1525,6 @@ function updateHighlightPosition() {
     highlight.style.width = (elemRect.width + extraWidth) + "px";
 }
 
+// Add domain change notification before preloading images
+showNotification("ucfguessr.xyz has moved to ucfguessr.com");
 preloadGameImages();
