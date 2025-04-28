@@ -15,7 +15,7 @@ function showNotification(message) {
     
     setTimeout(() => {
         notification.classList.remove('show');
-    }, 4000);
+    }, 3000);
 }
 
 function createConfetti() {
@@ -1525,6 +1525,5 @@ function updateHighlightPosition() {
     highlight.style.width = (elemRect.width + extraWidth) + "px";
 }
 
-// Add domain change notification before preloading images
-showNotification("ucfguessr.xyz has moved to ucfguessr.com");
+showNotification("our url is now ucfguessr.com");
 preloadGameImages();
