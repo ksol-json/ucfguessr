@@ -875,6 +875,21 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     totalScore += score;
     roundScores.push(score);
     
+    // GA4 event tracking for individual round scores
+    if (isArchiveMode) {
+        gtag('event', `archive_round_${currentRound + 1}_score`, {
+            'event_category': 'gameplay',
+            'event_label': `Archive Day ${currentDay}`,
+            'value': score
+        });
+    } else {
+        gtag('event', `round_${currentRound + 1}_score`, {
+            'event_category': 'gameplay',
+            'event_label': `Day ${currentDay}`,
+            'value': score
+        });
+    }
+
     actualMarker = L.marker([actualCoords.lat, actualCoords.lng])
         .addTo(map)
         .bindPopup("Correct Location", {
@@ -1525,5 +1540,5 @@ function updateHighlightPosition() {
     highlight.style.width = (elemRect.width + extraWidth) + "px";
 }
 
-showNotification("our url is now ucfguessr.com");
+showNotification("url is now ucfguessr.com!");
 preloadGameImages();
