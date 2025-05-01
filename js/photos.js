@@ -86,6 +86,7 @@ const easyPhotos = [
     "images/easy/IMG_6676.jpeg", // 85
     "images/easy/IMG_6503.jpeg", // 86
     "images/easy/IMG_6963.jpeg", // 87
+    "images/easy/IMG_6704.jpeg", // 88
 ];
 
 const mediumPhotos = [
@@ -163,11 +164,11 @@ const mediumPhotos = [
     "images/medium/IMG_6468.jpeg", // 72
     "images/medium/IMG_6891~~0.jpeg", // 73
     "images/medium/IMG_6694.jpeg", // 74
-    "images/medium/IMG_8211.jpeg", // 75
+    "images/medium/IMG_5345--Anonymous.jpeg", // 75
     "images/medium/IMG_6480.jpeg", // 76
     "images/medium/IMG_6485.jpeg", // 77
-    "images/medium/IMG_6965.jpeg", // 78
-    "images/medium/IMG_6511.jpeg", // 79
+    "images/medium/IMG_6511.jpeg", // 78
+    "images/medium/IMG_6965.jpeg", // 79
     "images/medium/IMG_6632.jpeg", // 80
     "images/medium/IMG_6370.jpeg", // 81
     "images/medium/IMG_6686~~funny sidewalk.jpeg", // 82
@@ -176,6 +177,7 @@ const mediumPhotos = [
     "images/medium/IMG_6643.jpeg", // 85
     "images/medium/IMG_6634.jpeg", // 86
     "images/medium/IMG_4729.jpeg", // 87
+    "images/medium/IMG_8211.jpeg", // 88
 ]
 
 const hardPhotos = [
@@ -266,4 +268,5 @@ const hardPhotos = [
     "images/hard/IMG_6502.jpeg", // 85
     "images/hard/IMG_6980.jpeg", // 86
     "images/hard/IMG_6964.jpeg", // 87
+    "images/hard/IMG_4960--Juni and Josh.jpeg", // 88
 ];
