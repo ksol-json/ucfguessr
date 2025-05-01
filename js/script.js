@@ -1540,5 +1540,5 @@ function updateHighlightPosition() {
     highlight.style.width = (elemRect.width + extraWidth) + "px";
 }
 
-showNotification("url is now ucfguessr.com!");
+showNotification("change your bookmark to ucfguessr.com!");
 preloadGameImages();
