@@ -161,7 +161,7 @@ const mediumPhotos = [
     "images/medium/5--Anonymous.jpeg", // 69
     "images/medium/bench--Emzee.jpeg", // 70
     "images/easy/IMG_7534.jpeg", // CHANGE
-    "images/medium/IMG_6468.jpeg", // 72
+    "images/medium/IMG_6979.jpeg", // 72
     "images/medium/IMG_6891~~0.jpeg", // 73
     "images/medium/IMG_6694.jpeg", // 74
     "images/medium/IMG_5345--Anonymous.jpeg", // 75
@@ -252,7 +252,7 @@ const hardPhotos = [
     "images/hard/IMG_5351--Anonymous.jpeg", // 69
     "images/hard/IMG_6405.jpeg", // 70
     "images/easy/IMG_7534.jpeg", // CHANGE
-    "images/hard/IMG_6979.jpeg", // 72
+    "images/hard/IMG_6468.jpeg", // 72
     "images/hard/IMG_6642~~5.jpeg", // 73
     "images/hard/IMG_6696.jpeg", // 74
     "images/hard/IMG_6489.jpeg", // 75
