@@ -69,7 +69,7 @@ const easyPhotos = [
     "images/easy/IMG_5342--Anonymous.jpeg", // 68
     "images/easy/IMG_6235~~gl on today's.jpeg", // 69
     "images/easy/bridge launch--Zach Morris.jpeg", // 70
-    "images/easy/IMG_7534.jpeg", // CHANGE
+
     "images/easy/IMG_6639.jpeg", // 72
     "images/easy/IMG_6826~~5.jpeg", // 73
     "images/easy/IMG_6679.jpeg", // 74
@@ -160,7 +160,7 @@ const mediumPhotos = [
     "images/medium/IMG_6641.jpeg", // 68
     "images/medium/5--Anonymous.jpeg", // 69
     "images/medium/bench--Emzee.jpeg", // 70
-    "images/easy/IMG_7534.jpeg", // CHANGE
+
     "images/medium/IMG_6979.jpeg", // 72
     "images/medium/IMG_6891~~0.jpeg", // 73
     "images/medium/IMG_6694.jpeg", // 74
@@ -251,7 +251,7 @@ const hardPhotos = [
     "images/hard/PXL_20221016--Jeremiah N.jpeg", // 68
     "images/hard/IMG_5351--Anonymous.jpeg", // 69
     "images/hard/IMG_6405.jpeg", // 70
-    "images/easy/IMG_7534.jpeg", // CHANGE
+
     "images/hard/IMG_6468.jpeg", // 72
     "images/hard/IMG_6642~~5.jpeg", // 73
     "images/hard/IMG_6696.jpeg", // 74
