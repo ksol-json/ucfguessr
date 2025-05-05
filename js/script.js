@@ -212,6 +212,106 @@ let currentDay = daysSinceEpoch + 1;
 
 const imageWrapper = document.querySelector('.image-wrapper');
 
+// ---------- persistent per-round info ----------
+const roundState = [
+    { userMarker: null, actualMarker: null, line: null, scoreHTML: '', completed: false }, // Easy
+    { userMarker: null, actualMarker: null, line: null, scoreHTML: '', completed: false }, // Medium
+    { userMarker: null, actualMarker: null, line: null, scoreHTML: '', completed: false }  // Hard
+];
+
+// Round the player is CURRENTLY looking at in the UI
+let viewingRound = 0;
+
+// Always keep track of the "current" round for highlight
+function updateRoundIndicators() {
+    ['round1-text','round2-text','round3-text'].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        // Attach click handler only once
+        if (!el.dataset.listenerAttached) {
+            el.addEventListener('click', () => {
+                const gameRound = getGameRound();
+                if (idx <= gameRound || gameRound === 3) {
+                    showStoredRound(idx);
+                }
+            });
+            el.dataset.listenerAttached = 'true';
+        }
+        // Bold only the viewing round
+        el.style.fontWeight = (idx === viewingRound ? 'bold' : 'normal');
+        // Set cursor to pointer if clickable, otherwise default
+        const gameRound = getGameRound();
+        if (idx <= gameRound || gameRound === 3) {
+            el.style.cursor = 'pointer';
+        } else {
+            el.style.cursor = 'default';
+        }
+    });
+    updateHighlightPosition();
+}
+
+/*  Return the first round that hasn't been played yet (0‑based).
+    If every round is done it returns 3, which we treat as “game finished”. */
+function getGameRound() {
+    for (let i = 0; i < 3; i++) if (!roundState[i].completed) return i;
+    return 3;
+}
+
+function showStoredRound(roundIndex) {
+    viewingRound = roundIndex;
+    currentRound = roundIndex;
+
+    // Remove any existing markers/lines from map
+    if (userMarker) { try { map.removeLayer(userMarker); } catch {} }
+    if (actualMarker) { try { map.removeLayer(actualMarker); } catch {} }
+    if (line) { try { map.removeLayer(line); } catch {} }
+    userMarker = null;
+    actualMarker = null;
+    line = null;
+
+    // Load the image for this round
+    loadImage(rounds[roundIndex].src, true);
+
+    // Restore markers/lines if completed
+    if (roundState[roundIndex].completed) {
+        // Deep clone markers/lines for this round
+        const state = roundState[roundIndex];
+        if (state.userMarker) {
+            userMarker = L.marker(state.userMarker.getLatLng(), { draggable: false }).addTo(map);
+            userMarker.bindPopup("Your Guess", {
+                permanent: true,
+                offset: [0, -5],
+                closeButton: false
+            }).openPopup();
+        }
+        if (state.actualMarker) {
+            actualMarker = L.marker(state.actualMarker.getLatLng()).addTo(map);
+            actualMarker.bindPopup("Correct Location", {
+                permanent: true,
+                offset: [0, -5],
+                closeButton: false
+            }).openPopup();
+        }
+        if (state.line) {
+            line = L.polyline(state.line.getLatLngs(), {
+                color: 'var(--primary-color)', 
+                dashArray: '5, 5'
+            }).addTo(map);
+        }
+        document.getElementById("result").innerHTML = state.scoreHTML;
+        document.getElementById("submit-guess").style.display = "none";
+        document.getElementById("next-round").style.display = "inline-block";
+    } else {
+        // Not completed: reset UI for guessing
+        document.getElementById("result").innerHTML = "";
+        document.getElementById("submit-guess").style.display = "inline-block";
+        document.getElementById("next-round").style.display = "none";
+        document.getElementById("submit-guess").disabled = true;
+        guessSubmitted = false;
+    }
+
+    updateRoundIndicators();
+}
+
 // --------------------
 // Zoom & Pan Functionality
 // --------------------
@@ -478,7 +578,12 @@ let userMarker = null;
 
 // Modify map click handler to prevent new guesses after game completion
 map.on('click', function(e) {
-    if (guessSubmitted || currentRound === rounds.length - 1 && isGameCompleted()) return;
+    // Prevent placing/moving marker if viewing a completed round (not the current round)
+    if (
+        (roundState[viewingRound].completed && viewingRound !== getGameRound()) ||
+        guessSubmitted ||
+        (currentRound === rounds.length - 1 && isGameCompleted())
+    ) return;
     if (userMarker) {
         userMarker.setLatLng(e.latlng);
     } else {
@@ -600,7 +705,7 @@ function preloadGameImages() {
         [
             easyPhotos[yesterdayIndex % easyPhotos.length],
             mediumPhotos[yesterdayIndex % mediumPhotos.length],
-            hardPhotos[yesterdayIndex % hardPhotos.length]
+            hardPhotos[yesterdayIndex % mediumPhotos.length]
         ].forEach(url => preloadImage(url, 'low'));
     }
 }
@@ -815,30 +920,7 @@ function loadRound(skipExifCheck = false, completed = false) {
         guessSubmitted = false;
     }
 
-    // Bold round indicators
-    document.getElementById("round1-text").style.fontWeight = currentRound === 0 ? "bold" : "normal";
-    document.getElementById("round2-text").style.fontWeight = currentRound === 1 ? "bold" : "normal";
-    document.getElementById("round3-text").style.fontWeight = currentRound === 2 ? "bold" : "normal";
-
-    // Add/update highlight for current round indicator using a CSS class
-    const currentRoundId = "round" + (currentRound + 1) + "-text";
-    const currentElem = document.getElementById(currentRoundId);
-    const container = currentElem.parentElement; // common container for round texts
-    container.style.position = "relative";  // ensure container is positioned
-    let highlight = document.getElementById("round-highlight");
-    if (!highlight) {
-        highlight = document.createElement("div");
-        highlight.id = "round-highlight";
-        highlight.classList.add("round-highlight");
-        container.insertBefore(highlight, container.firstChild);
-    }
-    const containerRect = container.getBoundingClientRect();
-    const elemRect = currentElem.getBoundingClientRect();
-    const offsetLeft = elemRect.left - containerRect.left;
-    // Increase the highlight width by adding an extra 20px and adjust its left position accordingly.
-    const extraWidth = 20;
-    highlight.style.left = (offsetLeft - extraWidth / 2) + "px";
-    highlight.style.width = (elemRect.width + extraWidth) + "px";
+    updateRoundIndicators();
 
     // Just preload next round if it exists
     if (currentRound < rounds.length - 1) {
@@ -941,6 +1023,15 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
         });
     }
 
+    // --- persist this round’s visual state ---
+    roundState[currentRound] = {
+        userMarker,
+        actualMarker,
+        line,
+        scoreHTML: document.getElementById("result").innerHTML,
+        completed: true
+    };
+
     // GA4 event tracking for game completion
     if (currentRound === rounds.length - 1) {
         if (isArchiveMode) {
@@ -959,33 +1050,20 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     }
 });
 
-document.getElementById("next-round").addEventListener("click", function() {
-    if (currentRound === rounds.length - 1) {
-        showResults();
-    } else {
-        currentRound++;
-        isImageLoaded = false;  // Reset image loaded state
-        document.getElementById("submit-guess").disabled = true;
-        loadRound();
-        
-        // Check if the image wrapper is fully visible
-        const imageWrapper = document.querySelector('.image-wrapper');
-        const rect = imageWrapper.getBoundingClientRect();
-        const isFullyVisible = (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= window.innerHeight &&
-            rect.right <= window.innerWidth
-        );
+document.getElementById("next-round").addEventListener("click", () => {
+    const gameRound = getGameRound();   // where the player SHOULD be
 
-        // Only scroll if the element isn't fully visible
-        if (!isFullyVisible) {
-            imageWrapper.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
-        }
+    if (gameRound === 3) {              // everything finished
+        showResults();
+        return;
     }
+
+    viewingRound = currentRound = gameRound;   // jump to the live round
+    isImageLoaded = false;
+    document.getElementById("submit-guess").disabled = true;
+    loadRound();
+
+    document.querySelector('.image-wrapper').scrollIntoView({behavior:'smooth', block:'center'});
 });
 
 // --------------------
@@ -1189,7 +1267,7 @@ window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
-    updateHighlightPosition(); // Add this line
+    updateHighlightPosition();
 });
 
 // Add these variables at the top with other global variables
@@ -1318,6 +1396,12 @@ function selectArchiveDate(date) {
     isArchiveMode = date.toDateString() !== etNow.toDateString();
     selectedArchiveDate = date;
     hasUpdatedDistribution = false;
+
+    // Reset round state memory for all rounds
+    for (let i = 0; i < roundState.length; i++) {
+        roundState[i] = { userMarker: null, actualMarker: null, line: null, scoreHTML: '', completed: false };
+    }
+    viewingRound = 0;
     
     // Update daily indices for archive date
     const archiveEasyIndex = daysSinceEpochArchive % easyPhotos.length;
@@ -1527,11 +1611,19 @@ map.on('move', () => {
 });
 
 function updateHighlightPosition() {
-    const highlight = document.getElementById("round-highlight");
-    if (!highlight) return;
-    
-    const currentElem = document.getElementById("round" + (currentRound + 1) + "-text");
+    // Always highlight the current round (the one in progress or just completed)
+    const currentRoundId = "round" + (currentRound + 1) + "-text";
+    const currentElem = document.getElementById(currentRoundId);
+    if (!currentElem) return;
     const container = currentElem.parentElement;
+    container.style.position = "relative";
+    let highlight = document.getElementById("round-highlight");
+    if (!highlight) {
+        highlight = document.createElement("div");
+        highlight.id = "round-highlight";
+        highlight.classList.add("round-highlight");
+        container.insertBefore(highlight, container.firstChild);
+    }
     const containerRect = container.getBoundingClientRect();
     const elemRect = currentElem.getBoundingClientRect();
     const offsetLeft = elemRect.left - containerRect.left;
@@ -1541,3 +1633,4 @@ function updateHighlightPosition() {
 }
 
 preloadGameImages();
+updateRoundIndicators();
