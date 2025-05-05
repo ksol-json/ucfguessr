@@ -118,6 +118,18 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="js/photos.js"></script>
     <script>
+        const markerCache = new Set();
+
+        function addMarkerToMap(lat, lon, title) {
+        const key = `${lat.toFixed(6)},${lon.toFixed(6)}`;
+        if (markerCache.has(key)) return;
+        markerCache.add(key);
+
+        const marker = L.marker([lat, lon]).addTo(combinedMap);
+        if (title) marker.bindPopup(title);
+        markers.push(marker);
+        }
+
         function convertDMSToDD(dms, ref) {
             const degrees = dms[0].numerator / dms[0].denominator;
             const minutes = dms[1].numerator / dms[1].denominator;
@@ -143,13 +155,9 @@
             }
             markers.forEach(marker => marker.remove());
             markers = [];
+            markerCache.clear();
         }
 
-        function addMarkerToMap(lat, lon, title) {
-            const marker = L.marker([lat, lon]).addTo(combinedMap);
-            if (title) marker.bindPopup(title);
-            markers.push(marker);
-        }
 
         function updateCombinedMapView() {
             if (markers.length > 0) {
