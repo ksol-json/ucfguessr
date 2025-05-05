@@ -221,10 +221,6 @@ h1 {
     border-radius: 8px;
     padding: 8px;
     transition: background-color var(--transition-duration);
-    user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    -moz-user-select: none;
 }
 
 .zoom-button {
@@ -242,6 +238,7 @@ h1 {
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
+    touch-action: manipulation;
 }
 
 .zoom-button:hover {

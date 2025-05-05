@@ -77,7 +77,7 @@ const easyPhotos = [
     "images/easy/IMG_0403.jpeg", // 76
     "images/easy/20250416_112057 - Steven.jpeg", // 77
     "images/easy/global-easy--vivi.jpeg", // 78
-    "images/easy/IMG_6414.jpeg", // 79
+    "images/easy/IMG_7073.jpeg", // 79
     "images/easy/IMG_6239.jpeg", // 80
     "images/easy/IMG_6507.jpeg", // 81
     "images/easy/IMG_6343.jpeg", // 82
@@ -87,6 +87,7 @@ const easyPhotos = [
     "images/easy/IMG_6503.jpeg", // 86
     "images/easy/IMG_6963.jpeg", // 87
     "images/easy/IMG_6704.jpeg", // 88
+    "images/easy/IMG_6414.jpeg", // 89
 ];
 
 const mediumPhotos = [
@@ -178,6 +179,7 @@ const mediumPhotos = [
     "images/medium/IMG_6634.jpeg", // 86
     "images/medium/IMG_4729.jpeg", // 87
     "images/medium/IMG_8211.jpeg", // 88
+    "images/medium/IMG_6928.jpeg", // 89
 ]
 
 const hardPhotos = [
@@ -269,4 +271,5 @@ const hardPhotos = [
     "images/hard/IMG_6980.jpeg", // 86
     "images/hard/IMG_6964.jpeg", // 87
     "images/hard/IMG_4960--Juni and Josh.jpeg", // 88
+    "images/hard/IMG_6680.jpeg", // 89
 ];
