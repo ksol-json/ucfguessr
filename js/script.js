@@ -556,19 +556,6 @@ imageWrapper.addEventListener('touchend', function(e) {
     }
 });
 
-// Prevent double-tap to zoom on zoom buttons (especially on mobile)
-document.querySelectorAll('.zoom-button').forEach(btn => {
-    btn.addEventListener('touchstart', function(e) {
-        // Prevent double-tap zoom
-        if (e.touches.length === 1) {
-            e.preventDefault();
-        }
-    }, { passive: false });
-    btn.addEventListener('dblclick', function(e) {
-        e.preventDefault();
-    });
-});
-
 // --------------------
 // Map Setup
 // --------------------
