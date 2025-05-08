@@ -80,8 +80,8 @@ const easyPhotos = [
     "images/easy/IMG_7073.jpeg", // 79
     "images/easy/IMG_6239.jpeg", // 80
     "images/easy/IMG_6507.jpeg", // 81
-    "images/easy/IMG_6343.jpeg", // 82
-    "images/easy/IMG_6970.jpeg", // 83
+    "images/easy/IMG_6970.jpeg", // 82
+    "images/easy/IMG_6343.jpeg", // 83
     "images/easy/IMG_7259.jpeg", // 84
     "images/easy/IMG_6676.jpeg", // 85
     "images/easy/IMG_6503.jpeg", // 86
@@ -92,6 +92,13 @@ const easyPhotos = [
     "images/easy/IMG_6983.jpeg", // 91
     "images/easy/IMG_6681.jpeg", // 92
     "images/easy/A60E438B--Olive.jpeg", // 93
+    "images/easy/IMG_2090.jpeg", // 94
+    "images/easy/IMG_6682.jpeg", // 95
+    "images/easy/IMG_6988.jpeg", // 96
+    "images/easy/IMG_6961.jpeg", // 97
+    "images/easy/IMG_6962.jpeg", // 98
+    "images/easy/IMG_6950.jpeg", // 99
+    "images/easy/IMG_6960.jpeg", // 100
 ];
 
 const mediumPhotos = [
@@ -176,9 +183,9 @@ const mediumPhotos = [
     "images/medium/IMG_6965.jpeg", // 79
     "images/medium/IMG_6632.jpeg", // 80
     "images/medium/IMG_6370.jpeg", // 81
-    "images/medium/IMG_6686~~funny sidewalk.jpeg", // 82
-    "images/medium/IMG_6972.jpeg", // 83
-    "images/medium/IMG_6978.jpeg", // 84
+    "images/medium/IMG_6972.jpeg", // 82
+    "images/medium/IMG_6686~~funny sidewalk.jpeg", // 83
+    "images/medium/IMG_6946.jpeg", // 84
     "images/medium/IMG_6643.jpeg", // 85
     "images/medium/IMG_6634.jpeg", // 86
     "images/medium/IMG_4729.jpeg", // 87
@@ -188,6 +195,13 @@ const mediumPhotos = [
     "images/medium/IMG_6876.jpeg", // 91
     "images/medium/IMG_6467.jpeg", // 92
     "images/medium/IMG_6635.jpeg", // 93
+    "images/medium/IMG_6978.jpeg", // 94
+    "images/medium/IMG_6888.jpeg", // 95
+    "images/medium/IMG_5356--Anonymous.jpeg", // 96
+    "images/medium/IMG_6926.jpeg", // 97
+    "images/medium/IMG_5339--Anonymous.jpeg", // 98
+    "images/medium/IMG_6922.jpeg", // 99
+    "images/medium/IMG_2249--Olive and Juni.jpeg", // 100
 ]
 
 const hardPhotos = [
@@ -272,9 +286,9 @@ const hardPhotos = [
     "images/hard/IMG_6648.jpeg", // 79
     "images/hard/IMG_5349--Anonymous.jpeg", // 80
     "images/hard/IMG_6488.jpeg", // 81
-    "images/hard/IMG_6830.jpeg", // 82
-    "images/hard/IMG_6974~~mmm.jpeg", // 83
-    "images/hard/IMG_6946.jpeg", // 84
+    "images/hard/IMG_6974~~mmm.jpeg", // 82
+    "images/hard/IMG_6830.jpeg", // 83
+    "images/hard/IMG_6969.jpeg", // 84
     "images/hard/IMG_6502.jpeg", // 85
     "images/hard/IMG_6980.jpeg", // 86
     "images/hard/IMG_6964.jpeg", // 87
@@ -284,4 +298,11 @@ const hardPhotos = [
     "images/hard/IMG_6640.jpeg", // 91
     "images/hard/IMG_6986.jpeg", // 92
     "images/hard/IMG_6907.jpeg", // 93
+    "images/hard/IMG_6835.jpeg", // 94
+    "images/hard/IMG_5363--Anonymous.jpeg", // 95
+    "images/hard/IMG_2042.jpeg", // 96
+    "images/hard/IMG_6689.jpeg", // 97
+    "images/hard/IMG_6831.jpeg", // 98
+    "images/hard/IMG_6893.jpeg", // 99
+    "images/hard/IMG_7107~~ty for 100 days of ucfguessr.jpeg", // 100
 ];
