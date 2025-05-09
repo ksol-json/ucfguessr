@@ -103,6 +103,7 @@ const easyPhotos = [
     "images/easy/IMG_6683.jpeg", // 102
     "images/easy/IMG_6698.jpeg", // 103
     "images/easy/IMG_6879.jpeg", // 104
+    "images/easy/IMG_6985.jpeg", // 105
 ];
 
 const mediumPhotos = [
@@ -197,7 +198,7 @@ const mediumPhotos = [
     "images/medium/IMG_6928.jpeg", // 89
     "images/medium/IMG_6930.jpeg", // 90
     "images/medium/IMG_6876.jpeg", // 91
-    "images/medium/IMG_6467.jpeg", // 92
+    "images/medium/IMG_8237--Honors Congress.jpeg", // 92
     "images/medium/IMG_6635.jpeg", // 93
     "images/medium/IMG_6978.jpeg", // 94
     "images/medium/IMG_6888.jpeg", // 95
@@ -205,11 +206,12 @@ const mediumPhotos = [
     "images/medium/IMG_6926.jpeg", // 97
     "images/medium/IMG_5339--Anonymous.jpeg", // 98
     "images/medium/IMG_6922.jpeg", // 99
-    "images/medium/IMG_2249--Olive and Juni.jpeg", // 100
+    "images/medium/IMG_6467.jpeg", // 100
     "images/medium/IMG_6923.jpeg", // 101
     "images/medium/IMG_6949.jpeg", // 102
     "images/medium/IMG_5359--Anonymous.jpeg", // 103
     "images/medium/IMG_6471.jpeg", // 104
+    "images/medium/IMG_2249--Olive and Juni.jpeg", // 105
 ]
 
 const hardPhotos = [
@@ -317,4 +319,5 @@ const hardPhotos = [
     "images/hard/IMG_5357--Anonymous.jpeg", // 102
     "images/hard/IMG_6987.jpeg", // 103
     "images/hard/IMG_4821.jpeg", // 104
+    "images/hard/IMG_5364--Anonymous.jpeg", // 105
 ];
