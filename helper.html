@@ -287,6 +287,13 @@
                                 attribution: ''
                             }).addTo(map);
                             L.marker([latitude, longitude]).addTo(map);
+
+                            L.circle([latitude, longitude], {
+                                radius: 25,
+                                opacity: 0.35,
+                                color: 'red',
+                                dashArray: '5, 5'
+                            }).addTo(map);
                             
                             addMarkerToMap(latitude, longitude, `${photo.difficulty} Photo`);
                             if (index === photos.length - 1) {

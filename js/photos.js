@@ -99,6 +99,10 @@ const easyPhotos = [
     "images/easy/IMG_6962.jpeg", // 98
     "images/easy/IMG_6950.jpeg", // 99
     "images/easy/IMG_6960.jpeg", // 100
+    "images/easy/IMG_6976.jpeg", // 101
+    "images/easy/IMG_6683.jpeg", // 102
+    "images/easy/IMG_6698.jpeg", // 103
+    "images/easy/IMG_6879.jpeg", // 104
 ];
 
 const mediumPhotos = [
@@ -189,7 +193,7 @@ const mediumPhotos = [
     "images/medium/IMG_6643.jpeg", // 85
     "images/medium/IMG_6634.jpeg", // 86
     "images/medium/IMG_4729.jpeg", // 87
-    "images/medium/IMG_8211.jpeg", // 88
+    "images/medium/IMG_6230.jpeg", // 88
     "images/medium/IMG_6928.jpeg", // 89
     "images/medium/IMG_6930.jpeg", // 90
     "images/medium/IMG_6876.jpeg", // 91
@@ -202,6 +206,10 @@ const mediumPhotos = [
     "images/medium/IMG_5339--Anonymous.jpeg", // 98
     "images/medium/IMG_6922.jpeg", // 99
     "images/medium/IMG_2249--Olive and Juni.jpeg", // 100
+    "images/medium/IMG_6923.jpeg", // 101
+    "images/medium/IMG_6949.jpeg", // 102
+    "images/medium/IMG_5359--Anonymous.jpeg", // 103
+    "images/medium/IMG_6471.jpeg", // 104
 ]
 
 const hardPhotos = [
@@ -292,7 +300,7 @@ const hardPhotos = [
     "images/hard/IMG_6502.jpeg", // 85
     "images/hard/IMG_6980.jpeg", // 86
     "images/hard/IMG_6964.jpeg", // 87
-    "images/hard/IMG_4960--Juni and Josh.jpeg", // 88
+    "images/hard/IMG_8211.jpeg", // 88,
     "images/hard/IMG_6680.jpeg", // 89
     "images/hard/IMG_6951.jpeg", // 90
     "images/hard/IMG_6640.jpeg", // 91
@@ -303,6 +311,10 @@ const hardPhotos = [
     "images/hard/IMG_2042.jpeg", // 96
     "images/hard/IMG_6689.jpeg", // 97
     "images/hard/IMG_6831.jpeg", // 98
-    "images/hard/IMG_6893.jpeg", // 99
+    "images/hard/IMG_6893~~This is the southernmost one..jpeg", // 99
     "images/hard/IMG_7107~~ty for 100 days of ucfguessr.jpeg", // 100
+    "images/hard/IMG_4960--Juni and Josh.jpeg", // 101
+    "images/hard/IMG_5357--Anonymous.jpeg", // 102
+    "images/hard/IMG_6987.jpeg", // 103
+    "images/hard/IMG_4821.jpeg", // 104
 ];
