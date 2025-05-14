@@ -197,8 +197,8 @@ const mediumPhotos = [
     "images/medium/IMG_6230.jpeg", // 88
     "images/medium/IMG_4729.jpeg", // 89
     "images/medium/IMG_6930.jpeg", // 90
-    "images/medium/IMG_6876.jpeg", // 91
-    "images/medium/IMG_8237--Honors Congress.jpeg", // 92
+    "images/medium/IMG_8237--Honors Congress.jpeg", // 91
+    "images/medium/IMG_6876.jpeg", // 92
     "images/medium/IMG_6635.jpeg", // 93
     "images/medium/IMG_6978.jpeg", // 94
     "images/medium/IMG_6888.jpeg", // 95

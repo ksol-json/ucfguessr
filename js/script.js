@@ -249,8 +249,6 @@ function updateRoundIndicators() {
     updateHighlightPosition();
 }
 
-/*  Return the first round that hasn't been played yet (0‑based).
-    If every round is done it returns 3, which we treat as “game finished”. */
 function getGameRound() {
     for (let i = 0; i < 3; i++) if (!roundState[i].completed) return i;
     return 3;
