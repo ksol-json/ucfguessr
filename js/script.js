@@ -1098,6 +1098,12 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
             'event_label': `Archive Day ${currentDay}`,
             'value': score
         });
+    } else if (hardModeEnabled && hardModeGameStarted) {
+        gtag('event', `hard_mode_round_${currentRound + 1}_score`, {
+            'event_category': 'gameplay',
+            'event_label': `Day ${currentDay}`,
+            'value': score
+        });
     } else {
         gtag('event', `round_${currentRound + 1}_score`, {
             'event_category': 'gameplay',
@@ -1178,6 +1184,12 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
             gtag('event', 'archive_game_complete', {
                 'event_category': 'gameplay',
                 'event_label': `Archive Day ${Math.floor((selectedArchiveDate - epoch) / (1000 * 60 * 60 * 24)) + 1}`,
+                'value': totalScore
+            });
+        } else if (hardModeEnabled && hardModeGameStarted) {
+            gtag('event', 'hard_mode_game_complete', {
+                'event_category': 'gameplay',
+                'event_label': `Day ${daysSinceEpoch + 1}`,
                 'value': totalScore
             });
         } else {
