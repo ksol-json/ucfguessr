@@ -31,10 +31,29 @@
         <span class="current-date" id="current-date"></span>
       </div>
       <div class="controls-group">
-        <button class="archive-button" onclick="showArchive()">📅</button>
-        <button class="coverage-button" onclick="toggleCoverageMarkers()">📍</button>
-        <button class="theme-button" onclick="toggleDarkMode()">🌙</button>
-        <button class="help-button" onclick="showHelp()">❔</button>
+        <button class="toolbar-button archive-button" onclick="showArchive()">📅</button>
+        <button class="toolbar-button theme-button" onclick="toggleDarkMode()">🌙</button>
+        <div class="dropdown">
+          <button class="toolbar-button dropdown-button">⋮</button>
+          <div class="dropdown-content">
+            <div class="dropdown-item" onclick="showHelp()">
+              <span class="dropdown-icon">❔</span>
+              <span>How to Play</span>
+            </div>
+            <div class="dropdown-item coverage-item" onclick="toggleCoverageMarkers()">
+              <span class="dropdown-icon">📍</span>
+              <span>Coverage Mode</span>
+            </div>
+            <div class="dropdown-item" onclick="toggleHardMode()">
+              <span class="dropdown-icon">🔥</span>
+              <span>Extreme Mode</span>
+            </div>
+            <div class="dropdown-item" onclick="toggleMarathonMode()">
+              <span class="dropdown-icon">🏁</span>
+              <span>Marathon</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <p class="rounds-indicator">
@@ -48,6 +67,10 @@
           <img class="challenge-image visible" id="challenge-image-1" onload="handleImageLoad()">
           <img class="challenge-image hidden" id="challenge-image-2" onload="handleImageLoad()">
           <div class="loading-spinner"></div>
+          <div id="hard-mode-start" class="hard-mode-start" style="display: none;">
+            <button class="button start-button">Start Game</button>
+            <div class="start-caption">Extreme Mode</div>
+          </div>
         </div>
         <!-- Added zoom controls -->
         <div class="zoom-controls">
@@ -73,7 +96,6 @@
       <p id="round-scores"></p>
       <button class="button" onclick="copyResults()">Share Score</button>
     </div>
-    <div class="copied-message" id="copied-message">Copied to clipboard</div>
 
     <!-- Help popup -->
     <div id="help-popup">
@@ -150,6 +172,7 @@
       <p id="round-scores"></p>
       <p>Come back tomorrow for a new challenge!</p>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLScUbMUont8pCtntTDSOJbxaVXJ0cao8AK2v-GS068TTyXii5A/viewform?usp=dialog" target="_blank" style="font-weight: bold;">Want your photos featured in the game?<br>Upload them here!</a>
+      <p>Try the new EXTREME mode by tapping the ⋮ icon!</p>
       <button class="button share-button" onclick="copyResults()">Share Score</button>
     </template>
     

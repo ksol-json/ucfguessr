@@ -1,6 +1,10 @@
 const isMobile = window.innerWidth <= 768;
 
 let isImageLoaded = false;
+let hardModeEnabled = JSON.parse(localStorage.getItem('hardModeEnabled') || 'false');
+let marathonModeEnabled = false;
+let hardModeRoundsViewed = new Set();
+let hardModeGameStarted = false;
 
 function showNotification(message) {
     let notification = document.querySelector('.notification-popup');
@@ -106,9 +110,9 @@ let konamiCodeActivations = 0;
 
 function handleKonamiSuccess() {
     konamiCodeActivations++;
-    document.querySelector('.coverage-button').style.display = 'flex';
     
     if (konamiCodeActivations === 1) {
+        document.querySelector('.coverage-item').style.display = 'flex';
         showNotification('Coverage mode unlocked!');
     } else if (konamiCodeActivations === 2) {
         showNotification('Full coverage mode unlocked!');
@@ -151,7 +155,11 @@ document.addEventListener('keydown', function(event) {
     
     if (event.code === 'Space') {
         event.preventDefault();
-        
+        const startScreen = document.getElementById('hard-mode-start');
+        if (startScreen && startScreen.style.display !== 'none' && !hardModeGameStarted && currentRound === 0) {
+            startScreen.querySelector('.start-button').click();
+            return;
+        }
         const nextRoundButton = document.getElementById('next-round');
         if (nextRoundButton.style.display !== 'none') {
             nextRoundButton.click();
@@ -266,8 +274,25 @@ function showStoredRound(roundIndex) {
     actualMarker = null;
     line = null;
 
+    // Clear any existing question mark overlay
+    document.getElementById('hardmode-question-overlay')?.remove();
+
     // Load the image for this round
-    loadImage(rounds[roundIndex].src, true);
+    if (roundState[roundIndex].completed) {
+        loadImage(rounds[roundIndex].src, true, true); // Force visibility for completed rounds
+    } else {
+        loadImage(rounds[roundIndex].src, true);
+        
+        // Only show question mark for current active round that hasn't been submitted
+        if (hardModeEnabled && roundIndex === getGameRound() && !hardModeRoundsViewed.has(roundIndex)) {
+            const container = document.getElementById('image-container');
+            const qOverlay = document.createElement('div');
+            qOverlay.id = 'hardmode-question-overlay';
+            qOverlay.textContent = '?';
+            qOverlay.style.cssText = "position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:5rem; color:var(--text-color); z-index:2000;";
+            container.appendChild(qOverlay);
+        }
+    }
 
     // Restore markers/lines if completed
     if (roundState[roundIndex].completed) {
@@ -305,6 +330,29 @@ function showStoredRound(roundIndex) {
         document.getElementById("next-round").style.display = "none";
         document.getElementById("submit-guess").disabled = true;
         guessSubmitted = false;
+
+        // Only hide image and run countdown if this round hasn't been viewed yet
+        if (hardModeEnabled && !hardModeRoundsViewed.has(roundIndex)) {
+            const visibleImage = document.querySelector('.challenge-image.visible');
+            if (visibleImage) {
+                visibleImage.style.visibility = 'hidden';
+            }
+            hardModeRoundsViewed.add(roundIndex);
+            runHardModeCountdown();
+        }
+
+        // If switching back to the current round and user hasn't submitted a guess,
+        // add back the question mark overlay.
+        if (hardModeEnabled && roundIndex === getGameRound() && !guessSubmitted) {
+            const container = document.getElementById('image-container');
+            if (!document.getElementById('hardmode-question-overlay')) {
+                const qOverlay = document.createElement('div');
+                qOverlay.id = 'hardmode-question-overlay';
+                qOverlay.textContent = '?';
+                qOverlay.style.cssText = "position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:5rem; color:var(--text-color); z-index:2000;";
+                container.appendChild(qOverlay);
+            }
+        }
     }
 
     updateRoundIndicators();
@@ -335,12 +383,14 @@ function updateImageTransform() {
 }
 
 function startDragging(e) {
+    if (e.target.closest('#hard-mode-start')) return;
+
     isDragging = true;
     if (e.type === 'mousedown') {
         startX = e.clientX;
         startY = e.clientY;
     } else if (e.type === 'touchstart') {
-        e.preventDefault();
+        e.preventDefault(); 
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
     }
@@ -635,9 +685,63 @@ let activeImageIndex = 1;
 function handleImageLoad() {
     isImageLoaded = true;
     const submitButton = document.getElementById('submit-guess');
-    if (userMarker) {  // Only enable if there's also a marker placed
+    if (userMarker) {  
         submitButton.disabled = false;
     }
+    // Only run countdown for rounds not yet viewed in hard mode
+    if (hardModeEnabled && !roundState[currentRound].completed && !hardModeRoundsViewed.has(currentRound)) {
+        const visibleImage = document.querySelector('.challenge-image.visible');
+        if (visibleImage) {
+            visibleImage.style.visibility = 'hidden';
+        }
+        hardModeRoundsViewed.add(currentRound);
+        runHardModeCountdown();
+    }
+}
+
+function runHardModeCountdown() {
+    const container = document.getElementById('image-container');
+    document.getElementById('hardmode-countdown-overlay')?.remove();
+    // Immediately hide the challenge image so it won't be visible during countdown.
+    const visibleImage = container.querySelector('.challenge-image.visible');
+    if (visibleImage) {
+        visibleImage.style.visibility = 'hidden';
+    }
+    const countdownOverlay = document.createElement('div');
+    countdownOverlay.id = 'hardmode-countdown-overlay';
+    countdownOverlay.style.cssText = "position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; color:#fff; font-size:3rem; z-index:2000;";
+    container.appendChild(countdownOverlay);
+    const countdownTime = 1.5; 
+    const startTime = performance.now();
+    function updateCountdown() {
+        const elapsed = (performance.now() - startTime) / 1000;
+        const remaining = Math.max(countdownTime - elapsed, 0);
+        countdownOverlay.textContent = remaining.toFixed(2);
+        if (remaining > 0) {
+            requestAnimationFrame(updateCountdown);
+        } else {
+            countdownOverlay.remove();
+            runHardModeFlash();
+        }
+    }
+    requestAnimationFrame(updateCountdown);
+}
+
+function runHardModeFlash() {
+    const container = document.getElementById('image-container');
+    document.getElementById('hardmode-question-overlay')?.remove();
+    const visibleImage = container.querySelector('.challenge-image.visible');
+    if (!visibleImage) return;
+    // Show the image for 0.5 seconds, then hide it and show a large question mark.
+    visibleImage.style.visibility = 'visible';
+    setTimeout(() => {
+        visibleImage.style.visibility = 'hidden';
+        const qOverlay = document.createElement('div');
+        qOverlay.id = 'hardmode-question-overlay';
+        qOverlay.textContent = '?';
+        qOverlay.style.cssText = "position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:5rem; color:var(--text-color); z-index:2000;";
+        container.appendChild(qOverlay);
+    }, 800);
 }
 
 let preloadedImages = new Map();
@@ -709,7 +813,7 @@ function preloadGameImages() {
 }
 
 // Modify loadImage function to use the preloaded images
-function loadImage(imageUrl, skipExifCheck = false) {
+function loadImage(imageUrl, skipExifCheck = false, forceVisible = false) {
     const currentImage = document.getElementById(`challenge-image-${activeImageIndex}`);
     const nextImage = document.getElementById(`challenge-image-${activeImageIndex === 1 ? 2 : 1}`);
     const spinner = document.querySelector('.loading-spinner');
@@ -781,30 +885,35 @@ function loadImage(imageUrl, skipExifCheck = false) {
         return;
     }
     
-    // Mobile: Simple swap without transition
+    // Mobile transition
     if (isMobileView) {
         nextImage.onload = () => {
             clearTimeout(window.spinnerTimeout);
             spinner.style.display = 'none';
-            
-            // Don't reset transforms immediately
+
             currentZoom = 1;
-            translateX = 0;
-            translateY = 0;
-            
-            // Instant swap of images
+            translateX = translateY = 0;
+
+            // Hard-mode keeps the image hidden until the flash
+            if (hardModeEnabled && !forceVisible){
+                nextImage.style.visibility = 'hidden';
+            } else {
+                nextImage.style.visibility = 'visible';
+            }
+
             currentImage.classList.remove('visible');
             currentImage.classList.add('hidden');
+
             nextImage.classList.remove('hidden');
             nextImage.classList.add('visible');
-            
-            // Apply transforms after swap
+
+            // Clear transforms after swap
             requestAnimationFrame(() => {
                 currentImage.style.transform = '';
-                nextImage.style.transform = `translate3d(0px, 0px, 0) scale(1)`;
+                nextImage.style.transform = 'translate3d(0,0,0) scale(1)';
                 updateImageTransform();
             });
-            
+
             activeImageIndex = activeImageIndex === 1 ? 2 : 1;
             handleImageLoad();
         };
@@ -812,13 +921,11 @@ function loadImage(imageUrl, skipExifCheck = false) {
         return;
     }
     
-    // Desktop: Keep existing crossfade transition logic
+    // Desktop crossfade transition
     nextImage.style.opacity = '0';
     nextImage.classList.remove('hidden');
     nextImage.classList.add('visible');
     nextImage.src = imageUrl;
-    
-// Wait for next image to load before starting transition
     nextImage.onload = () => {
         clearTimeout(window.spinnerTimeout);
         spinner.style.display = 'none';
@@ -830,6 +937,13 @@ function loadImage(imageUrl, skipExifCheck = false) {
         translateX = 0;
         translateY = 0;
         
+        // Ensure image remains hidden in hard mode until countdown completes
+        if (hardModeEnabled && !forceVisible) {
+            nextImage.style.visibility = 'hidden';
+        } else {
+            nextImage.style.visibility = 'visible';
+        }
+        
         // Start crossfade with slight delay for smoother transition
         requestAnimationFrame(() => {
             nextImage.style.opacity = '1';
@@ -840,7 +954,7 @@ function loadImage(imageUrl, skipExifCheck = false) {
                 currentImage.classList.add('hidden');
                 activeImageIndex = activeImageIndex === 1 ? 2 : 1;
                 handleImageLoad();
-            }, 500); // Match CSS transition duration
+            }, 500);
         });
     };
 }
@@ -853,6 +967,28 @@ document.querySelectorAll('.challenge-image').forEach(img => {
 });
 
 function loadRound(skipExifCheck = false, completed = false) {
+    document.getElementById('hardmode-countdown-overlay')?.remove();
+    document.getElementById('hardmode-question-overlay')?.remove();
+
+    // Show start screen if hard mode and first round
+    if (hardModeEnabled && currentRound === 0 && !hardModeGameStarted) {
+        const startScreen = document.getElementById('hard-mode-start');
+        startScreen.style.display = 'flex';
+        
+        document.getElementById('overlay').style.display = 'none';
+        
+        startScreen.querySelector('.start-button').onclick = () => {
+            hardModeGameStarted = true;
+            startScreen.style.display = 'none';
+            loadRound(skipExifCheck, completed);
+        };
+        return;
+    }
+
+    if (currentRound === 0) {
+        hardModeRoundsViewed.clear();
+    }
+
     const round = rounds[currentRound];
     
     // Load and display the image immediately
@@ -996,6 +1132,12 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     document.getElementById("result").innerHTML = `<p>Your guess is <strong>${Math.round(distance)} ${Math.round(distance) === 1 ? 'meter' : 'meters'}</strong> away${distance <= 50 ? '!' : '.'}<br>Score: <strong>${score}</strong></p>`;
     document.getElementById("submit-guess").style.display = "none";
     
+    // Reveal the challenge image for the round after submission
+    document.querySelectorAll('.challenge-image').forEach(img => {
+        img.style.visibility = 'visible';
+    });
+    document.querySelectorAll('#hardmode-question-overlay').forEach(overlay => overlay.remove());
+    
     if (currentRound === rounds.length - 1) {
         document.getElementById("next-round").textContent = "See Results";
     } else {
@@ -1049,14 +1191,14 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
 });
 
 document.getElementById("next-round").addEventListener("click", () => {
-    const gameRound = getGameRound();   // where the player SHOULD be
+    const gameRound = getGameRound();
 
-    if (gameRound === 3) {              // everything finished
+    if (gameRound === 3) {
         showResults();
         return;
     }
 
-    viewingRound = currentRound = gameRound;   // jump to the live round
+    viewingRound = currentRound = gameRound;
     isImageLoaded = false;
     document.getElementById("submit-guess").disabled = true;
     loadRound();
@@ -1068,6 +1210,13 @@ document.getElementById("next-round").addEventListener("click", () => {
 // Results Popup Functions
 // --------------------
 let hasUpdatedDistribution = false;
+
+function closeAllPopups() {
+    document.getElementById("results-popup").style.display = "none";
+    document.getElementById("help-popup").style.display = "none";
+    document.getElementById("archive-popup").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
 
 function updateScoreDistribution() {
     if (hasUpdatedDistribution) return;
@@ -1135,6 +1284,7 @@ function showResults(fromStats = false) {
     if (!fromStats) {
         updateScoreDistribution();
     }
+    closeAllPopups();
     
     const template = document.getElementById('results-template');
     const clone = template.content.cloneNode(true);
@@ -1174,8 +1324,7 @@ function showResults(fromStats = false) {
 }
 
 function closePopup() {
-    document.getElementById("results-popup").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
+    closeAllPopups();
 }
 
 function copyResults() {
@@ -1185,7 +1334,10 @@ function copyResults() {
         return '🟩'.repeat(greenSquares) + '⬛'.repeat(blackSquares);
     }
     
-    const shareText = `UCFGuessr ${currentDay} ${totalScore}/15000\n\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.com`;
+    // Add asterisk if hard mode was enabled and active for the whole game
+    const hardModeIndicator = (hardModeEnabled && hardModeGameStarted) ? '*' : '';
+    
+    const shareText = `UCFGuessr ${currentDay} ${totalScore}/15000${hardModeIndicator}\n\n${getScoreRepresentation(roundScores[0])}\n${getScoreRepresentation(roundScores[1])}\n${getScoreRepresentation(roundScores[2])}\nucfguessr.com`;
     
     navigator.clipboard.writeText(shareText).then(() => {
         // GA4 event tracking for sharing results
@@ -1202,14 +1354,8 @@ function copyResults() {
                 'value': totalScore
             });
         }
-
-        const copiedMessage = document.getElementById("copied-message");
-        copiedMessage.style.visibility = "visible";
-        copiedMessage.style.opacity = "1";
-        setTimeout(() => {
-            copiedMessage.style.opacity = "0";
-            setTimeout(() => copiedMessage.style.visibility = "hidden", 300);
-        }, 2000);
+        
+        showNotification('Copied to clipboard');
     });
 }
 
@@ -1222,6 +1368,7 @@ function showHelp() {
     } else {
         touchKonamiIndex = touchKonamiCode[0] === 'help' ? 1 : 0;
     }
+    closeAllPopups();
     document.getElementById("help-popup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 }
@@ -1229,14 +1376,10 @@ function showHelp() {
 function closeHelp() {
     if (touchKonamiCode[touchKonamiIndex] === 'closeHelp') {
         touchKonamiIndex++;
-        if (touchKonamiIndex === touchKonamiCode.length) {
-            handleKonamiSuccess();
-        }
     } else {
         touchKonamiIndex = touchKonamiCode[0] === 'closeHelp' ? 1 : 0;
     }
-    document.getElementById("help-popup").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
+    closeAllPopups();
 } 
 
 // --------------------
@@ -1281,6 +1424,7 @@ function showArchive() {
     } else {
         touchKonamiIndex = touchKonamiCode[0] === 'calendar' ? 1 : 0;
     }
+    closeAllPopups();
     document.getElementById("archive-popup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
     updateCalendar();
@@ -1292,8 +1436,7 @@ function closeArchive() {
     } else {
         touchKonamiIndex = touchKonamiCode[0] === 'closeArchive' ? 1 : 0;
     }
-    document.getElementById("archive-popup").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
+    closeAllPopups();
 }
 
 function updateCalendar() {
@@ -1394,6 +1537,8 @@ function selectArchiveDate(date) {
     isArchiveMode = date.toDateString() !== etNow.toDateString();
     selectedArchiveDate = date;
     hasUpdatedDistribution = false;
+    hardModeGameStarted = false;
+    hardModeEnabled = JSON.parse(localStorage.getItem('hardModeEnabled') || 'false');
 
     // Reset round state memory for all rounds
     for (let i = 0; i < roundState.length; i++) {
@@ -1608,8 +1753,8 @@ map.on('move', () => {
     }
 });
 
+// Always highlight the current round (the one in progress or just completed)
 function updateHighlightPosition() {
-    // Always highlight the current round (the one in progress or just completed)
     const currentRoundId = "round" + (currentRound + 1) + "-text";
     const currentElem = document.getElementById(currentRoundId);
     if (!currentElem) return;
@@ -1630,5 +1775,86 @@ function updateHighlightPosition() {
     highlight.style.width = (elemRect.width + extraWidth) + "px";
 }
 
+// Get dropdown elements once at start
+const dropdownWrap = document.querySelector('.dropdown');
+const toggleButton = document.querySelector('.dropdown-button');
+const dropdownMenu = dropdownWrap.querySelector('.dropdown-content');
+
+function toggleDropdown(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropdownWrap.classList.toggle('active');
+}
+
+// Use pointer events for better cross-device support
+toggleButton.addEventListener('pointerup', toggleDropdown, { passive: false });
+
+// Close dropdown when clicking/tapping outside
+document.addEventListener('pointerup', (e) => {
+    if (!e.target.closest('.dropdown')) {
+        dropdownWrap.classList.remove('active');
+    }
+});
+
+function closeDropdown() {
+    dropdownWrap.classList.remove('active');
+}
+
+// Add click handlers to dropdown items
+dropdownWrap.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', closeDropdown);
+});
+
+// Modify existing functions to close dropdown
+function toggleHardMode() {
+    const newPreference = !JSON.parse(localStorage.getItem('hardModeEnabled') || 'false');
+    localStorage.setItem('hardModeEnabled', JSON.stringify(newPreference));
+    const gameInProgress = !isFirstLoad || hardModeGameStarted;
+
+    if (!newPreference) {
+        const startScreen = document.getElementById('hard-mode-start');
+        if (startScreen) {
+            startScreen.style.display = 'none';
+        }
+        hardModeEnabled = false;
+        hardModeGameStarted = false;
+        document.querySelectorAll('.challenge-image').forEach(img => img.style.visibility = 'visible');
+        document.querySelectorAll('#hardmode-question-overlay').forEach(el => el.remove());
+        
+        // If we're on round 0 and haven't started, show the first image
+        if (currentRound === 0 && !roundState[0].completed) {
+            loadRound();
+        }
+        
+        showNotification('Extreme Mode disabled');
+        closeDropdown();
+        return;
+    }
+
+    // If the user wants to enable hard mode but the game is already in progress
+    if (gameInProgress) {
+        // Defer activation until the next game
+        showNotification('Extreme Mode will be enabled next game');
+    } else {
+        // Still pre-game; activate immediately
+        hardModeEnabled = true;
+        const startScreen = document.getElementById('hard-mode-start');
+        startScreen.style.display = 'flex';
+    }
+    closeDropdown();
+}
+
+function toggleMarathonMode() {
+    marathonModeEnabled = !marathonModeEnabled;
+    showNotification('Coming soon!');
+    closeDropdown();
+}
+
 preloadGameImages();
 updateRoundIndicators();
+
+document.addEventListener('DOMContentLoaded', () => {
+    currentPlayingDate = new Date();
+    hasUpdatedDistribution = false;
+    updateTitleForAprilFoolsDay(daysSinceEpoch + 1);
+});
