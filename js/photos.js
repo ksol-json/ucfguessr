@@ -196,8 +196,8 @@ const mediumPhotos = [
     "images/medium/IMG_6928.jpeg", // 87
     "images/medium/IMG_6230.jpeg", // 88
     "images/medium/IMG_4729.jpeg", // 89
-    "images/medium/IMG_6930.jpeg", // 90
-    "images/medium/IMG_8237--Honors Congress.jpeg", // 91
+    "images/medium/IMG_8237--Honors Congress.jpeg", // 90
+    "images/medium/IMG_6930.jpeg", // 91
     "images/medium/IMG_6876.jpeg", // 92
     "images/medium/IMG_6635.jpeg", // 93
     "images/medium/IMG_6978.jpeg", // 94
@@ -304,8 +304,8 @@ const hardPhotos = [
     "images/hard/IMG_6680.jpeg", // 87
     "images/hard/IMG_8211.jpeg", // 88
     "images/hard/IMG_6964.jpeg", // 89
-    "images/hard/IMG_6951.jpeg", // 90
-    "images/hard/IMG_5131~~ur insane if u can 5k this.jpeg", // 91
+    "images/hard/IMG_5131~~ur insane if u can 5k this.jpeg", // 90
+    "images/hard/IMG_6951.jpeg", // 91
     "images/hard/IMG_6986.jpeg", // 92
     "images/hard/IMG_6907.jpeg", // 93
     "images/hard/IMG_6835.jpeg", // 94
