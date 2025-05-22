@@ -312,7 +312,7 @@ const hardPhotos = [
     "images/hard/IMG_5363--Anonymous.jpeg", // 95
     "images/hard/IMG_2042.jpeg", // 96
     "images/hard/IMG_6689.jpeg", // 97
-    "images/IMG_5302--Anonymous.jpeg", // 98
+    "images/hard/IMG_5302--Anonymous.jpeg", // 98
     "images/hard/IMG_6893~~This is the southernmost one..jpeg", // 99
     "images/hard/IMG_7107~~ty for 100 days of ucfguessr.jpeg", // 100
     "images/hard/IMG_4960--Juni and Josh.jpeg", // 101
