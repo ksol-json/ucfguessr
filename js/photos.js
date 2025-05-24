@@ -92,16 +92,16 @@ const easyPhotos = [
     "images/easy/IMG_6983.jpeg", // 91
     "images/easy/IMG_6681.jpeg", // 92
     "images/easy/A60E438B--Olive.jpeg", // 93
-    "images/easy/IMG_2090.jpeg", // 94
+    "images/easy/IMG_6978.jpeg", // 94
     "images/easy/IMG_6682.jpeg", // 95
     "images/easy/IMG_6988.jpeg", // 96
-    "images/easy/IMG_6962.jpeg", // 97
+    "images/easy/IMG_6698.jpeg", // 97
     "images/easy/IMG_6961.jpeg", // 98
     "images/easy/IMG_6950.jpeg", // 99
     "images/easy/IMG_6960.jpeg", // 100
     "images/easy/IMG_6976.jpeg", // 101
-    "images/easy/IMG_6683.jpeg", // 102
-    "images/easy/IMG_6698.jpeg", // 103
+    "images/easy/IMG_6962.jpeg", // 102
+    "images/easy/IMG_6683.jpeg", // 103
     "images/easy/IMG_6879.jpeg", // 104
     "images/easy/IMG_6985.jpeg", // 105
 ];
@@ -200,7 +200,7 @@ const mediumPhotos = [
     "images/medium/IMG_6930.jpeg", // 91
     "images/medium/IMG_6876.jpeg", // 92
     "images/medium/IMG_6635.jpeg", // 93
-    "images/medium/IMG_6978.jpeg", // 94
+    "images/medium/IMG_2090.jpeg", // 94
     "images/medium/IMG_6888.jpeg", // 95
     "images/medium/IMG_5356--Anonymous.jpeg", // 96
     "images/medium/IMG_6926.jpeg", // 97
