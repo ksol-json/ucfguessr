@@ -95,8 +95,8 @@ const easyPhotos = [
     "images/easy/IMG_6978.jpeg", // 94
     "images/easy/IMG_6682.jpeg", // 95
     "images/easy/IMG_3477--M. Giannacco.jpeg", // 96
-    "images/easy/IMG_6988.jpeg", // 97
-    "images/easy/IMG_6961.jpeg", // 98
+    "images/easy/IMG_6961.jpeg", // 97
+    "images/easy/IMG_6988.jpeg", // 98
     "images/easy/IMG_6950.jpeg", // 99
     "images/easy/IMG_6960.jpeg", // 100
     "images/easy/IMG_6976.jpeg", // 101
@@ -205,8 +205,8 @@ const mediumPhotos = [
     "images/medium/IMG_2090.jpeg", // 94
     "images/medium/IMG_6888.jpeg", // 95
     "images/medium/IMG_5356--Anonymous.jpeg", // 96
-    "images/medium/IMG_6926.jpeg", // 97
-    "images/medium/IMG_5339--Anonymous.jpeg", // 98
+    "images/medium/IMG_5339--Anonymous.jpeg", // 97
+    "images/medium/IMG_6926.jpeg", // 98
     "images/medium/IMG_6922.jpeg", // 99
     "images/medium/IMG_6467.jpeg", // 100
     "images/medium/IMG_6923.jpeg", // 101
@@ -315,8 +315,8 @@ const hardPhotos = [
     "images/hard/IMG_6835.jpeg", // 94
     "images/hard/IMG_5363--Anonymous.jpeg", // 95
     "images/hard/IMG_2042.jpeg", // 96
-    "images/hard/IMG_6689.jpeg", // 97
-    "images/hard/IMG_5302--Anonymous.jpeg", // 98
+    "images/hard/IMG_5302--Anonymous.jpeg", // 97
+    "images/hard/IMG_6689.jpeg", // 98
     "images/hard/IMG_6893~~This is the southernmost one..jpeg", // 99
     "images/hard/IMG_7107~~ty for 100 days of ucfguessr.jpeg", // 100
     "images/hard/IMG_4960--Juni and Josh.jpeg", // 101
