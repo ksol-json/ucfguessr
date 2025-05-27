@@ -1719,7 +1719,7 @@ function toggleCoverageMarkers() {
                         }
                         
                         if ((konamiCodeActivations === 1 && photoIndex < currentDaysSinceEpoch) ||
-                            konamiCodeActivations === 2) {
+                            konamiCodeActivations >= 2) {
                             
                             const marker = L.circleMarker([latitude, longitude], {
                                 radius: 5,
