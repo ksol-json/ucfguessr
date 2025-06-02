@@ -323,7 +323,7 @@ const hardPhotos = [
     "images/hard/IMG_5357--Anonymous.jpeg", // 102
     "images/hard/IMG_6987.jpeg", // 103
     "images/hard/IMG_4821.jpeg", // 104
-    "images/hard/IMG_6640.jpeg", // 105
+    "images/hard/IMG_6640~~on the east side.jpeg", // 105
     "images/hard/IMG_5340--Anonymous.jpeg", // 106
     "images/hard/IMG_6831.jpeg", // 107
     "images/hard/IMG_3489--M. Giannacco.jpeg", // 108
