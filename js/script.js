@@ -1858,9 +1858,11 @@ function toggleHardMode() {
 
 function toggleMarathonMode() {
     marathonModeEnabled = !marathonModeEnabled;
-    showNotification('Coming soon!');
+    showNotification('Coming eventually!');
     closeDropdown();
 }
+
+
 
 preloadGameImages();
 updateRoundIndicators();

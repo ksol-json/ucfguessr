@@ -106,6 +106,12 @@ const easyPhotos = [
     "images/easy/IMG_6985.jpeg", // 105
     "images/easy/IMG_6982.jpeg", // 106
     "images/easy/IMG_6925.jpeg", // 107
+    "images/easy/IMG_6889.jpeg", // 108
+    "images/easy/IMG_3527--M. Giannacco.jpeg", // 109
+    "images/easy/IMG_7840.jpeg", // 110
+    "images/easy/PXL_20250114--Jeremiah N..jpeg", // 111
+    "images/easy/IMG_6920.jpeg", // 112
+    "images/easy/IMG_3476--M. Giannacco.jpeg", // 113
 ];
 
 const mediumPhotos = [
@@ -216,6 +222,12 @@ const mediumPhotos = [
     "images/medium/IMG_2249--Olive and Juni.jpeg", // 105
     "images/medium/IMG_6698.jpeg", // 106
     "images/medium/IMG_5364--Anonymous.jpeg", // 107
+    "images/medium/IMG_6953.jpeg", // 108
+    "images/medium/IMG_6975.jpeg", // 109
+    "images/medium/IMG_3204--M. Giannacco.jpeg", // 110
+    "images/medium/IMG_5338--Anonymous.jpeg", // 111
+    "images/medium/seats--Emzee.jpeg", // 112
+    "images/medium/IMG_5355--Anonymous.jpeg", // 113
 ]
 
 const hardPhotos = [
@@ -327,4 +339,9 @@ const hardPhotos = [
     "images/hard/IMG_5340--Anonymous.jpeg", // 106
     "images/hard/IMG_6831.jpeg", // 107
     "images/hard/IMG_3489--M. Giannacco.jpeg", // 108
+    "images/hard/1000101337--Jeremy Weed.jpeg", // 109
+    "images/hard/IMG_6657.jpeg", // 110
+    "images/hard/IMG_8238--Honors Congress.jpeg", // 111
+    "images/hard/IMG_5365--Anonymous.jpeg", // 112
+    "images/hard/IMG_6371.jpeg", // 113
 ];
