@@ -102,10 +102,10 @@ const easyPhotos = [
     "images/easy/IMG_6976.jpeg", // 101
     "images/easy/IMG_6962.jpeg", // 102
     "images/easy/IMG_6683.jpeg", // 103
-    "images/easy/IMG_6879.jpeg", // 104
+    "images/easy/IMG_6925.jpeg", // 104
     "images/easy/IMG_6985.jpeg", // 105
     "images/easy/IMG_6982.jpeg", // 106
-    "images/easy/IMG_6925.jpeg", // 107
+    "images/easy/IMG_6879.jpeg", // 107
     "images/easy/IMG_6889.jpeg", // 108
     "images/easy/IMG_3527--M. Giannacco.jpeg", // 109
     "images/easy/IMG_7840.jpeg", // 110
