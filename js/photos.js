@@ -112,7 +112,7 @@ const easyPhotos = [
     "images/easy/IMG_7840.jpeg", // 111
     "images/easy/PXL_20250114--Jeremiah N..jpeg", // 112
     "images/easy/IMG_6920.jpeg", // 113
-    "images/easy/IMG_3476--M. Giannacco.jpeg", // 114
+    "images/easy/IMG_5355--Anonymous.jpeg", // 114
 ];
 
 const mediumPhotos = [
@@ -229,7 +229,7 @@ const mediumPhotos = [
     "images/medium/IMG_3204--M. Giannacco.jpeg", // 111
     "images/medium/IMG_5338--Anonymous.jpeg", // 112
     "images/medium/seats--Emzee.jpeg", // 113
-    "images/medium/IMG_5355--Anonymous.jpeg", // 114
+    "images/medium/IMG_3476--M. Giannacco.jpeg", // 114
 ]
 
 const hardPhotos = [
