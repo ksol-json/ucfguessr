@@ -105,7 +105,7 @@ const easyPhotos = [
     "images/easy/IMG_6925.jpeg", // 104
     "images/easy/IMG_6985.jpeg", // 105
     "images/easy/IMG_6982.jpeg", // 106
-    "images/easy/IMG_6879.jpeg", // 107
+    "images/easy/IMG_5364--Anonymous.jpeg", // 107
     "images/easy/IMG_6889.jpeg", // 108
     "images/easy/IMG_3527--M. Giannacco.jpeg", // 109
     "images/easy/studentswalking~~via University Archives (1987).jpeg", // 110
@@ -222,7 +222,7 @@ const mediumPhotos = [
     "images/medium/IMG_6471.jpeg", // 104
     "images/medium/IMG_2249--Olive and Juni.jpeg", // 105
     "images/medium/IMG_6698.jpeg", // 106
-    "images/medium/IMG_5364--Anonymous.jpeg", // 107
+    "images/medium/IMG_6879.jpeg", // 107
     "images/medium/IMG_6953.jpeg", // 108
     "images/medium/IMG_6975.jpeg", // 109
     "images/medium/oldbuilding~~via University Archives (1980s).jpeg", // 110
