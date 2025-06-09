@@ -110,9 +110,10 @@ const easyPhotos = [
     "images/easy/IMG_3527--M. Giannacco.jpeg", // 109
     "images/easy/studentswalking~~via University Archives (1987).jpeg", // 110
     "images/easy/IMG_7840.jpeg", // 111
-    "images/easy/PXL_20250114--Jeremiah N..jpeg", // 112
-    "images/easy/IMG_6920.jpeg", // 113
+    "images/easy/IMG_6920.jpeg", // 112
+    "images/easy/PXL_20250114--Jeremiah N..jpeg", // 113
     "images/easy/IMG_5355--Anonymous.jpeg", // 114
+    "images/easy/IMG_6919.jpeg", // 115
 ];
 
 const mediumPhotos = [
@@ -227,9 +228,10 @@ const mediumPhotos = [
     "images/medium/IMG_6975.jpeg", // 109
     "images/medium/oldbuilding~~via University Archives (1980s).jpeg", // 110
     "images/medium/IMG_3204--M. Giannacco.jpeg", // 111
-    "images/medium/IMG_5338--Anonymous.jpeg", // 112
-    "images/medium/seats--Emzee.jpeg", // 113
+    "images/medium/seats--Emzee.jpeg", // 112
+    "images/medium/IMG_5338--Anonymous.jpeg", // 113
     "images/medium/IMG_3476--M. Giannacco.jpeg", // 114
+    "images/medium/IMG_5471--Maia Keefe.jpeg", // 115
 ]
 
 const hardPhotos = [
@@ -344,7 +346,8 @@ const hardPhotos = [
     "images/hard/1000101337--Jeremy Weed.jpeg", // 109
     "images/hard/glasswindows~~via University Archives (1984).jpeg", // 110
     "images/hard/IMG_6657.jpeg", // 111
-    "images/hard/IMG_8238--Honors Congress.jpeg", // 112
-    "images/hard/IMG_5365--Anonymous.jpeg", // 113
+    "images/hard/IMG_5365--Anonymous.jpeg", // 112
+    "images/hard/IMG_8238--Honors Congress.jpeg", // 113
     "images/hard/IMG_6371.jpeg", // 114
+    "images/hard/IMG_6955.jpeg", // 115
 ];
