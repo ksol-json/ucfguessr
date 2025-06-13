@@ -115,6 +115,7 @@ const easyPhotos = [
     "images/easy/IMG_5355--Anonymous.jpeg", // 114
     "images/easy/IMG_6919.jpeg", // 115
     "images/easy/IMG_6506.jpeg", // 116
+    "images/easy/IMG_6963.jpeg", // 117
 ];
 
 const mediumPhotos = [
@@ -234,6 +235,7 @@ const mediumPhotos = [
     "images/medium/IMG_3476--M. Giannacco.jpeg", // 114
     "images/medium/IMG_5471--Maia Keefe.jpeg", // 115
     "images/medium/IMG_6977.jpeg", // 116
+    "images/medium/IMG_6952.jpeg", // 117
 ]
 
 const hardPhotos = [
@@ -353,4 +355,5 @@ const hardPhotos = [
     "images/hard/IMG_6371.jpeg", // 114
     "images/hard/IMG_6955.jpeg", // 115
     "images/hard/IMG_0272--Anonymous.jpeg", // 116
+    "images/hard/IMG_8236--Honors Congress.jpeg", // 117
 ];
