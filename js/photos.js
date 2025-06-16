@@ -116,6 +116,10 @@ const easyPhotos = [
     "images/easy/IMG_6919.jpeg", // 115
     "images/easy/IMG_6506.jpeg", // 116
     "images/easy/IMG_6963.jpeg", // 117
+    "images/easy/IMG_3499--M. Giannacco.jpeg", // 118
+    "images/easy/IMG_8147.jpeg", // 119
+    "images/easy/IMG_8093.jpeg", // 120
+    "images/easy/Fish--Emzee.jpeg", // 121
 ];
 
 const mediumPhotos = [
@@ -236,6 +240,10 @@ const mediumPhotos = [
     "images/medium/IMG_5471--Maia Keefe.jpeg", // 115
     "images/medium/IMG_6977.jpeg", // 116
     "images/medium/IMG_6952.jpeg", // 117
+    "images/medium/IMG_6551--Maia Keefe.jpeg", // 118
+    "images/medium/IMG_3502--M. Giannacco.jpeg", // 119
+    "images/medium/IMG_3525--M. Giannacco.jpeg", // 120
+    "images/medium/IMG_7889.jpeg", // 121
 ]
 
 const hardPhotos = [
@@ -356,4 +364,8 @@ const hardPhotos = [
     "images/hard/IMG_6955.jpeg", // 115
     "images/hard/IMG_0272--Anonymous.jpeg", // 116
     "images/hard/IMG_8236--Honors Congress.jpeg", // 117
+    "images/hard/IMG_8092.jpeg", // 118
+    "images/hard/IMG_8095.jpeg", // 119
+    "images/hard/IMG_5366--Anonymous.jpeg", // 120
+    "images/hard/IMG_8094.jpeg", // 121
 ];
