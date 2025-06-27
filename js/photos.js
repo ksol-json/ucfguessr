@@ -127,6 +127,8 @@ const easyPhotos = [
     "images/easy/IMG_8326.jpeg", // 126
     "images/easy/IMG_8745.jpeg", // 127
     "images/easy/IMG_9159.jpeg", // 128
+    "images/easy/IMG_1024--Deez nuts.jpeg", // 129
+    "images/easy/IMG_9078.jpeg", // 130
 ];
 
 const mediumPhotos = [
@@ -258,6 +260,8 @@ const mediumPhotos = [
     "images/medium/IMG_8864.jpeg", // 126
     "images/medium/IMG_7973.jpeg", // 127
     "images/medium/piano--Emzee.jpeg", // 128
+    "images/medium/IMG_8186.jpeg", // 129
+    "images/medium/IMG_8551.jpeg", // 130
 ]
 
 const hardPhotos = [
@@ -389,4 +393,6 @@ const hardPhotos = [
     "images/hard/IMG_9068~~idk how much is on the gift card.jpeg", // 126
     "images/hard/IMG_8968.jpeg", // 127
     "images/hard/IMG_9178.jpeg", // 128
+    "images/hard/IMG_8893.jpeg", // 129
+    "images/hard/IMG_3520--M. Giannacco.jpeg", // 130
 ];
