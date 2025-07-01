@@ -131,6 +131,7 @@ const easyPhotos = [
     "images/easy/IMG_9078.jpeg", // 130
     "images/easy/IMG_8086.jpeg", // 131
     "images/easy/IMG_8919.jpeg", // 132
+    "images/easy/IMG_8325.jpeg", // 133
 ];
 
 const mediumPhotos = [
@@ -266,6 +267,7 @@ const mediumPhotos = [
     "images/medium/IMG_8551.jpeg", // 130
     "images/medium/IMG_8373.jpeg", // 131
     "images/medium/IMG_8662.jpeg", // 132
+    "images/medium/IMG_4704.jpeg", // 133
 ]
 
 const hardPhotos = [
@@ -400,5 +402,7 @@ const hardPhotos = [
     "images/hard/IMG_8893.jpeg", // 129
     "images/hard/IMG_3520--M. Giannacco.jpeg", // 130
     "images/hard/IMG_9117.jpeg", // 131
-    "images/hard/IMG_7910.jpeg", // 132
+    "images/hard/IMG_7937.jpeg", // 132
+    "images/hard/IMG_7909.jpeg", // 133
+    "images/hard/IMG_7910.jpeg", // 134
 ];
