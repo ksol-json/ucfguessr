@@ -134,6 +134,8 @@ const easyPhotos = [
     "images/easy/IMG_8325.jpeg", // 133
     "images/easy/IMG_8199.jpeg", // 134
     "images/easy/IMG_9163.jpeg", // 135
+    "images/easy/IMG_8243.jpeg", // 136
+    "images/easy/IMG_9245.jpeg", // 137
 ];
 
 const mediumPhotos = [
@@ -272,6 +274,8 @@ const mediumPhotos = [
     "images/medium/IMG_4704.jpeg", // 133
     "images/medium/IMG_8478.jpeg", // 134
     "images/medium/IMG_8065.jpeg", // 135
+    "images/medium/IMG_8366.jpeg", // 136
+    "images/medium/IMG_8579.jpeg", // 137
 ]
 
 const hardPhotos = [
@@ -409,5 +413,7 @@ const hardPhotos = [
     "images/hard/IMG_7937.jpeg", // 132
     "images/hard/IMG_7909.jpeg", // 133
     "images/hard/IMG_5392--Kai J.jpeg", // 134
-    "images/hard/IMG_7910.jpeg", // 135
+    "images/hard/IMG_8797.jpeg", // 135
+    "images/hard/IMG_9065.jpeg", // 136
+    "images/hard/IMG_7910.jpeg", // 137
 ];
