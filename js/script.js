@@ -214,7 +214,7 @@ let currentZoom = 1;
 let isDragging = false;
 let startX, startY, translateX = 0, translateY = 0;
 let actualCoords;
-let perfectRange = 25;
+let perfectRange = 30;
 let isFirstLoad = true;
 let currentDay = daysSinceEpoch + 1;  
 
@@ -1081,7 +1081,7 @@ document.getElementById("submit-guess").addEventListener("click", function(e) {
     }).openPopup();
     
     const distance = getDistance(guessLatLng.lat, guessLatLng.lng, actualCoords.lat, actualCoords.lng);
-    let score = distance <= perfectRange ? 5000 : Math.round(5550 * Math.exp(-3 * (distance / 700)));
+    let score = distance <= perfectRange ? 5000 : Math.round(5680 * Math.exp(-3 * (distance / 700)));
     score = distance > 1000 ? 0 : score;
     
     if (score === 5000) {
