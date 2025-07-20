@@ -6,98 +6,306 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 20px auto;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
         }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
         .input-group {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 20px;
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
+
+        .input-group h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        input[type="number"], input[type="date"] {
+            padding: 8px 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus, input[type="date"]:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .toggle-view, .week-nav button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .toggle-view:hover, .week-nav button:hover {
+            background: #2980b9;
+        }
+
+        .week-nav {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .week-nav span {
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 200px;
+            text-align: center;
+        }
+
         .preview {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
-            margin-top: 20px;
+            margin-bottom: 20px;
         }
-        .photo-card {
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 8px;
+
+        .weekly-view {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .weekly-container {
             display: grid;
-            grid-template-rows: auto auto;        
+            grid-template-columns: repeat(7, minmax(220px, 1fr));
+            gap: 6px;
+            overflow-x: auto;
+            padding: 10px;
         }
-        img {
-            max-width: 100%;
+
+        .photo-card {
+            background: white;
+            border: 1px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .photo-card h4 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .filename {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 12px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .photo-card img {
+            width: 100%;
             height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
         }
+
+        .weekly-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            margin: 0;
+            display: block;
+        }
+
+        .weekly-photo:hover {
+            opacity: 0.8;
+        }
+
         .map {
             height: 200px;
             width: 100%;
-            border-radius: 4px;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
         }
-        .weekly-view {
-            display: none;
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-        .weekly-container {
-            display: grid;
-            grid-template-columns: repeat(7, minmax(200px, 1fr));
-            gap: 20px;
-            min-width: min-content;
-        }
+
         .day-column {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            height: 100%;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 8px;
+            gap: 10px;
+            transition: border-color 0.2s;
         }
+
         .day-column.current-day {
-            background-color: rgba(135, 206, 250, 0.1);
+            border-color: #3498db;
+            background: linear-gradient(135deg, #ebf3ff 0%, #f8fbff 100%);
         }
+
         .day-header {
             text-align: center;
-            margin-bottom: 10px;
-            font-weight: bold;
+            font-weight: 600;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e1e8ed;
+            white-space: pre-line;
+            font-size: 14px;
         }
-        .toggle-view {
-            margin: 20px 0;
-        }
-        .week-nav {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin: 20px 0;
-        }
-        .weekly-photo {
-            height: 150px;
-            object-fit: cover;
-            width: 100%;
-        }
+
         .combined-map {
-            height: 400px;
+            height: 450px;
             width: 100%;
-            margin-top: 20px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
+            border-radius: 12px;
+            border: 1px solid #e1e8ed;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+
         .weekly-tooltip {
             position: fixed;
-            background: rgba(30,30,30,0.95);
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 13px;
+            background: rgba(44, 62, 80, 0.95);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
             pointer-events: none;
-            z-index: 9999;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .day-of-week {
+            margin-left: 10px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .preview {
+                grid-template-columns: 1fr;
+            }
+            
+            .weekly-container {
+                grid-template-columns: repeat(7, minmax(180px, 1fr));
+                gap: 4px;
+            }
+            
+            .combined-map {
+                height: 300px;
+            }
+            
+            .weekly-photo {
+                height: 100%;
+                min-height: 60px;
+            }
+        }
+
+        /* Loading states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Better focus styles */
+        button:focus, input:focus {
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+
+        /* Smooth transitions */
+        .preview, .weekly-view {
+            transition: opacity 0.3s ease;
+        }
+
+        /* Mobile navigation bar for helper tool */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            background: rgba(255,255,255,0.98);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+            z-index: 1001;
+            padding: 8px 0 4px 0;
+            justify-content: space-around;
+            align-items: center;
+            gap: 0;
+        }
+        .mobile-nav button {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 24px;
+            margin: 0 8px;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mobile-nav button:active {
+            background: #2980b9;
+        }
+        .mobile-nav .mobile-day {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
         }
     </style>
 </head>
@@ -106,16 +314,16 @@
     
     <div class="input-group">
         <h3>Enter Day Number or Date</h3>
-        <input type="number" id="dayInput" placeholder="Enter day number (1, 2, 3...)" min="1">
-        <input type="date" id="dateInput" min="2025-02-22">
-        <span id="dayOfWeek"></span>
+        <input type="number" id="dayInput" placeholder="Enter day number (1, 2, 3...)" min="1" aria-label="Day number">
+        <input type="date" id="dateInput" min="2025-02-22" aria-label="Select date">
+        <span id="dayOfWeek" class="day-of-week"></span>
         <button id="toggleView" class="toggle-view">Toggle Weekly View</button>
     </div>
 
-    <div id="weekNav" class="week-nav" style="display: none;">
-        <button id="prevWeek">←</button>
+    <div id="weekNav" class="week-nav">
+        <button id="prevWeek" aria-label="Previous week">← Previous</button>
         <span id="weekRange"></span>
-        <button id="nextWeek">→</button>
+        <button id="nextWeek" aria-label="Next week">Next →</button>
     </div>
 
     <div id="preview" class="preview"></div>
@@ -123,268 +331,244 @@
         <div id="weeklyContainer" class="weekly-container"></div>
     </div>
     
-    <div id="combinedMap" class="combined-map"></div>
+    <div id="combinedMap" class="combined-map" role="application" aria-label="Combined map view"></div>
+
+    <!-- Mobile navigation bar -->
+    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+        <button id="mobilePrevDay" aria-label="Previous day">←</button>
+        <span class="mobile-day" id="mobileDayLabel">Day 1</span>
+        <button id="mobileNextDay" aria-label="Next day">→</button>
+        <button id="mobileToggleView" aria-label="Toggle weekly view" style="width:48px;height:48px;font-size:20px;border-radius:50%;margin-left:8px;">📅</button>
+    </nav>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="js/photos.js"></script>
     <script>
-        const markerCache = new Set();
+        // Application state
+        const AppState = {
+            epoch: new Date(Date.UTC(2025, 1, 22)),
+            combinedMap: null,
+            markers: [],
+            markerCache: new Set(),
+            currentWeekStart: 1,
+            isWeeklyView: false
+        };
 
-        function addMarkerToMap(lat, lon, title) {
-        const key = `${lat.toFixed(6)},${lon.toFixed(6)}`;
-        if (markerCache.has(key)) return;
-        markerCache.add(key);
+        // Utility functions
+        const Utils = {
+            convertDMSToDD(dms, ref) {
+                const degrees = dms[0].numerator / dms[0].denominator;
+                const minutes = dms[1].numerator / dms[1].denominator;
+                const seconds = dms[2].numerator / dms[2].denominator;
+                let dd = degrees + minutes / 60 + seconds / 3600;
+                return (ref === "S" || ref === "W") ? -dd : dd;
+            },
 
-        const marker = L.marker([lat, lon]).addTo(combinedMap);
-        if (title) marker.bindPopup(title);
-        markers.push(marker);
-        }
+            formatDate(date) {
+                const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+                const day = String(date.getUTCDate()).padStart(2, '0');
+                const year = date.getUTCFullYear();
+                return `${month}/${day}/${year}`;
+            },
 
-        function convertDMSToDD(dms, ref) {
-            const degrees = dms[0].numerator / dms[0].denominator;
-            const minutes = dms[1].numerator / dms[1].denominator;
-            const seconds = dms[2].numerator / dms[2].denominator;
-            let dd = degrees + minutes / 60 + seconds / 3600;
-            if (ref === "S" || ref === "W") {
-                dd = dd * -1;
-            }
-            return dd;
-        }
-        
-        const epoch = new Date(Date.UTC(2025, 1, 22));
-        
-        let combinedMap = null;
-        let markers = [];
+            getMondayUTC(date) {
+                const d = new Date(date);
+                const utcDay = d.getUTCDay();
+                const diff = d.getUTCDate() - utcDay + (utcDay === 0 ? -6 : 1);
+                d.setUTCDate(diff);
+                d.setUTCHours(0, 0, 0, 0);
+                return d;
+            },
 
-        function initCombinedMap() {
-            if (!combinedMap) {
-                combinedMap = L.map('combinedMap', { attributionControl: false });
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: ''
-                }).addTo(combinedMap);
-            }
-            markers.forEach(marker => marker.remove());
-            markers = [];
-            markerCache.clear();
-        }
+            dayNumberFromUTC(date) {
+                const msPerDay = 86400000;
+                const utcMidnight = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+                const epochMidnight = Date.UTC(AppState.epoch.getUTCFullYear(), AppState.epoch.getUTCMonth(), AppState.epoch.getUTCDate());
+                return Math.floor((utcMidnight - epochMidnight) / msPerDay) + 1;
+            },
 
+            getTodayInET() {
+                const now = new Date();
+                return new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+            },
 
-        function updateCombinedMapView() {
-            if (markers.length > 0) {
-                const group = L.featureGroup(markers);
-                combinedMap.fitBounds(group.getBounds().pad(0.1));
-            }
-        }
-
-        function updateFromDay(day) {
-            if (isNaN(day) || day < 1) {
-                document.getElementById('preview').innerHTML = '';
-                document.getElementById('dateInput').value = '';
-                document.getElementById('dayOfWeek').textContent = '';
-                return;
-            }
-            
-            const date = new Date(epoch);
-            date.setUTCDate(date.getUTCDate() + (day - 1));
-            document.getElementById('dateInput').value = date.toISOString().split('T')[0];
-            updateDayOfWeek(date);
-            showPhotosForDay(day);
-        }
-
-        function formatDate(date) {
-            const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-            const day = String(date.getUTCDate()).padStart(2, '0');
-            const year = date.getUTCFullYear();
-            return `${month}/${day}/${year}`;
-        }
-
-        function getMondayUTC(date) {
-            const d = new Date(date);
-            const utcDay = d.getUTCDay();
-            const diff = d.getUTCDate() - utcDay + (utcDay === 0 ? -6 : 1);
-            d.setUTCDate(diff);
-            d.setUTCHours(0, 0, 0, 0);
-            return d;
-        }
-
-        function dayNumberFromUTC(date) {
-            const msPerDay = 86400000;
-            const utcMidnight = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
-            const epochMidnight = Date.UTC(epoch.getUTCFullYear(), epoch.getUTCMonth(), epoch.getUTCDate());
-            return Math.floor((utcMidnight - epochMidnight) / msPerDay) + 1;
-        }
-
-        function updateFromDate(dateStr) {
-            if (!dateStr) {
-                document.getElementById('preview').innerHTML = '';
-                document.getElementById('dayInput').value = '';
-                document.getElementById('dayOfWeek').textContent = '';
-                return;
-            }
-            
-            const selectedDate = new Date(dateStr);
-            updateDayOfWeek(selectedDate);
-            const daysSinceEpoch = Math.floor((selectedDate - epoch) / 86400000) + 1;
-            
-            if (daysSinceEpoch < 1) {
-                alert('Please select a date on or after February 22, 2025');
-                return;
-            }
-            
-            document.getElementById('dayInput').value = daysSinceEpoch;
-            showPhotosForDay(daysSinceEpoch);
-        }
-
-        function updateDayOfWeek(date) {
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const dayOfWeek = days[date.getUTCDay()];
-            document.getElementById('dayOfWeek').textContent = ` ${dayOfWeek}`;
-        }
-        
-        function showPhotosForDay(dayIndex) {
-            // Subtract 1 for array index since days start at 1
-            const arrayIndex = dayIndex - 1;
-            const easyIndex = arrayIndex % easyPhotos.length;
-            const mediumIndex = arrayIndex % mediumPhotos.length;
-            const hardIndex = arrayIndex % hardPhotos.length;
-            
-            const photos = [
-                { src: easyPhotos[easyIndex], difficulty: 'Easy', arraySize: easyPhotos.length, index: easyIndex },
-                { src: mediumPhotos[mediumIndex], difficulty: 'Medium', arraySize: mediumPhotos.length, index: mediumIndex },
-                { src: hardPhotos[hardIndex], difficulty: 'Hard', arraySize: hardPhotos.length, index: hardIndex }
-            ];
-            
-            const previewDiv = document.getElementById('preview');
-            previewDiv.innerHTML = '';
-            
-            initCombinedMap();
-            
-            photos.forEach((photo, index) => {
-                const card = document.createElement('div');
-                card.className = 'photo-card';
-                
-                const title = document.createElement('h4');
-                title.textContent = `${photo.difficulty} Photo`;
-                
-                const filename = document.createElement('div');
-                filename.textContent = photo.src.split('/').pop();
-                filename.style.fontSize = '0.9em';
-                filename.style.color = '#666';
-                filename.style.marginTop = '-10px';
-                filename.style.marginBottom = '10px';
-                
-                const img = new Image();
-                img.src = photo.src;
-                img.crossOrigin = "Anonymous";
-                
-                const mapDiv = document.createElement('div');
-                mapDiv.className = 'map';
-                mapDiv.id = `map-${index}`;
-                
-                img.onload = function() {
-                    EXIF.getData(this, function() {
-                        const lat = EXIF.getTag(this, "GPSLatitude");
-                        const latRef = EXIF.getTag(this, "GPSLatitudeRef") || "N";
-                        const lon = EXIF.getTag(this, "GPSLongitude");
-                        const lonRef = EXIF.getTag(this, "GPSLongitudeRef") || "W";
-                        
-                        if (lat && lon) {
-                            const latitude = convertDMSToDD(lat, latRef);
-                            const longitude = convertDMSToDD(lon, lonRef);
-                            
-                            const map = L.map(`map-${index}`, { attributionControl: false }).setView([latitude, longitude], 16);
-                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                attribution: ''
-                            }).addTo(map);
-                            L.marker([latitude, longitude]).addTo(map);
-
-                            L.circle([latitude, longitude], {
-                                radius: 25,
-                                opacity: 0.35,
-                                color: 'red',
-                                dashArray: '5, 5'
-                            }).addTo(map);
-                            
-                            addMarkerToMap(latitude, longitude, `${photo.difficulty} Photo`);
-                            if (index === photos.length - 1) {
-                                updateCombinedMapView();
-                            }
-                        }
-                    });
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func.apply(this, args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
                 };
-                
-                card.appendChild(title);
-                card.appendChild(filename);
-                card.appendChild(img);
-                card.appendChild(mapDiv);
-                previewDiv.appendChild(card);
-            });
-        }
+            }
+        };
 
-        function showPhotosForDayInColumn(dayIndex, container) {
-            // Subtract 1 for array index since days start at 1
-            const arrayIndex = dayIndex - 1;
-            const easyIndex = arrayIndex % easyPhotos.length;
-            const mediumIndex = arrayIndex % mediumPhotos.length;
-            const hardIndex = arrayIndex % hardPhotos.length;
-            
-            const photos = [
-                { src: easyPhotos[easyIndex], difficulty: 'Easy' },
-                { src: mediumPhotos[mediumIndex], difficulty: 'Medium' },
-                { src: hardPhotos[hardIndex], difficulty: 'Hard' }
-            ];
-            
-            photos.forEach((photo, index) => {
-                const card = document.createElement('div');
-                card.className = 'photo-card';
+        // DOM management
+        const DOM = {
+            get dayInput() { return document.getElementById('dayInput'); },
+            get dateInput() { return document.getElementById('dateInput'); },
+            get dayOfWeek() { return document.getElementById('dayOfWeek'); },
+            get preview() { return document.getElementById('preview'); },
+            get weeklyView() { return document.getElementById('weeklyView'); },
+            get weekNav() { return document.getElementById('weekNav'); },
+            get weekRange() { return document.getElementById('weekRange'); },
+            get weeklyContainer() { return document.getElementById('weeklyContainer'); },
+
+            setLoading(element, isLoading) {
+                element.classList.toggle('loading', isLoading);
+            }
+        };
+
+        // Tooltip management
+        const TooltipManager = {
+            cleanup() {
+                // Remove existing tooltips
+                document.querySelectorAll('.weekly-tooltip').forEach(tooltip => tooltip.remove());
                 
-                const img = new Image();
-                img.src = photo.src;
-                img.className = 'weekly-photo';
-                img.crossOrigin = "Anonymous";
-                
-                // --- Tooltip logic for filename on hover ---
-                let tooltipTimeout;
-                img.addEventListener('mouseenter', function(e) {
-                    tooltipTimeout = setTimeout(() => {
-                        let tooltip = document.createElement('div');
+                // Clear image references and timeouts
+                document.querySelectorAll('img').forEach(img => {
+                    this.clearImageTooltip(img);
+                });
+            },
+
+            clearImageTooltip(img) {
+                if (img._tooltipTimeout) {
+                    clearTimeout(img._tooltipTimeout);
+                    img._tooltipTimeout = null;
+                }
+                if (img._tooltip) {
+                    img._tooltip.remove();
+                    img._tooltip = null;
+                }
+                if (img._moveTooltip) {
+                    img.removeEventListener('mousemove', img._moveTooltip);
+                    img._moveTooltip = null;
+                }
+            },
+
+            setup(img, filename) {
+                img.addEventListener('mouseenter', (e) => {
+                    if (img._tooltipTimeout) clearTimeout(img._tooltipTimeout);
+                    
+                    img._tooltipTimeout = setTimeout(() => {
+                        if (img._tooltip) return;
+                        
+                        const tooltip = document.createElement('div');
                         tooltip.className = 'weekly-tooltip';
-                        tooltip.textContent = photo.src.split('/').pop();
-                        tooltip.style.position = 'fixed';
-                        tooltip.style.background = 'rgba(30,30,30,0.95)';
-                        tooltip.style.color = '#fff';
-                        tooltip.style.padding = '4px 10px';
-                        tooltip.style.borderRadius = '6px';
-                        tooltip.style.fontSize = '13px';
-                        tooltip.style.pointerEvents = 'none';
-                        tooltip.style.zIndex = 9999;
-                        tooltip.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                        tooltip.textContent = filename;
                         document.body.appendChild(tooltip);
 
-                        function moveTooltip(ev) {
-                            tooltip.style.left = (ev.clientX + 12) + 'px';
-                            tooltip.style.top = (ev.clientY + 12) + 'px';
-                        }
+                        const moveTooltip = (ev) => {
+                            if (tooltip.parentNode) {
+                                tooltip.style.left = `${ev.clientX + 12}px`;
+                                tooltip.style.top = `${ev.clientY + 12}px`;
+                            }
+                        };
+                        
                         moveTooltip(e);
                         img.addEventListener('mousemove', moveTooltip);
                         img._tooltip = tooltip;
                         img._moveTooltip = moveTooltip;
                     }, 300);
                 });
-                img.addEventListener('mouseleave', function() {
-                    clearTimeout(tooltipTimeout);
-                    if (img._tooltip) {
-                        img._tooltip.remove();
-                        img._tooltip = null;
-                    }
-                    if (img._moveTooltip) {
-                        img.removeEventListener('mousemove', img._moveTooltip);
-                        img._moveTooltip = null;
-                    }
-                });
-                // --- End tooltip logic ---
 
+                img.addEventListener('mouseleave', () => {
+                    this.clearImageTooltip(img);
+                });
+            }
+        };
+
+        // Map management
+        const MapManager = {
+            init() {
+                if (!AppState.combinedMap) {
+                    AppState.combinedMap = L.map('combinedMap', { 
+                        attributionControl: false,
+                        zoomControl: true
+                    });
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenStreetMap contributors',
+                        maxZoom: 19
+                    }).addTo(AppState.combinedMap);
+                }
+                this.clearMarkers();
+            },
+
+            clearMarkers() {
+                AppState.markers.forEach(marker => marker.remove());
+                AppState.markers = [];
+                AppState.markerCache.clear();
+            },
+
+            addMarker(lat, lon, title) {
+                const key = `${lat.toFixed(6)},${lon.toFixed(6)}`;
+                if (AppState.markerCache.has(key)) return;
+                
+                AppState.markerCache.add(key);
+                const marker = L.marker([lat, lon]).addTo(AppState.combinedMap);
+                if (title) marker.bindPopup(title);
+                AppState.markers.push(marker);
+            },
+
+            fitToMarkers() {
+                if (AppState.markers.length > 0) {
+                    const group = L.featureGroup(AppState.markers);
+                    AppState.combinedMap.fitBounds(group.getBounds().pad(0.1));
+                } else {
+                    // Default view if no markers
+                    AppState.combinedMap.setView([28.6024, -81.2001], 15); // UCF coordinates
+                }
+            },
+
+            createIndividualMap(containerId, lat, lon) {
+                const map = L.map(containerId, { 
+                    attributionControl: false,
+                    zoomControl: true
+                }).setView([lat, lon], 17);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19
+                }).addTo(map);
+                
+                L.marker([lat, lon]).addTo(map);
+                L.circle([lat, lon], {
+                    radius: 25,
+                    opacity: 0.4,
+                    color: '#e74c3c',
+                    dashArray: '5, 5'
+                }).addTo(map);
+
+                return map;
+            }
+        };
+
+        // Photo management
+        const PhotoManager = {
+            getPhotosForDay(dayIndex) {
+                const arrayIndex = dayIndex - 1;
+                return [
+                    { 
+                        src: easyPhotos[arrayIndex % easyPhotos.length], 
+                        difficulty: 'Easy',
+                        color: '#27ae60'
+                    },
+                    { 
+                        src: mediumPhotos[arrayIndex % mediumPhotos.length], 
+                        difficulty: 'Medium',
+                        color: '#f39c12'
+                    },
+                    { 
+                        src: hardPhotos[arrayIndex % hardPhotos.length], 
+                        difficulty: 'Hard',
+                        color: '#e74c3c'
+                    }
+                ];
+            },
+
+            processImage(img, onLocationFound) {
                 img.onload = function() {
                     EXIF.getData(this, function() {
                         const lat = EXIF.getTag(this, "GPSLatitude");
@@ -393,150 +577,341 @@
                         const lonRef = EXIF.getTag(this, "GPSLongitudeRef") || "W";
                         
                         if (lat && lon) {
-                            const latitude = convertDMSToDD(lat, latRef);
-                            const longitude = convertDMSToDD(lon, lonRef);
-                            addMarkerToMap(latitude, longitude, `Day ${dayIndex} - ${photo.difficulty}`);
-                            updateCombinedMapView();
+                            const latitude = Utils.convertDMSToDD(lat, latRef);
+                            const longitude = Utils.convertDMSToDD(lon, lonRef);
+                            onLocationFound(latitude, longitude);
                         }
                     });
                 };
+            },
+
+            createPhotoCard(photo, index, isWeekly = false) {
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                
+                if (!isWeekly) {
+                    const title = document.createElement('h4');
+                    title.textContent = `${photo.difficulty} Photo`;
+                    title.style.color = photo.color;
+                    card.appendChild(title);
+
+                    const filename = document.createElement('div');
+                    filename.className = 'filename';
+                    filename.textContent = photo.src.split('/').pop();
+                    card.appendChild(filename);
+                }
+                
+                const img = new Image();
+                img.src = photo.src;
+                img.className = isWeekly ? 'weekly-photo' : '';
+                img.crossOrigin = "Anonymous";
+                img.loading = "lazy";
+                
+                if (isWeekly) {
+                    TooltipManager.setup(img, photo.src.split('/').pop());
+                }
                 
                 card.appendChild(img);
-                container.appendChild(card);
+                
+                if (!isWeekly) {
+                    const mapDiv = document.createElement('div');
+                    mapDiv.className = 'map';
+                    mapDiv.id = `map-${index}`;
+                    card.appendChild(mapDiv);
+                    
+                    this.processImage(img, (lat, lon) => {
+                        MapManager.createIndividualMap(`map-${index}`, lat, lon);
+                        MapManager.addMarker(lat, lon, `${photo.difficulty} Photo`);
+                        MapManager.fitToMarkers();
+                    });
+                } else {
+                    this.processImage(img, (lat, lon) => {
+                        MapManager.addMarker(lat, lon, `${photo.difficulty}`);
+                        MapManager.fitToMarkers();
+                    });
+                }
+                
+                return card;
+            }
+        };
+
+        // View management
+        const ViewManager = {
+            updateDayOfWeek(date) {
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                DOM.dayOfWeek.textContent = `${days[date.getUTCDay()]}`;
+            },
+
+            showPhotosForDay(dayIndex) {
+                TooltipManager.cleanup();
+                DOM.setLoading(DOM.preview, true);
+                
+                if (isNaN(dayIndex) || dayIndex < 1) {
+                    DOM.preview.innerHTML = '<p>Please enter a valid day number.</p>';
+                    return;
+                }
+                
+                const photos = PhotoManager.getPhotosForDay(dayIndex);
+                DOM.preview.innerHTML = '';
+                MapManager.init();
+                
+                photos.forEach((photo, index) => {
+                    const card = PhotoManager.createPhotoCard(photo, index, false);
+                    DOM.preview.appendChild(card);
+                });
+                
+                DOM.setLoading(DOM.preview, false);
+            },
+
+            showWeeklyView(startDayGuess) {
+                TooltipManager.cleanup();
+                DOM.setLoading(DOM.weeklyView, true);
+                
+                const guessDate = new Date(AppState.epoch);
+                guessDate.setUTCDate(guessDate.getUTCDate() + startDayGuess - 1);
+                
+                const mondayDate = Utils.getMondayUTC(guessDate);
+                AppState.currentWeekStart = Utils.dayNumberFromUTC(mondayDate);
+                
+                const currentDayInput = parseInt(DOM.dayInput.value) || 1;
+                this.updateWeekRange();
+                
+                DOM.weeklyContainer.innerHTML = '';
+                MapManager.init();
+                
+                for (let i = 0; i < 7; i++) {
+                    const dayColumn = document.createElement('div');
+                    dayColumn.className = 'day-column';
+                    
+                    const currentDay = AppState.currentWeekStart + i;
+                    if (currentDay === currentDayInput) {
+                        dayColumn.classList.add('current-day');
+                    }
+                    
+                    const date = new Date(AppState.epoch);
+                    date.setUTCDate(date.getUTCDate() + (currentDay - 1));
+                    
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'day-header';
+                    dayHeader.textContent = `Day ${currentDay}\n${Utils.formatDate(date)}`;
+                    dayColumn.appendChild(dayHeader);
+                    
+                    const photos = PhotoManager.getPhotosForDay(currentDay);
+                    photos.forEach(photo => {
+                        const card = PhotoManager.createPhotoCard(photo, i, true);
+                        dayColumn.appendChild(card);
+                    });
+                    
+                    DOM.weeklyContainer.appendChild(dayColumn);
+                }
+                
+                DOM.setLoading(DOM.weeklyView, false);
+            },
+
+            updateWeekRange() {
+                const startDate = new Date(AppState.epoch);
+                startDate.setUTCDate(startDate.getUTCDate() + (AppState.currentWeekStart - 1));
+                const endDate = new Date(startDate);
+                endDate.setUTCDate(endDate.getUTCDate() + 6);
+                
+                DOM.weekRange.textContent = `${Utils.formatDate(startDate)} - ${Utils.formatDate(endDate)}`;
+            },
+
+            toggleView() {
+                TooltipManager.cleanup();
+                const currentDay = parseInt(DOM.dayInput.value) || 1;
+                
+                if (!AppState.isWeeklyView) {
+                    DOM.preview.style.display = 'none';
+                    DOM.weeklyView.style.display = 'block';
+                    DOM.weekNav.style.display = 'flex';
+                    AppState.isWeeklyView = true;
+                    this.showWeeklyView(currentDay);
+                } else {
+                    DOM.preview.style.display = 'grid';
+                    DOM.weeklyView.style.display = 'none';
+                    DOM.weekNav.style.display = 'none';
+                    AppState.isWeeklyView = false;
+                    this.showPhotosForDay(currentDay);
+                }
+            }
+        };
+
+        // Event handlers
+        const EventHandlers = {
+            updateFromDay: Utils.debounce((day) => {
+                if (isNaN(day) || day < 1) {
+                    DOM.dateInput.value = '';
+                    DOM.dayOfWeek.textContent = '';
+                    return;
+                }
+                
+                const date = new Date(AppState.epoch);
+                date.setUTCDate(date.getUTCDate() + (day - 1));
+                DOM.dateInput.value = date.toISOString().split('T')[0];
+                ViewManager.updateDayOfWeek(date);
+                
+                if (AppState.isWeeklyView) {
+                    ViewManager.showWeeklyView(day);
+                } else {
+                    ViewManager.showPhotosForDay(day);
+                }
+            }, 300),
+
+            updateFromDate(dateStr) {
+                if (!dateStr) {
+                    DOM.dayInput.value = '';
+                    DOM.dayOfWeek.textContent = '';
+                    return;
+                }
+                
+                const selectedDate = new Date(dateStr);
+                ViewManager.updateDayOfWeek(selectedDate);
+                const daysSinceEpoch = Math.floor((selectedDate - AppState.epoch) / 86400000) + 1;
+                
+                if (daysSinceEpoch < 1) {
+                    alert('Please select a date on or after February 22, 2025');
+                    return;
+                }
+                
+                DOM.dayInput.value = daysSinceEpoch;
+                
+                if (AppState.isWeeklyView) {
+                    ViewManager.showWeeklyView(daysSinceEpoch);
+                } else {
+                    ViewManager.showPhotosForDay(daysSinceEpoch);
+                }
+            },
+
+            handleKeyboard(e) {
+                const currentDay = parseInt(DOM.dayInput.value) || 1;
+                
+                if (AppState.isWeeklyView) {
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        ViewManager.showWeeklyView(AppState.currentWeekStart + 7);
+                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (AppState.currentWeekStart > 7) {
+                            ViewManager.showWeeklyView(AppState.currentWeekStart - 7);
+                        }
+                    }
+                } else {
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        DOM.dayInput.value = currentDay + 1;
+                        this.updateFromDay(currentDay + 1);
+                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (currentDay > 1) {
+                            DOM.dayInput.value = currentDay - 1;
+                            this.updateFromDay(currentDay - 1);
+                        }
+                    }
+                }
+            }
+        };
+
+        // --- Mobile navigation logic ---
+        function updateMobileDayLabel(dayNum) {
+            const day = Math.max(1, parseInt(dayNum) || 1);
+            document.getElementById('mobileDayLabel').textContent = `Day ${day}`;
+        }
+
+        function syncMobileNavWithInputs() {
+            // Sync mobile nav label with current day input
+            updateMobileDayLabel(DOM.dayInput.value);
+        }
+
+        function handleMobileNavButton(e) {
+            const currentDay = Math.max(1, parseInt(DOM.dayInput.value) || 1);
+            if (e.target.id === 'mobilePrevDay') {
+                if (currentDay > 1) {
+                    DOM.dayInput.value = currentDay - 1;
+                    EventHandlers.updateFromDay(currentDay - 1);
+                }
+            } else if (e.target.id === 'mobileNextDay') {
+                DOM.dayInput.value = currentDay + 1;
+                EventHandlers.updateFromDay(currentDay + 1);
+            } else if (e.target.id === 'mobileToggleView') {
+                ViewManager.toggleView();
+            }
+            syncMobileNavWithInputs();
+        }
+
+        function showMobileNav(show) {
+            document.getElementById('mobileNav').style.display = show ? 'flex' : 'none';
+        }
+
+        // --- Patch event handlers for mobile ---
+        function setupMobileNav() {
+            document.getElementById('mobilePrevDay').addEventListener('click', handleMobileNavButton);
+            document.getElementById('mobileNextDay').addEventListener('click', handleMobileNavButton);
+            document.getElementById('mobileToggleView').addEventListener('click', handleMobileNavButton);
+
+            // Sync label on input changes
+            DOM.dayInput.addEventListener('input', syncMobileNavWithInputs);
+            DOM.dateInput.addEventListener('input', syncMobileNavWithInputs);
+        }
+
+        // --- Patch init ---
+        function init() {
+            // Set up event listeners
+            DOM.dayInput.addEventListener('input', (e) => {
+                EventHandlers.updateFromDay(parseInt(e.target.value));
             });
-        }
-
-        let currentWeekStart = 1;
-
-        function updateWeekRange() {
-            const startDate = new Date(epoch);
-            startDate.setUTCDate(startDate.getUTCDate() + (currentWeekStart - 1));
-            const endDate = new Date(startDate);
-            endDate.setUTCDate(endDate.getUTCDate() + 6);
             
-            document.getElementById('weekRange').textContent = 
-                `${formatDate(startDate)} to ${formatDate(endDate)}`;
-        }
-
-        function showWeeklyView(startDayGuess) {
-            const guessDate = new Date(epoch);
-            guessDate.setUTCDate(guessDate.getUTCDate() + startDayGuess - 1);
-
-            const mondayDate = getMondayUTC(guessDate);
-            currentWeekStart = dayNumberFromUTC(mondayDate);
+            DOM.dateInput.addEventListener('input', (e) => {
+                EventHandlers.updateFromDate(e.target.value);
+            });
             
-            const currentDayInput = parseInt(document.getElementById('dayInput').value) || 1;
+            document.getElementById('toggleView').addEventListener('click', () => {
+                ViewManager.toggleView();
+            });
             
-            updateWeekRange();
-            const weeklyContainer = document.getElementById('weeklyContainer');
-            weeklyContainer.innerHTML = '';
-            
-            initCombinedMap();
-            
-            for (let i = 0; i < 7; i++) {
-                const dayColumn = document.createElement('div');
-                dayColumn.className = 'day-column';
-                
-                const currentDay = currentWeekStart + i;
-                if (currentDay === currentDayInput) {
-                    dayColumn.classList.add('current-day');
+            document.getElementById('prevWeek').addEventListener('click', () => {
+                if (AppState.currentWeekStart > 7) {
+                    ViewManager.showWeeklyView(AppState.currentWeekStart - 7);
                 }
-                
-                const date = new Date(epoch);
-                date.setUTCDate(date.getUTCDate() + (currentDay - 1));
-                
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'day-header';
-                dayHeader.textContent = `Day ${currentDay}\n${formatDate(date)}`;
-                dayColumn.appendChild(dayHeader);
-                
-                showPhotosForDayInColumn(currentDay, dayColumn);
-                weeklyContainer.appendChild(dayColumn);
-            }
-        }
-
-        // Update toggle view event listener
-        document.getElementById('toggleView').addEventListener('click', () => {
-            const preview = document.getElementById('preview');
-            const weeklyView = document.getElementById('weeklyView');
-            const weekNav = document.getElementById('weekNav');
-            const dayInput = document.getElementById('dayInput');
-            const currentDay = parseInt(dayInput.value) || 1;
+            });
             
-            if (weeklyView.style.display === 'none' || !weeklyView.style.display) {
-                preview.style.display = 'none';
-                weeklyView.style.display = 'block';
-                weekNav.style.display = 'flex';
-                initCombinedMap();
-                showWeeklyView(currentDay);
+            document.getElementById('nextWeek').addEventListener('click', () => {
+                ViewManager.showWeeklyView(AppState.currentWeekStart + 7);
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                // Only handle keyboard navigation if not focused on input
+                if (document.activeElement.tagName !== 'INPUT') {
+                    EventHandlers.handleKeyboard(e);
+                }
+            });
+
+            // Setup mobile nav if on mobile
+            if (window.innerWidth <= 768) {
+                setupMobileNav();
+                showMobileNav(true);
+                syncMobileNavWithInputs();
             } else {
-                preview.style.display = 'grid';
-                weeklyView.style.display = 'none';
-                weekNav.style.display = 'none';
-                initCombinedMap();
-                showPhotosForDay(currentDay);
+                showMobileNav(false);
             }
-        });
 
-        // Add week navigation handlers
-        document.getElementById('prevWeek').addEventListener('click', () => {
-            if (currentWeekStart > 7) {
-                showWeeklyView(currentWeekStart - 7);
-            }
-        });
-
-        document.getElementById('nextWeek').addEventListener('click', () => {
-            showWeeklyView(currentWeekStart + 7);
-        });
-
-        // Add event listeners
-        document.getElementById('dayInput').addEventListener('input', e => updateFromDay(parseInt(e.target.value)));
-        document.getElementById('dateInput').addEventListener('input', e => updateFromDate(e.target.value));
-
-        function getTodayInET() {
-            const now = new Date();
-            const options = { timeZone: 'America/New_York' };
-            return new Date(now.toLocaleString('en-US', options));
+            // Set default to today
+            const today = Utils.getTodayInET();
+            const todayStr = today.toISOString().split('T')[0];
+            const todaySinceEpoch = Math.floor((today - AppState.epoch) / (1000 * 60 * 60 * 24)) + 1;
+            
+            DOM.dayInput.value = Math.max(1, todaySinceEpoch);
+            DOM.dateInput.value = todayStr;
+            
+            ViewManager.showPhotosForDay(Math.max(1, todaySinceEpoch));
         }
 
-        // Set default to today's date in ET
-        const today = getTodayInET();
-        const todayStr = today.toISOString().split('T')[0];
-        const todaySinceEpoch = Math.floor((today - epoch) / (1000 * 60 * 60 * 24)) + 1;
-        document.getElementById('dayInput').value = todaySinceEpoch;
-        document.getElementById('dateInput').value = todayStr;
-        updateFromDay(todaySinceEpoch);
-
-        // Update keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            const weeklyView = document.getElementById('weeklyView');
-            const dayInput = document.getElementById('dayInput');
-            const currentDay = parseInt(dayInput.value) || 1;
-            
-            if (weeklyView.style.display === 'block') {
-                if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-                    showWeeklyView(currentWeekStart + 7);
-                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-                    if (currentWeekStart > 7) {
-                        showWeeklyView(currentWeekStart - 7);
-                    }
-                }
-            } else {
-                if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-                    dayInput.value = currentDay + 1;
-                    dayInput.dispatchEvent(new Event('input'));
-                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-                    if (currentDay > 1) {
-                        dayInput.value = currentDay - 1;
-                        dayInput.dispatchEvent(new Event('input'));
-                    }
-                }
-            }
-        });
-
-        // Add some styling for the day of week display
-        document.getElementById('dayOfWeek').style.marginLeft = '10px';
-        document.getElementById('dayOfWeek').style.color = '#666';
+        // Start the application when DOM is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     </script>
 </body>
 </html>
