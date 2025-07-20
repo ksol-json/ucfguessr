@@ -88,6 +88,17 @@
             border-radius: 8px;
             border: 1px solid #ddd;
         }
+        .weekly-tooltip {
+            position: fixed;
+            background: rgba(30,30,30,0.95);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
     </style>
 </head>
 <body>
@@ -333,6 +344,47 @@
                 img.className = 'weekly-photo';
                 img.crossOrigin = "Anonymous";
                 
+                // --- Tooltip logic for filename on hover ---
+                let tooltipTimeout;
+                img.addEventListener('mouseenter', function(e) {
+                    tooltipTimeout = setTimeout(() => {
+                        let tooltip = document.createElement('div');
+                        tooltip.className = 'weekly-tooltip';
+                        tooltip.textContent = photo.src.split('/').pop();
+                        tooltip.style.position = 'fixed';
+                        tooltip.style.background = 'rgba(30,30,30,0.95)';
+                        tooltip.style.color = '#fff';
+                        tooltip.style.padding = '4px 10px';
+                        tooltip.style.borderRadius = '6px';
+                        tooltip.style.fontSize = '13px';
+                        tooltip.style.pointerEvents = 'none';
+                        tooltip.style.zIndex = 9999;
+                        tooltip.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                        document.body.appendChild(tooltip);
+
+                        function moveTooltip(ev) {
+                            tooltip.style.left = (ev.clientX + 12) + 'px';
+                            tooltip.style.top = (ev.clientY + 12) + 'px';
+                        }
+                        moveTooltip(e);
+                        img.addEventListener('mousemove', moveTooltip);
+                        img._tooltip = tooltip;
+                        img._moveTooltip = moveTooltip;
+                    }, 300);
+                });
+                img.addEventListener('mouseleave', function() {
+                    clearTimeout(tooltipTimeout);
+                    if (img._tooltip) {
+                        img._tooltip.remove();
+                        img._tooltip = null;
+                    }
+                    if (img._moveTooltip) {
+                        img.removeEventListener('mousemove', img._moveTooltip);
+                        img._moveTooltip = null;
+                    }
+                });
+                // --- End tooltip logic ---
+
                 img.onload = function() {
                     EXIF.getData(this, function() {
                         const lat = EXIF.getTag(this, "GPSLatitude");
