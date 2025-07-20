@@ -130,7 +130,7 @@
         }
 
         .filename {
-            font-size: 12px;
+            font-size: 14px;
             color: #7f8c8d;
             margin-bottom: 12px;
             font-family: 'Courier New', monospace;
@@ -336,7 +336,7 @@
     <!-- Mobile navigation bar -->
     <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
         <button id="mobilePrevDay" aria-label="Previous day">←</button>
-        <span class="mobile-day" id="mobileDayLabel">Day 1</span>
+        <span class="mobile-day" id="mobileDayLabel"></span>
         <button id="mobileNextDay" aria-label="Next day">→</button>
         <button id="mobileToggleView" aria-label="Toggle weekly view" style="width:48px;height:48px;font-size:20px;border-radius:50%;margin-left:8px;">📅</button>
     </nav>
@@ -819,7 +819,6 @@
         }
 
         function syncMobileNavWithInputs() {
-            // Sync mobile nav label with current day input
             updateMobileDayLabel(DOM.dayInput.value);
         }
 
@@ -843,7 +842,6 @@
             document.getElementById('mobileNav').style.display = show ? 'flex' : 'none';
         }
 
-        // --- Patch event handlers for mobile ---
         function setupMobileNav() {
             document.getElementById('mobilePrevDay').addEventListener('click', handleMobileNavButton);
             document.getElementById('mobileNextDay').addEventListener('click', handleMobileNavButton);
@@ -886,23 +884,23 @@
                 }
             });
 
-            // Setup mobile nav if on mobile
-            if (window.innerWidth <= 768) {
-                setupMobileNav();
-                showMobileNav(true);
-                syncMobileNavWithInputs();
-            } else {
-                showMobileNav(false);
-            }
-
             // Set default to today
             const today = Utils.getTodayInET();
             const todayStr = today.toISOString().split('T')[0];
             const todaySinceEpoch = Math.floor((today - AppState.epoch) / (1000 * 60 * 60 * 24)) + 1;
-            
+
             DOM.dayInput.value = Math.max(1, todaySinceEpoch);
             DOM.dateInput.value = todayStr;
-            
+
+            // Setup mobile nav if on mobile
+            if (window.innerWidth <= 768) {
+                setupMobileNav();
+                showMobileNav(true);
+                updateMobileDayLabel(DOM.dayInput.value); // Set correct label on load
+            } else {
+                showMobileNav(false);
+            }
+
             ViewManager.showPhotosForDay(Math.max(1, todaySinceEpoch));
         }
 
