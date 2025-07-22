@@ -769,11 +769,6 @@
                 ViewManager.updateDayOfWeek(selectedDate);
                 const daysSinceEpoch = Math.floor((selectedDate - AppState.epoch) / 86400000) + 1;
                 
-                if (daysSinceEpoch < 1) {
-                    alert('Please select a date on or after February 22, 2025');
-                    return;
-                }
-                
                 DOM.dayInput.value = daysSinceEpoch;
                 
                 if (AppState.isWeeklyView) {
