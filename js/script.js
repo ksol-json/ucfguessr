@@ -2,7 +2,6 @@ const isMobile = window.innerWidth <= 768;
 
 let isImageLoaded = false;
 let hardModeEnabled = JSON.parse(localStorage.getItem('hardModeEnabled') || 'false');
-let marathonModeEnabled = false;
 let hardModeRoundsViewed = new Set();
 let hardModeGameStarted = false;
 
@@ -1817,6 +1816,49 @@ dropdownWrap.querySelectorAll('.dropdown-item').forEach(item => {
     item.addEventListener('click', closeDropdown);
 });
 
+// Random day functionality
+function selectRandomArchiveDay() {
+    const etNow = getETDate();
+    const todayDaysSinceEpoch = Math.floor((Date.UTC(etNow.getFullYear(), etNow.getMonth(), etNow.getDate()) - epoch.getTime()) / (1000 * 60 * 60 * 24));
+
+    // Exclude today, future days, and current archive day (if in archive mode)
+    let excludeDay = null;
+    if (isArchiveMode && selectedArchiveDate) {
+        const etSelected = new Date(selectedArchiveDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        excludeDay = Math.floor((Date.UTC(etSelected.getFullYear(), etSelected.getMonth(), etSelected.getDate()) - epoch.getTime()) / (1000 * 60 * 60 * 24));
+    }
+    let validDays = [];
+    for (let i = 0; i < todayDaysSinceEpoch; i++) {
+        if (excludeDay === null || i !== excludeDay) {
+            validDays.push(i);
+        }
+    }
+    if (validDays.length === 0) {
+        showNotification('No random archive days available!');
+        return;
+    }
+    const randomIndex = Math.floor(Math.random() * validDays.length);
+    const randomDay = validDays[randomIndex];
+    
+    // Set date to ET midnight of randomDay
+    const randomDate = new Date(epoch.getTime() + randomDay * 24 * 60 * 60 * 1000);
+    selectArchiveDate(randomDate);
+    showNotification('Random archive day loaded!');
+}
+
+// Add click handler for the random day dropdown item after dropdown-item event listeners
+dropdownWrap.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', closeDropdown);
+});
+// Add this after the above
+const randomDayItem = document.querySelector('.dropdown-item.random-day-item');
+if (randomDayItem) {
+    randomDayItem.addEventListener('click', function(e) {
+        closeDropdown();
+        selectRandomArchiveDay();
+    });
+}
+
 // Modify existing functions to close dropdown
 function toggleHardMode() {
     const newPreference = !JSON.parse(localStorage.getItem('hardModeEnabled') || 'false');
@@ -1855,14 +1897,6 @@ function toggleHardMode() {
     }
     closeDropdown();
 }
-
-function toggleMarathonMode() {
-    marathonModeEnabled = !marathonModeEnabled;
-    showNotification('Coming eventually!');
-    closeDropdown();
-}
-
-
 
 preloadGameImages();
 updateRoundIndicators();
