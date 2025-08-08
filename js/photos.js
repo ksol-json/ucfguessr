@@ -391,9 +391,9 @@ const easyPhotos = [
     "images/easy/IMG_8992.jpeg",
     "images/easy/IMG_8070.jpeg",
     "images/easy/IMG_8959.jpeg",
-    "images/easy/IMG_8369.jpeg",
     "images/easy/IMG_8885.jpeg",
     "images/easy/IMG_8413.jpeg",
+    "images/easy/IMG_8416.jpeg",
     "images/easy/IMG_8522.jpeg",
     "images/easy/IMG_6663--Shecky.jpeg",
     "images/easy/IMG_8665.jpeg",
@@ -503,7 +503,7 @@ const easyPhotos = [
     "images/easy/IMG_8708.jpeg",
     "images/easy/IMG_8561.jpeg",
     "images/easy/IMG_7948.jpeg",
-    "images/easy/IMG_8416.jpeg",
+    "images/easy/IMG_5583--Juni.jpeg",
     "images/easy/entrance~~via University Archives (~2000).jpeg",
     "images/easy/IMG_8050.jpeg",
     "images/easy/IMG_8739.jpeg",
@@ -903,9 +903,9 @@ const mediumPhotos = [
     "images/medium/IMG_8996.jpeg",
     "images/medium/IMG_8047.jpeg",
     "images/medium/IMG_9134.jpeg",
-    "images/medium/IMG_8228.jpeg",
     "images/medium/IMG_8484.jpeg",
     "images/medium/IMG_9067.jpeg",
+    "images/medium/IMG_8369.jpeg",
     "images/medium/IMG_8641.jpeg",
     "images/medium/IMG_8252.jpeg",
     "images/medium/IMG_8981.jpeg",
@@ -1015,7 +1015,8 @@ const mediumPhotos = [
     "images/medium/IMG_7911.jpeg",
     "images/medium/IMG_8206.jpeg",
     "images/medium/IMG_8100.jpeg",
-]
+    "images/medium/IMG_8228.jpeg",
+];
 
 const hardPhotos = [
     "images/hard/IMG_0425.jpeg", // 1
@@ -1410,9 +1411,9 @@ const hardPhotos = [
     "images/hard/IMG_8998.jpeg",
     "images/hard/IMG_8264.jpeg",
     "images/hard/IMG_7951.jpeg",
-    "images/hard/IMG_8926.jpeg",
     "images/hard/IMG_9003.jpeg",
     "images/hard/IMG_8089.jpeg",
+    "images/hard/IMG_8926.jpeg",
     "images/hard/IMG_8271.jpeg",
     "images/hard/IMG_8064.jpeg",
     "images/hard/IMG_8088.jpeg",
