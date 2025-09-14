@@ -206,12 +206,12 @@ const easyPhotos = [
     "images/easy/IMG_8440.jpeg",
     "images/easy/IMG_8713.jpeg",
     "images/easy/IMG_8924.jpeg",
-    "images/easy/IMG_8900.jpeg",
+    "images/easy/IMG_1872.jpeg",
     "images/easy/IMG_8899.jpeg",
     "images/easy/IMG_8971.jpeg",
     "images/easy/IMG_8639.jpeg",
     "images/easy/IMG_8956.jpeg",
-    "images/easy/IMG_8307.jpeg",
+    "images/easy/IMG_1116.jpeg",
     "images/easy/IMG_8950.jpeg",
     "images/easy/IMG_8748.jpeg",
     "images/easy/IMG_7434--Maia Keefe.jpeg",
@@ -508,6 +508,8 @@ const easyPhotos = [
     "images/easy/IMG_8050.jpeg",
     "images/easy/IMG_8739.jpeg",
     "images/easy/IMG_8518.jpeg",
+    "images/easy/IMG_8900.jpeg",
+    "images/easy/IMG_8307.jpeg",
 ];
 
 const mediumPhotos = [
@@ -718,9 +720,9 @@ const mediumPhotos = [
     "images/medium/IMG_8637.jpeg",
     "images/medium/IMG_8310.jpeg",
     "images/medium/IMG_7907.jpeg",
-    "images/medium/IMG_7995.jpeg",
+    "images/medium/IMG_1237--Talia Jaret.jpeg",
     "images/medium/IMG_8363.jpeg",
-    "images/medium/IMG_8275.jpeg",
+    "images/medium/IMG_7984.jpeg",
     "images/medium/IMG_8513.jpeg",
     "images/medium/IMG_8514.jpeg",
     "images/medium/IMG_9099.jpeg",
@@ -869,7 +871,7 @@ const mediumPhotos = [
     "images/medium/IMG_9043.jpeg",
     "images/medium/IMG_8780.jpeg",
     "images/medium/IMG_8317.jpeg",
-    "images/medium/IMG_7984.jpeg",
+    "images/medium/IMG_8275.jpeg",
     "images/medium/IMG_8410.jpeg",
     "images/medium/IMG_8332.jpeg",
     "images/medium/IMG_8187.jpeg",
@@ -1016,6 +1018,7 @@ const mediumPhotos = [
     "images/medium/IMG_8206.jpeg",
     "images/medium/IMG_8100.jpeg",
     "images/medium/IMG_8228.jpeg",
+    "images/medium/IMG_7995.jpeg",
 ];
 
 const hardPhotos = [
@@ -1226,7 +1229,7 @@ const hardPhotos = [
     "images/hard/IMG_8686.jpeg",
     "images/hard/IMG_5549--Juni.jpeg",
     "images/hard/IMG_8972.jpeg",
-    "images/hard/PXL_20250418--Caleb.jpeg",
+    "images/hard/IMG_5101--Yennuis.jpeg",
     "images/hard/IMG_8939.jpeg",
     "images/hard/IMG_2271--Anonymous.jpeg",
     "images/hard/IMG_8493.jpeg",
@@ -1529,4 +1532,5 @@ const hardPhotos = [
     "images/hard/IMG_8467~~west side.jpeg",
     "images/hard/IMG_7934.jpeg",
     "images/hard/IMG_8772.jpeg",
+    "images/hard/PXL_20250418--Caleb.jpeg",
 ];
