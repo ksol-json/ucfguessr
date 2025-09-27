@@ -1533,4 +1533,4 @@ const hardPhotos = [
     "images/hard/IMG_7934.jpeg",
     "images/hard/IMG_8772.jpeg",
     "images/hard/PXL_20250418--Caleb.jpeg",
-]; 
+];
