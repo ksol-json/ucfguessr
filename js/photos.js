@@ -1266,9 +1266,9 @@ const hardPhotos = [
     "images/hard/IMG_8479.jpeg",
     "images/hard/IMG_8687.jpeg",
     "images/hard/IMG_9184.jpeg",
-    "images/hard/IMG_8666.jpeg",
-    "images/hard/IMG_8619.jpeg",
     "images/hard/IMG_8387.jpeg",
+    "images/hard/IMG_8619.jpeg",
+    "images/hard/IMG_8666.jpeg",
     "images/hard/IMG_8217~~southwest elevator.jpeg",
     "images/hard/IMG_8074.jpeg",
     "images/hard/IMG_8940.jpeg",
@@ -1533,4 +1533,4 @@ const hardPhotos = [
     "images/hard/IMG_7934.jpeg",
     "images/hard/IMG_8772.jpeg",
     "images/hard/PXL_20250418--Caleb.jpeg",
-]; 
+];
