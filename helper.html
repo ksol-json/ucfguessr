@@ -357,6 +357,19 @@
 
         // Utility functions
         const Utils = {
+            resolveImageSrc(src) {
+                if (!src) return src;
+                if (/^https?:\/\//i.test(src)) return src;
+                
+                const base = (typeof IMAGE_BASE !== 'undefined' && IMAGE_BASE) 
+                    ? IMAGE_BASE 
+                    : 'https://pub-3697703b8a84452c9d96ad7b8e4c8128.r2.dev/';
+
+                const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+                const normalizedSrc = src.startsWith('/') ? src.slice(1) : src;
+                return `${normalizedBase}${normalizedSrc}`;
+            },
+
             convertDMSToDD(dms, ref) {
                 const degrees = dms[0].numerator / dms[0].denominator;
                 const minutes = dms[1].numerator / dms[1].denominator;
@@ -551,17 +564,17 @@
                 const arrayIndex = dayIndex - 1;
                 return [
                     { 
-                        src: easyPhotos[arrayIndex % easyPhotos.length], 
+                        src: Utils.resolveImageSrc(easyPhotos[arrayIndex % easyPhotos.length]), 
                         difficulty: 'Easy',
                         color: '#27ae60'
                     },
                     { 
-                        src: mediumPhotos[arrayIndex % mediumPhotos.length], 
+                        src: Utils.resolveImageSrc(mediumPhotos[arrayIndex % mediumPhotos.length]), 
                         difficulty: 'Medium',
                         color: '#f39c12'
                     },
                     { 
-                        src: hardPhotos[arrayIndex % hardPhotos.length], 
+                        src: Utils.resolveImageSrc(hardPhotos[arrayIndex % hardPhotos.length]), 
                         difficulty: 'Hard',
                         color: '#e74c3c'
                     }
@@ -602,10 +615,11 @@
                 }
                 
                 const img = new Image();
-                img.src = photo.src;
                 img.className = isWeekly ? 'weekly-photo' : '';
-                img.crossOrigin = "Anonymous";
+                img.crossOrigin = "anonymous";
+                img.referrerPolicy = "no-referrer";
                 img.loading = "lazy";
+                img.src = photo.src;
                 
                 if (isWeekly) {
                     TooltipManager.setup(img, photo.src.split('/').pop());
