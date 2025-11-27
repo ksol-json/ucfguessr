@@ -284,7 +284,7 @@ const easyPhotos = [
     IMAGE_BASE + "images/easy/IMG_9031.jpeg",
     IMAGE_BASE + "images/easy/IMG_8346.jpeg",
     IMAGE_BASE + "images/easy/IMG_7970.jpeg",
-    IMAGE_BASE + "images/easy/IMG_8355.jpeg",
+    IMAGE_BASE + "images/easy/IMG_5374--Andrew K.jpeg",
     IMAGE_BASE + "images/easy/IMG_9161.jpeg",
     IMAGE_BASE + "images/easy/IMG_8680.jpeg",
     IMAGE_BASE + "images/easy/IMG_9171.jpeg",
@@ -294,7 +294,7 @@ const easyPhotos = [
     IMAGE_BASE + "images/easy/IMG_7980.jpeg",
     IMAGE_BASE + "images/easy/IMG_7110.jpeg",
     IMAGE_BASE + "images/easy/IMG_9241.jpeg",
-    IMAGE_BASE + "images/easy/IMG_8294.jpeg",
+    IMAGE_BASE + "images/easy/IMG_5361--Andrew K.jpeg",
     IMAGE_BASE + "images/easy/IMG_8453.jpeg",
     IMAGE_BASE + "images/easy/IMG_9039.jpeg",
     IMAGE_BASE + "images/easy/IMG_7953.jpeg",
@@ -512,6 +512,8 @@ const easyPhotos = [
     IMAGE_BASE + "images/easy/IMG_8518.jpeg",
     IMAGE_BASE + "images/easy/IMG_8900.jpeg",
     IMAGE_BASE + "images/easy/IMG_8307.jpeg",
+    IMAGE_BASE + "images/easy/IMG_8355.jpeg",
+    IMAGE_BASE + "images/easy/IMG_8294.jpeg",
 ];
 
 const mediumPhotos = [
@@ -798,9 +800,9 @@ const mediumPhotos = [
     IMAGE_BASE + "images/medium/IMG_8443.jpeg",
     IMAGE_BASE + "images/medium/IMG_3484--M. Giannacco.jpeg",
     IMAGE_BASE + "images/medium/IMG_6927.jpeg",
-    IMAGE_BASE + "images/medium/IMG_8107.jpeg",
+    IMAGE_BASE + "images/medium/20251015_213859--Xavier B..jpeg",
     IMAGE_BASE + "images/medium/IMG_8052.jpeg",
-    IMAGE_BASE + "images/medium/IMG_8447.jpeg",
+    IMAGE_BASE + "images/medium/20250326_000924--Anonymous.jpeg",
     IMAGE_BASE + "images/medium/IMG_8409.jpeg",
     IMAGE_BASE + "images/medium/IMG_9112.jpeg",
     IMAGE_BASE + "images/medium/IMG_8392.jpeg",
@@ -1021,6 +1023,8 @@ const mediumPhotos = [
     IMAGE_BASE + "images/medium/IMG_8100.jpeg",
     IMAGE_BASE + "images/medium/IMG_8228.jpeg",
     IMAGE_BASE + "images/medium/IMG_7995.jpeg",
+    IMAGE_BASE + "images/medium/IMG_8107.jpeg",
+    IMAGE_BASE + "images/medium/IMG_8447.jpeg",
 ];
 
 const hardPhotos = [
@@ -1307,7 +1311,7 @@ const hardPhotos = [
     IMAGE_BASE + "images/hard/IMG_9224.jpeg",
     IMAGE_BASE + "images/hard/IMG_7949.jpeg",
     IMAGE_BASE + "images/hard/IMG_8188.jpeg",
-    IMAGE_BASE + "images/hard/IMG_9082.jpeg",
+    IMAGE_BASE + "images/hard/PXL_20251016_232606822--Ethan no. 1 plasma ball fan.jpeg",
     IMAGE_BASE + "images/hard/IMG_8984.jpeg",
     IMAGE_BASE + "images/hard/IMG_8562.jpeg",
     IMAGE_BASE + "images/hard/IMG_8558.jpeg",
@@ -1317,7 +1321,7 @@ const hardPhotos = [
     IMAGE_BASE + "images/hard/IMG_8434.jpeg",
     IMAGE_BASE + "images/hard/IMG_8059.jpeg",
     IMAGE_BASE + "images/hard/IMG_8990.jpeg",
-    IMAGE_BASE + "images/hard/IMG_8258.jpeg",
+    IMAGE_BASE + "images/hard/PXL_20251120_233508000.MP--Anonymous.jpeg",
     IMAGE_BASE + "images/hard/IMG_8611.jpeg",
     IMAGE_BASE + "images/hard/IMG_7999.jpeg",
     IMAGE_BASE + "images/hard/IMG_8631.jpeg",
@@ -1422,7 +1426,7 @@ const hardPhotos = [
     IMAGE_BASE + "images/hard/IMG_8271.jpeg",
     IMAGE_BASE + "images/hard/IMG_8064.jpeg",
     IMAGE_BASE + "images/hard/IMG_8088.jpeg",
-
+    IMAGE_BASE + "images/hard/IMG_9233.jpeg",
     IMAGE_BASE + "images/hard/IMG_9132.jpeg",
     IMAGE_BASE + "images/hard/IMG_8765.jpeg",
     IMAGE_BASE + "images/hard/IMG_8876.jpeg",
@@ -1535,4 +1539,6 @@ const hardPhotos = [
     IMAGE_BASE + "images/hard/IMG_7934.jpeg",
     IMAGE_BASE + "images/hard/IMG_8772.jpeg",
     IMAGE_BASE + "images/hard/PXL_20250418--Caleb.jpeg",
+    IMAGE_BASE + "images/hard/IMG_9082.jpeg",
+    IMAGE_BASE + "images/hard/IMG_8258.jpeg",
 ];
