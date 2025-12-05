@@ -1340,7 +1340,7 @@ const hardPhotos = [
     IMAGE_BASE + "images/hard/IMG_7898.jpeg",
     IMAGE_BASE + "images/hard/IMG_8542.jpeg",
     IMAGE_BASE + "images/hard/IMG_8457.jpeg",
-    IMAGE_BASE + "images/hard/IMG_9158~~east building.jpeg",
+    IMAGE_BASE + "images/hard/IMG_9158~~north building.jpeg",
     IMAGE_BASE + "images/hard/IMG_8770~~YEAR!!!.jpeg",
     IMAGE_BASE + "images/hard/IMG_9229.jpeg",
     IMAGE_BASE + "images/hard/IMG_9102.jpeg",

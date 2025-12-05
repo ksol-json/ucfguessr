@@ -560,21 +560,30 @@
 
         // Photo management
         const PhotoManager = {
+            normalizeIndex(dayIndex, length) {
+                if (!Number.isFinite(dayIndex) || length <= 0) return 0;
+                const zeroBased = Math.round(dayIndex) - 1;
+                // Keep indices in range even if dayIndex is 0/negative
+                return ((zeroBased % length) + length) % length;
+            },
+
             getPhotosForDay(dayIndex) {
-                const arrayIndex = dayIndex - 1;
+                const easyIndex = this.normalizeIndex(dayIndex, easyPhotos.length);
+                const mediumIndex = this.normalizeIndex(dayIndex, mediumPhotos.length);
+                const hardIndex = this.normalizeIndex(dayIndex, hardPhotos.length);
                 return [
                     { 
-                        src: Utils.resolveImageSrc(easyPhotos[arrayIndex % easyPhotos.length]), 
+                        src: Utils.resolveImageSrc(easyPhotos[easyIndex]), 
                         difficulty: 'Easy',
                         color: '#27ae60'
                     },
                     { 
-                        src: Utils.resolveImageSrc(mediumPhotos[arrayIndex % mediumPhotos.length]), 
+                        src: Utils.resolveImageSrc(mediumPhotos[mediumIndex]), 
                         difficulty: 'Medium',
                         color: '#f39c12'
                     },
                     { 
-                        src: Utils.resolveImageSrc(hardPhotos[arrayIndex % hardPhotos.length]), 
+                        src: Utils.resolveImageSrc(hardPhotos[hardIndex]), 
                         difficulty: 'Hard',
                         color: '#e74c3c'
                     }
@@ -619,7 +628,21 @@
                 img.crossOrigin = "anonymous";
                 img.referrerPolicy = "no-referrer";
                 img.loading = "lazy";
-                img.src = photo.src;
+                img.decoding = "async";
+
+                const originalSrc = photo.src;
+                const withCacheBuster = () => `${originalSrc}${originalSrc.includes('?') ? '&' : '?'}t=${Date.now()}`;
+
+                img.onerror = () => {
+                    if (!img.dataset.retry) {
+                        img.dataset.retry = '1';
+                        img.src = withCacheBuster();
+                    } else {
+                        img.alt = 'Photo failed to load';
+                    }
+                };
+
+                img.src = originalSrc;
                 
                 if (isWeekly) {
                     TooltipManager.setup(img, photo.src.split('/').pop());
