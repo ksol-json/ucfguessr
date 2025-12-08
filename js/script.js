@@ -177,10 +177,9 @@ document.addEventListener('keydown', function(event) {
 // --------------------
 const epoch = new Date(Date.UTC(2025, 1, 22)); // February 22, 2025 00:00:00 UTC
 
-function getETDate() {
-    const now = new Date();
+function getETDate(date = new Date()) {
     const etOptions = { timeZone: 'America/New_York' };
-    return new Date(now.toLocaleString('en-US', etOptions));
+    return new Date(date.toLocaleString('en-US', etOptions));
 }
 
 const etNow = getETDate();
@@ -1402,7 +1401,7 @@ function formatDate(date) {
         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
     
-    const etDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    const etDate = getETDate(date);
     const month = months[etDate.getMonth()];  
     const day = etDate.getDate();
     const year = etDate.getFullYear();
@@ -1410,8 +1409,8 @@ function formatDate(date) {
     return `${month} ${day}, ${year}`;
 }
 
-// Set the current date in the header
-document.getElementById('current-date').textContent = formatDate(new Date());
+// Set the current date in the header (always using ET)
+document.getElementById('current-date').textContent = formatDate(getETDate());
 
 // Add window resize handler
 window.addEventListener('resize', () => {
@@ -1425,8 +1424,8 @@ window.addEventListener('resize', () => {
 // Add these variables at the top with other global variables
 let isArchiveMode = false;
 let selectedArchiveDate = null;
-let currentCalendarDate = new Date();
-let currentPlayingDate = new Date();
+let currentCalendarDate = getETDate();
+let currentPlayingDate = getETDate();
 
 // Add these functions before the loadRound function
 function showArchive() {
@@ -1454,10 +1453,13 @@ function updateCalendar() {
     const calendarMonth = document.getElementById("calendar-month");
     const weekdaysDiv = document.querySelector(".calendar-weekdays");
     const daysDiv = document.querySelector(".calendar-days");
-    const today = new Date();
+    const today = getETDate();
+    const todayDay = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+    const epochDay = Date.UTC(epoch.getFullYear(), epoch.getMonth(), epoch.getDate());
+    const etCalendarDate = getETDate(currentCalendarDate);
     
     // Set month and year
-    calendarMonth.textContent = currentCalendarDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+    calendarMonth.textContent = etCalendarDate.toLocaleString('default', { month: 'long', year: 'numeric' });
     
     // Set weekdays
     if (!weekdaysDiv.children.length) {
@@ -1473,8 +1475,8 @@ function updateCalendar() {
     daysDiv.innerHTML = '';
     
     // Calculate days
-    const firstDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 1);
-    const lastDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + 1, 0);
+    const firstDay = new Date(etCalendarDate.getFullYear(), etCalendarDate.getMonth(), 1);
+    const lastDay = new Date(etCalendarDate.getFullYear(), etCalendarDate.getMonth() + 1, 0);
     
     // Add empty spaces for starting position
     for (let i = 0; i < firstDay.getDay(); i++) {
@@ -1488,22 +1490,24 @@ function updateCalendar() {
         dayDiv.className = 'calendar-day';
         dayDiv.textContent = i;
         
-        const dateToCheck = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), i);
+        const dateToCheck = new Date(etCalendarDate.getFullYear(), etCalendarDate.getMonth(), i);
+        const etDateToCheck = getETDate(dateToCheck);
+        const dateToCheckDay = Date.UTC(etDateToCheck.getFullYear(), etDateToCheck.getMonth(), etDateToCheck.getDate());
         
         // Mark today's date
-        if (dateToCheck.toDateString() === today.toDateString()) {
+        if (etDateToCheck.toDateString() === today.toDateString()) {
             dayDiv.classList.add('today');
         }
         
         // Mark currently selected/playing date
-        if (dateToCheck.toDateString() === currentPlayingDate.toDateString()) {
+        if (etDateToCheck.toDateString() === getETDate(currentPlayingDate).toDateString()) {
             dayDiv.classList.add('selected');
         }
         
-        if (dateToCheck > new Date() || dateToCheck < epoch) {
+        if (dateToCheckDay > todayDay || dateToCheckDay < epochDay) {
             dayDiv.classList.add('disabled');
         } else {
-            dayDiv.onclick = () => selectArchiveDate(dateToCheck);
+            dayDiv.onclick = () => selectArchiveDate(etDateToCheck);
         }
         
         daysDiv.appendChild(dayDiv);
@@ -1533,20 +1537,20 @@ function updateTitleForAprilFoolsDay(dayNumber) {
 
 function selectArchiveDate(date) {
     // Convert the selected date to ET midnight
-    const etDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    const etDate = getETDate(date);
     const daysSinceEpochArchive = Math.floor((Date.UTC(etDate.getFullYear(), etDate.getMonth(), etDate.getDate()) - epoch.getTime()) / (1000 * 60 * 60 * 24));
     const etNow = getETDate();
     
     // Update current playing date and day number
-    currentPlayingDate = date;
+    currentPlayingDate = etDate;
     currentDay = daysSinceEpochArchive + 1;
     
     // Reset game state
     currentRound = 0;
     totalScore = 0;
     roundScores = [];
-    isArchiveMode = date.toDateString() !== etNow.toDateString();
-    selectedArchiveDate = date;
+    isArchiveMode = etDate.toDateString() !== etNow.toDateString();
+    selectedArchiveDate = etDate;
     hasUpdatedDistribution = false;
     hardModeGameStarted = false;
     hardModeEnabled = JSON.parse(localStorage.getItem('hardModeEnabled') || 'false');
@@ -1578,13 +1582,13 @@ function selectArchiveDate(date) {
     closeArchive();
     loadRound();
     
-    const archiveLabel = date.toDateString() !== etNow.toDateString() ? ' (Archive)' : '';
-    document.getElementById('current-date').textContent = formatDate(date) + archiveLabel;
+    const archiveLabel = etDate.toDateString() !== etNow.toDateString() ? ' (Archive)' : '';
+    document.getElementById('current-date').textContent = formatDate(etDate) + archiveLabel;
 }
 
 // Initialize currentPlayingDate when the game loads
 document.addEventListener('DOMContentLoaded', () => {
-    currentPlayingDate = new Date();
+    currentPlayingDate = getETDate();
     hasUpdatedDistribution = false;
     updateTitleForAprilFoolsDay(daysSinceEpoch + 1);
 });
@@ -1824,7 +1828,7 @@ function selectRandomArchiveDay() {
     // Exclude today, future days, and current archive day (if in archive mode)
     let excludeDay = null;
     if (isArchiveMode && selectedArchiveDate) {
-        const etSelected = new Date(selectedArchiveDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        const etSelected = getETDate(selectedArchiveDate);
         excludeDay = Math.floor((Date.UTC(etSelected.getFullYear(), etSelected.getMonth(), etSelected.getDate()) - epoch.getTime()) / (1000 * 60 * 60 * 24));
     }
     let validDays = [];
@@ -1902,7 +1906,7 @@ preloadGameImages();
 updateRoundIndicators();
 
 document.addEventListener('DOMContentLoaded', () => {
-    currentPlayingDate = new Date();
+    currentPlayingDate = getETDate();
     hasUpdatedDistribution = false;
     updateTitleForAprilFoolsDay(daysSinceEpoch + 1);
 });
