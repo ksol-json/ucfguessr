@@ -366,7 +366,7 @@ const easyPhotos = [
     IMAGE_BASE + "images/easy/IMG_9243.jpeg",
     IMAGE_BASE + "images/easy/IMG_8233.jpeg",
     IMAGE_BASE + "images/easy/IMG_9035.jpeg",
-    IMAGE_BASE + "images/easy/IMG_8381.jpeg",
+    IMAGE_BASE + "images/easy/IMG_8381~~ty for one year of ucfguessr.jpeg",
     IMAGE_BASE + "images/easy/IMG_8544.jpeg",
     IMAGE_BASE + "images/easy/IMG_8714.jpeg",
     IMAGE_BASE + "images/easy/IMG_8517~~mmm.jpeg",
