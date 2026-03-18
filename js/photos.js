@@ -391,7 +391,7 @@ const easyPhotos = [
     IMAGE_BASE + "images/easy/IMG_8379.jpeg",
     IMAGE_BASE + "images/easy/IMG_8070.jpeg",
     IMAGE_BASE + "images/easy/IMG_8992.jpeg",
-    IMAGE_BASE + "images/easy/IMG_8920.jpeg ",
+    IMAGE_BASE + "images/easy/IMG_8294.jpeg",
     IMAGE_BASE + "images/easy/IMG_8959.jpeg",
     IMAGE_BASE + "images/easy/IMG_8885.jpeg",
     IMAGE_BASE + "images/easy/IMG_8413.jpeg",
@@ -513,7 +513,6 @@ const easyPhotos = [
     IMAGE_BASE + "images/easy/IMG_8900.jpeg",
     IMAGE_BASE + "images/easy/IMG_8307.jpeg",
     IMAGE_BASE + "images/easy/IMG_8355.jpeg",
-    IMAGE_BASE + "images/easy/IMG_8294.jpeg",
 ];
 
 const mediumPhotos = [
