@@ -996,7 +996,7 @@ function loadRound(skipExifCheck = false, completed = false) {
         // Extract EXIF data in the background
         const tempImg = new Image();
         tempImg.crossOrigin = "Anonymous"; 
-        const urlWithTimestamp = round.src + "?t=" + new Date().getTime();
+        const urlWithTimestamp = encodeURI(round.src) + "?t=" + new Date().getTime();
         tempImg.src = urlWithTimestamp;
         
         tempImg.onload = function() {
