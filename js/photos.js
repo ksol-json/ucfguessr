@@ -389,7 +389,7 @@ const easyPhotos = [
     IMAGE_BASE + "images/easy/IMG_8287.jpeg",
     IMAGE_BASE + "images/easy/IMG_8444.jpeg",
     IMAGE_BASE + "images/easy/IMG_8379.jpeg",
-    IMAGE_BASE + "images/easy/IMG_8920~~🍀🍀🍀.jpeg ",
+    IMAGE_BASE + "images/easy/IMG_8920.jpeg ",
     IMAGE_BASE + "images/easy/IMG_8992.jpeg",
     IMAGE_BASE + "images/easy/IMG_8070.jpeg",
     IMAGE_BASE + "images/easy/IMG_8959.jpeg",
