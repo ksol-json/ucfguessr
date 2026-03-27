@@ -605,19 +605,39 @@ imageWrapper.addEventListener('touchend', function(e) {
 // --------------------
 // Map Setup
 // --------------------
-function isAprilFoolsDay(dayNumber) {
-    return dayNumber === 39; // April 1st, 2025 is day #39
+function getAprilFoolsVariant(dayNumber) {
+    if (dayNumber === 39) {
+        return {
+            titleHTML: `<span style="color:rgb(251, 101, 60)">UF</span><span style="color:rgb(27, 60, 192)">Guessr</span>`,
+            mapCenter: [29.64410123796475, -82.34763839012359]
+        };
+    }
+
+    if (dayNumber === 404) {
+        return {
+            titleHTML: `<span style="color:#006747">USF</span><span style="color:#CFC493">Guessr</span>`,
+            mapCenter: [28.06211482443541, -82.41378479339227]
+        };
+    }
+
+    return null;
 }
 
-const map = L.map('map').setView([28.602053, -81.200421], isMobile ? 14 : 15);
+function isAprilFoolsDay(dayNumber) {
+    return getAprilFoolsVariant(dayNumber) !== null;
+}
+
+const defaultMapCenter = [28.602053, -81.200421];
+const map = L.map('map').setView(defaultMapCenter, isMobile ? 14 : 15);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-if (isAprilFoolsDay(daysSinceEpoch + 1)) {
-    map.setView([29.64410123796475, -82.34763839012359], 14);
+const todayAprilFoolsVariant = getAprilFoolsVariant(daysSinceEpoch + 1);
+if (todayAprilFoolsVariant) {
+    map.setView(todayAprilFoolsVariant.mapCenter, 14);
 }
 
 let userMarker = null;
@@ -1023,10 +1043,11 @@ function loadRound(skipExifCheck = false, completed = false) {
     translateY = 0;
     updateImageTransform();
     
-    if (isAprilFoolsDay(currentDay)) {
-        map.setView([29.64410123796475, -82.34763839012359], 15);
+    const aprilFoolsVariant = getAprilFoolsVariant(currentDay);
+    if (aprilFoolsVariant) {
+        map.setView(aprilFoolsVariant.mapCenter, 15);
     } else {
-        map.setView([28.602053, -81.200421], 15);
+        map.setView(defaultMapCenter, 15);
     }
     
     if (userMarker) map.removeLayer(userMarker);
@@ -1526,9 +1547,10 @@ function nextMonth() {
 
 function updateTitleForAprilFoolsDay(dayNumber) {
     const title = document.querySelector('h1');
+    const aprilFoolsVariant = getAprilFoolsVariant(dayNumber);
     if (title) {
-        if (isAprilFoolsDay(dayNumber)) {
-            title.innerHTML = `<span style="color:rgb(251, 101, 60)">UF</span><span style="color:rgb(27, 60, 192)">Guessr</span>`;
+        if (aprilFoolsVariant) {
+            title.innerHTML = aprilFoolsVariant.titleHTML;
         } else {
             title.innerHTML = `<span class="title-ucf">UCF</span><span class="title-guessr">Guessr</span>`;
         }
@@ -1572,10 +1594,11 @@ function selectArchiveDate(date) {
     rounds[2].src = hardPhotos[archiveHardIndex];
     
     // Update map center and title based on the day number
-    if (isAprilFoolsDay(currentDay)) {
-        map.setView([29.64410123796475, -82.34763839012359], 15);
+    const aprilFoolsVariant = getAprilFoolsVariant(currentDay);
+    if (aprilFoolsVariant) {
+        map.setView(aprilFoolsVariant.mapCenter, 15);
     } else {
-        map.setView([28.602053, -81.200421], 15);
+        map.setView(defaultMapCenter, 15);
     }
     updateTitleForAprilFoolsDay(currentDay);
     

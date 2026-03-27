@@ -404,7 +404,7 @@ const easyPhotos = [
     IMAGE_BASE + "images/easy/IMG_8646.jpeg",
     IMAGE_BASE + "images/easy/IMG_8351.jpeg",
     IMAGE_BASE + "images/easy/IMG_8185.jpeg",
-    IMAGE_BASE + "images/easy/IMG_8658.jpeg",
+    IMAGE_BASE + "images/easy/IMG_4225--Braeden.jpeg",
     IMAGE_BASE + "images/easy/IMG_8452.jpeg",
     IMAGE_BASE + "images/easy/IMG_9045.jpeg",
     IMAGE_BASE + "images/easy/IMG_8036.jpeg",
@@ -513,6 +513,7 @@ const easyPhotos = [
     IMAGE_BASE + "images/easy/IMG_8900.jpeg",
     IMAGE_BASE + "images/easy/IMG_8307.jpeg",
     IMAGE_BASE + "images/easy/IMG_8355.jpeg",
+    IMAGE_BASE + "images/easy/IMG_8658.jpeg",
 ];
 
 const mediumPhotos = [
@@ -919,7 +920,7 @@ const mediumPhotos = [
     IMAGE_BASE + "images/medium/IMG_8973.jpeg",
     IMAGE_BASE + "images/medium/IMG_7959.jpeg",
     IMAGE_BASE + "images/medium/IMG_8308.jpeg",
-    IMAGE_BASE + "images/medium/IMG_8293.jpeg",
+    IMAGE_BASE + "images/medium/IMG_4226--Braeden.jpeg",
     IMAGE_BASE + "images/medium/IMG_8207.jpeg",
     IMAGE_BASE + "images/medium/hs1--Emzee.jpeg",
     IMAGE_BASE + "images/medium/IMG_9063.jpeg",
@@ -1026,6 +1027,7 @@ const mediumPhotos = [
     IMAGE_BASE + "images/medium/IMG_8447.jpeg",
     IMAGE_BASE + "images/medium/IMG_1811.jpeg",
     IMAGE_BASE + "images/medium/IMG_8533.jpeg",
+    IMAGE_BASE + "images/medium/IMG_8293.jpeg",
 ];
 
 const hardPhotos = [
@@ -1432,7 +1434,7 @@ const hardPhotos = [
     IMAGE_BASE + "images/hard/IMG_8765.jpeg",
     IMAGE_BASE + "images/hard/IMG_8876.jpeg",
     IMAGE_BASE + "images/hard/IMG_8760.jpeg",
-    IMAGE_BASE + "images/hard/IMG_8069.jpeg",
+    IMAGE_BASE + "images/hard/IMG_4223--Braeden.jpeg",
     IMAGE_BASE + "images/hard/IMG_7901.jpeg",
     IMAGE_BASE + "images/hard/IMG_8938.jpeg",
     IMAGE_BASE + "images/hard/IMG_9127.jpeg",
@@ -1543,4 +1545,5 @@ const hardPhotos = [
     IMAGE_BASE + "images/hard/IMG_9082.jpeg",
     IMAGE_BASE + "images/hard/IMG_8258.jpeg",
     IMAGE_BASE + "images/hard/IMG_9102.jpeg",
+    IMAGE_BASE + "images/hard/IMG_8069.jpeg",
 ];
