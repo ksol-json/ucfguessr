@@ -921,7 +921,7 @@ const mediumPhotos = [
     IMAGE_BASE + "images/medium/IMG_7959.jpeg",
     IMAGE_BASE + "images/medium/IMG_8308.jpeg",
     IMAGE_BASE + "images/medium/IMG_4226--Braeden.jpeg",
-    IMAGE_BASE + "images/medium/IMG_8207.jpeg",
+    IMAGE_BASE + "images/medium/IMG_5591--jayden.jpeg",
     IMAGE_BASE + "images/medium/hs1--Emzee.jpeg",
     IMAGE_BASE + "images/medium/IMG_9063.jpeg",
     IMAGE_BASE + "images/medium/IMG_8695.jpeg",
@@ -1028,6 +1028,7 @@ const mediumPhotos = [
     IMAGE_BASE + "images/medium/IMG_1811.jpeg",
     IMAGE_BASE + "images/medium/IMG_8533.jpeg",
     IMAGE_BASE + "images/medium/IMG_8293.jpeg",
+    IMAGE_BASE + "images/medium/IMG_8207.jpeg",
 ];
 
 const hardPhotos = [
