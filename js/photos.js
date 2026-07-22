@@ -517,6 +517,11 @@ const easyPhotos = [
     IMAGE_BASE + "images/easy/IMG_8355.jpeg",
     IMAGE_BASE + "images/easy/IMG_8658.jpeg",
     IMAGE_BASE + "images/easy/IMG_8587.jpeg",
+    IMAGE_BASE + "images/easy/20260713_210808412_iOS--Anonymous.jpeg",
+    IMAGE_BASE + "images/easy/IMG_5550--Juni.jpeg",
+    IMAGE_BASE + "images/easy/IMG_5367--Andrew K.jpeg",
+    IMAGE_BASE + "images/easy/IMG_5562--Juni.jpeg",
+    IMAGE_BASE + "images/easy/IMG_4725~~neigh.jpeg",
 ];
 
 const mediumPhotos = [
@@ -1035,8 +1040,12 @@ const mediumPhotos = [
     IMAGE_BASE + "images/medium/IMG_8293.jpeg",
     IMAGE_BASE + "images/medium/IMG_8567.jpeg",
     IMAGE_BASE + "images/medium/IMG_8207.jpeg",
-    IMAGE_BASE + "images/medium/IMG_8945.jpeg", 
     IMAGE_BASE + "images/medium/IMG_8644.jpeg",
+    IMAGE_BASE + "images/medium/IMG_8945.jpeg", 
+    IMAGE_BASE + "images/medium/IMG_8069.jpeg",
+    IMAGE_BASE + "images/medium/IMG_9694.jpeg",
+    IMAGE_BASE + "images/medium/IMG_5092--Sam K.jpeg",
+    IMAGE_BASE + "images/medium/IMG_0829~~shoutout josh wardle.jpeg",
 ];
 
 const hardPhotos = [
@@ -1557,7 +1566,7 @@ const hardPhotos = [
     IMAGE_BASE + "images/hard/IMG_8258.jpeg",
     IMAGE_BASE + "images/hard/IMG_9102.jpeg",
     IMAGE_BASE + "images/hard/IMG_8364.jpeg",
-    IMAGE_BASE + "images/hard/IMG_8069.jpeg",
+    IMAGE_BASE + "images/hard/IMG_20241001_183119--Anonymous.jpeg",
     IMAGE_BASE + "images/hard/IMG_9167.jpeg",
     IMAGE_BASE + "images/hard/IMG_8025.jpeg",
     IMAGE_BASE + "images/hard/IMG_9137.jpeg",
